@@ -1,5 +1,7 @@
+import mongoose from 'mongoose';
+
 export interface Agency {
-  userId: string;
+  userId: mongoose.Types.ObjectId;
   agencyName: string;
   numberOfCreators: number;
   websiteUrl: string;

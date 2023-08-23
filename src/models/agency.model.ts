@@ -1,6 +1,5 @@
 import { Agency } from '@/interfaces/agency.interface';
 import { Schema, model, Document } from 'mongoose';
-import { UserModel } from './users.model';
 
 const AgencySchema: Schema<Agency> = new Schema({
   userId: {

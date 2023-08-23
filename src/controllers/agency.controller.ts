@@ -5,7 +5,6 @@ import { Container } from 'typedi';
 
 export class AgencyController {
   public agency = Container.get(AgencyService);
-
   public createAgency = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const agencyData: Agency = req.body;
