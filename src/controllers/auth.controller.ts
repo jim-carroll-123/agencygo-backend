@@ -33,10 +33,10 @@ export class AuthController {
   public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.user;
-      const logOutUserData: User = await this.auth.logout(userData);
+      await this.auth.logout(userData);
 
       res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      res.status(200).json({ message: 'logout' });
     } catch (error) {
       next(error);
     }
