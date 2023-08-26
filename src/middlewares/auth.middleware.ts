@@ -5,15 +5,15 @@ import { HttpException } from '@exceptions/httpException';
 import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
 import { UserModel } from '@models/users.model';
 
-const getAuthorization = (req) => {
-  const coockie = req.cookies['Authorization'];
-  if (coockie) return coockie;
+const getAuthorization = (req: RequestWithUser) => {
+  const cookie = req.cookies['Authorization'];
+  if (cookie) return cookie;
 
   const header = req.header('Authorization');
   if (header) return header.split('Bearer ')[1];
 
   return null;
-}
+};
 
 export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
@@ -36,4 +36,3 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
     next(new HttpException(401, 'Wrong authentication token'));
   }
 };
-
