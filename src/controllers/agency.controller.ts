@@ -11,7 +11,7 @@ export class AgencyController {
       const userId = req.params.id;
       const createAgencyData: Agency = await this.agency.createAgency(agencyData, userId);
 
-      res.status(201).json({ data: createAgencyData, message: 'Agency created Succefully' });
+      res.status(201).json({ data: createAgencyData, message: 'Agency created Successfully' });
     } catch (error) {
       next(error);
     }
