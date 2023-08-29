@@ -30,7 +30,43 @@ export class EmployeeService {
     }
   }
 
-  // get employee
-  // public async getEmployee() {
-  // }
+  // get all employees of a agency
+  public async getAgencyEmployees(agencyId: string) {
+    try {
+      const employees = await EmployeeModel.find({ agencyId: agencyId }).lean();
+      return employees;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // get employee by employee id
+  public async getEmployeeById(employeeId: string) {
+    try {
+      const employee = await EmployeeModel.findOne({ _id: employeeId });
+      return employee;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // update employee by an employee id
+  public async updateEmployee(employeeId: string, employeeData: Partial<Employee>) {
+    try {
+      const updatedEmployee = await EmployeeModel.findByIdAndUpdate(
+        {
+          _id: employeeId,
+        },
+        {
+          $set: employeeData,
+        },
+        {
+          new: true,
+        },
+      );
+      return updatedEmployee;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

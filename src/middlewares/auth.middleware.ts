@@ -36,3 +36,15 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
     next(new HttpException(401, 'Wrong authentication token'));
   }
 };
+
+export const isAdminMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  try {
+    if (req?.user?.isAdmin) {
+      next();
+    } else {
+      next(new HttpException(401, 'Unauthorized'));
+    }
+  } catch (error) {
+    next(new HttpException(401, 'Unauthorized'));
+  }
+};
