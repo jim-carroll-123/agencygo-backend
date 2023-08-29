@@ -1,13 +1,12 @@
 import { Employee } from '@/interfaces/employee.interface';
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { EmployeeService } from '@/services/employee.service';
-import { RequestWithUser } from '@/interfaces/auth.interface';
 
 export class EmployeeController {
   public employee = Container.get(EmployeeService);
   // create employee
-  public createEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employeeData: Employee = req.body;
       const agencyId = req.params.id;
@@ -20,7 +19,7 @@ export class EmployeeController {
   };
 
   // Get all agency employees
-  public getEmployees = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public getEmployees = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const agencyId = req.params.agencyId;
       const employees = await this.employee.getAgencyEmployees(agencyId);
@@ -31,7 +30,7 @@ export class EmployeeController {
   };
 
   // Get employee by id
-  public getEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public getEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employeeId = req.params.employeeId;
       const employee = await this.employee.getEmployeeById(employeeId);
@@ -42,12 +41,26 @@ export class EmployeeController {
   };
 
   // update employee by id
-  public updateEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employeeId = req.params.employeeId;
       const employeeData: Employee = req.body;
       const updatedEmployee = await this.employee.updateEmployee(employeeId, employeeData);
       res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // delete employees in batch
+  public deleteEmployees = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const employeeIds = req.body.employeeIds;
+      const deletedEmployees = await this.employee.deleteEmployees(employeeIds);
+      if (!deletedEmployees.deletedCount) {
+        return res.status(404).json({ message: 'Invalid employee id' });
+      }
+      res.status(200).json({ success: true, message: 'Employee deleted successfully' });
     } catch (error) {
       next(error);
     }

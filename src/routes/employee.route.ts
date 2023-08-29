@@ -25,5 +25,6 @@ export class EmployeeRoute implements Routes {
     this.router.get(`${this.path}s/:agencyId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployees);
     this.router.get(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployee);
     this.router.put(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.updateEmployee);
+    this.router.delete(`${this.path}`, AuthMiddleware, isAdminMiddleware, this.employee.deleteEmployees);
   }
 }

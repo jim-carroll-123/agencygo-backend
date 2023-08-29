@@ -69,4 +69,16 @@ export class EmployeeService {
       throw error;
     }
   }
+
+  // delete employees in a batch
+  public async deleteEmployees(employeeIds: [string]) {
+    try {
+      const deletedEmployees = await EmployeeModel.deleteMany({
+        _id: { $in: employeeIds },
+      });
+      return deletedEmployees;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
