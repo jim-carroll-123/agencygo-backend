@@ -8,7 +8,7 @@ import { AgencyModel } from '@/models/agency.model';
 @Service()
 export class EmployeeService {
   // create employee
-  public async createEmployee(employeeData: Employee, agencyId: string): Promise<Employee> {
+  public async createEmployee(employeeData: Employee, agencyId: string): Promise<Partial<Employee>> {
     try {
       const agency = await AgencyModel.findOne({ _id: agencyId });
       if (!agency) {
@@ -26,7 +26,7 @@ export class EmployeeService {
       // save the employee
       return await newEmployee.save();
     } catch (error) {
-      throw error;
+      throw new HttpException(500, 'Something went wrong');
     }
   }
 
@@ -36,7 +36,7 @@ export class EmployeeService {
       const employees = await EmployeeModel.find({ agencyId: agencyId }).lean();
       return employees;
     } catch (error) {
-      throw error;
+      throw new HttpException(500, 'Something went wrong');
     }
   }
 
@@ -46,7 +46,7 @@ export class EmployeeService {
       const employee = await EmployeeModel.findOne({ _id: employeeId });
       return employee;
     } catch (error) {
-      throw error;
+      throw new HttpException(500, 'Something went wrong');
     }
   }
 
@@ -66,7 +66,7 @@ export class EmployeeService {
       );
       return updatedEmployee;
     } catch (error) {
-      throw error;
+      throw new HttpException(500, 'Something went wrong');
     }
   }
 
@@ -78,7 +78,7 @@ export class EmployeeService {
       });
       return deletedEmployees;
     } catch (error) {
-      throw error;
+      throw new HttpException(500, 'Something went wrong');
     }
   }
 }
