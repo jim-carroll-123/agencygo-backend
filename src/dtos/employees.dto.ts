@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum } from 'class-validator';
+import { IsString, IsEmail, IsEnum, isEnum } from 'class-validator';
 
 enum Role {
   CHATTER = 'chatter',
@@ -12,7 +12,9 @@ export class CreateEmployeeDto {
 
   @IsEmail()
   public employeeEmail;
+}
 
+export class AssignRoleDto {
   @IsEnum(Role)
   public role;
 }

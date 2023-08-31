@@ -10,7 +10,7 @@ export class EmployeeController {
     try {
       const employeeData: Employee = req.body;
       const agencyId = req.params.id;
-      const createEmployeeData: Employee = await this.employee.createEmployee(employeeData, agencyId);
+      const createEmployeeData: Partial<Employee> = await this.employee.createEmployee(employeeData, agencyId);
 
       res.status(201).json({ data: createEmployeeData, message: 'Employee created successfully' });
     } catch (error) {
@@ -61,6 +61,17 @@ export class EmployeeController {
         return res.status(404).json({ message: 'Invalid employee id' });
       }
       res.status(200).json({ success: true, message: 'Employee deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // assign role to employee
+  public assignRoleToEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const employeeId = req.params.employeeId;
+      const employee = await this.employee.assignRoleToEmployee(employeeId, req.body.role);
+      res.status(200).json({ data: employee, message: 'Employee role updated successfully' });
     } catch (error) {
       next(error);
     }
