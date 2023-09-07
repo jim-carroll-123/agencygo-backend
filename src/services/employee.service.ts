@@ -16,7 +16,7 @@ export class EmployeeService {
       }
       const user = await EmployeeModel.findOne({ employeeEmail: employeeData.employeeEmail });
       if (user) {
-        throw new HttpException(404, `User already registered`);
+        throw new HttpException(409, `User already registered`);
       }
       if (employeeData.role) {
         delete employeeData.role;

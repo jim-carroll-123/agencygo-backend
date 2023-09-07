@@ -1,6 +1,8 @@
 tags:
 - name: users
   description: users API
+- name: employees
+  description: employees API
 
 paths:
 # [GET] users
@@ -99,6 +101,61 @@ paths:
           description: 'Conflict'
         500:
           description: 'Server Error'
+
+# [POST] employees
+  /employee/{agencyId}:
+    post:
+      tags:
+      - employees
+      summary: Add employee to agency Id
+      parameters:
+      - name: agencyId
+        in: path
+        description: Agency Id
+        required: true
+        responses:
+          200: 
+            description: 'OK'
+          404:
+            description: 'Agency not found'
+          409: 
+            description: 'User already registered'
+          500: 
+            description: 'Something went wrong/Server Error'
+
+# [GET] Get employees of an agency
+    /employees/{agencyId}:
+      get:
+        tags: 
+        - employees
+        summary: Get all employees of an agency
+        parameters: 
+        - name: agencyId
+          in: path
+          description: Agency Id
+          required: true
+          responses:
+            200: 
+              description: 'OK'
+            500: 
+              description: 'Something went wrong/Server Error'
+
+# [GET] Get employee via the employeeId
+    /employee/{employeeId}:
+      get:
+        tags: 
+        - employees
+        summary: Get specific employee
+        parameters: 
+        - name: employeeId
+          in: path
+          description: Employee Id
+          required: true
+          responses:
+            200: 
+              description: 'OK'
+            500: 
+              description: 'Something went wrong/Server Error'
 
 # definitions
 definitions:
