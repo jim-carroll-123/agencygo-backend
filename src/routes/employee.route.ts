@@ -1,5 +1,5 @@
 import { EmployeeController } from '@/controllers/employee.controller';
-import { CreateEmployeeDto } from '@/dtos/employees.dto';
+import { AssignRoleDto, CreateEmployeeDto } from '@/dtos/employees.dto';
 import { AuthMiddleware, isAdminMiddleware } from '@/middlewares/auth.middleware';
 import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 import { Routes } from '@interfaces/routes.interface';
@@ -22,9 +22,16 @@ export class EmployeeRoute implements Routes {
       ValidationMiddleware(CreateEmployeeDto, 'body'),
       this.employee.createEmployee,
     );
-    this.router.get(`${this.path}s/:agencyId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployees);
+    this.router.get(`${this.path}s/:agencyId`, AuthMiddleware, this.employee.getEmployees);
     this.router.get(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployee);
     this.router.put(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.updateEmployee);
     this.router.delete(`${this.path}`, AuthMiddleware, isAdminMiddleware, this.employee.deleteEmployees);
+    this.router.put(
+      `${this.path}/role/:employeeId`,
+      AuthMiddleware,
+      isAdminMiddleware,
+      ValidationMiddleware(AssignRoleDto, 'body'),
+      this.employee.assignRoleToEmployee,
+    );
   }
 }
