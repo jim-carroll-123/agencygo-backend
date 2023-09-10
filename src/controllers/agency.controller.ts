@@ -16,4 +16,13 @@ export class AgencyController {
       next(error);
     }
   };
+
+  public getAgency = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const findAllUsersAgency: Agency[] = await this.agency.getAllAgency();
+      res.status(200).json({ data: findAllUsersAgency, message: 'success' })
+    } catch (error) {
+      next(error);
+    }
+  };
 }
