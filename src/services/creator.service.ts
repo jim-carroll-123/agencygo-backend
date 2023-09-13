@@ -17,4 +17,12 @@ export class CreatorService {
       throw new HttpException(500, 'Internal Server Error');
     }
   }
+
+  // delete a creator by an admin
+  public async deleteCreator(creatorId: string): Promise<Creator> {
+    const deleteCreatorById: Creator = await CreatorModel.findByIdAndDelete(creatorId);
+    if (!deleteCreatorById) throw new HttpException(409, "User doesn't exist");
+
+    return deleteCreatorById;
+  }
 }

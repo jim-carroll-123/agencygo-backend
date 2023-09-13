@@ -16,4 +16,15 @@ export class CreatorController {
       next(error);
     }
   };
+
+  public _deleteCreator = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const creatorId: string = req.params.id;
+      const deleteCreatorData: Creator = await this.creator.deleteCreator(creatorId);
+
+      res.status(200).json({ data: deleteCreatorData, message: 'creator deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

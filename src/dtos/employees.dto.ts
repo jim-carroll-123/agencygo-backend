@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum, isEnum } from 'class-validator';
+import { IsString, IsEmail, IsEnum } from 'class-validator';
 
 enum Role {
   CHATTER = 'chatter',
