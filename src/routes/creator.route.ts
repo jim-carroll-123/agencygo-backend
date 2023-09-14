@@ -15,5 +15,6 @@ export class CreatorRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}`, ValidationMiddleware(CreatorDTO), this.creator.createCreator);
+    this.router.delete(`${this.path}/:id`, this.creator._deleteCreator);
   }
 }

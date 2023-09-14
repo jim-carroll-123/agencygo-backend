@@ -5,6 +5,7 @@ export enum Gender {
   Female = 'female',
 }
 export interface Creator {
+  _id?: string;
   creatorName: string;
   gender: Gender;
   internalNotes: string;
