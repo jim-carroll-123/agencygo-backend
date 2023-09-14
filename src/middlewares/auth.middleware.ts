@@ -48,3 +48,17 @@ export const isAdminMiddleware = async (req: RequestWithUser, res: Response, nex
     next(new HttpException(401, 'Unauthorized'));
   }
 };
+
+export const isManagerOrAdminMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  try {
+    if (req?.user?.isAdmin) {
+      next();
+    } else if (req?.user?.role === 'manager' || req?.user?.role === 'admin') {
+      next();
+    } else {
+      next(new HttpException(401, 'Unauthorized'));
+    }
+  } catch (error) {
+    next(new HttpException(401, 'Unauthorized'));
+  }
+};

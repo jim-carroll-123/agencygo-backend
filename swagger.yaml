@@ -235,7 +235,7 @@ paths:
             role:
               type: string
               items:
-                enum: ['chatter', 'leader', 'admin']
+                enum: ['chatter', 'manager', 'admin']
         responses:
           200: 
             description: 'OK'
@@ -277,7 +277,7 @@ definitions:
         description: Agency id
       role: 
         type: string
-        enum: ['leader', 'admin', 'chatter']
+        enum: ['manager', 'admin', 'chatter']
         description: 'employee role'
 
 schemes:

@@ -1,16 +1,16 @@
-import { Employee } from '@/interfaces/employee.interface';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { EmployeeService } from '@/services/employee.service';
+import { User } from '@/interfaces/users.interface';
 
 export class EmployeeController {
   public employee = Container.get(EmployeeService);
   // create employee
   public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const employeeData: Employee = req.body;
+      const employeeData: User = req.body;
       const agencyId = req.params.id;
-      const createEmployeeData: Partial<Employee> = await this.employee.createEmployee(employeeData, agencyId);
+      const createEmployeeData: Partial<User> = await this.employee.createEmployee(employeeData, agencyId);
 
       res.status(201).json({ data: createEmployeeData, message: 'Employee created successfully' });
     } catch (error) {
@@ -44,7 +44,7 @@ export class EmployeeController {
   public updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employeeId = req.params.employeeId;
-      const employeeData: Employee = req.body;
+      const employeeData: User = req.body;
       const updatedEmployee = await this.employee.updateEmployee(employeeId, employeeData);
       res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
     } catch (error) {

@@ -3,12 +3,14 @@ import { Types } from 'mongoose';
 enum Role {
   CHATTER = 'chatter',
   ADMIN = 'admin',
-  LEADER = 'team leader',
+  Manager = 'manager',
 }
 
 export interface Employee {
-  employeeName: string;
-  employeeEmail: string;
+  firstName: string;
+  lastName: string;
   agencyId: Types.ObjectId;
+  email: string;
+  isEmployee: boolean;
   role: Role;
 }
