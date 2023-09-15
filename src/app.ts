@@ -14,9 +14,10 @@ import { dbConnection } from './database/index';
 import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import logRoutes from './utils/routes-logger';
 
 export class App {
-  public app: express.Application;
+  public app: express.Express;
   public env: string;
   public port: string | number;
 
@@ -38,6 +39,7 @@ export class App {
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
+      logRoutes(this.app);
     });
   }
 
