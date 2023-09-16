@@ -14,7 +14,6 @@ import { dbConnection } from './database/index';
 import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
-import logRoutes from './utils/routes-logger';
 
 export class App {
   public app: express.Express;
@@ -39,7 +38,7 @@ export class App {
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
-      logRoutes(this.app);
+      // logRoutes(this.app);
     });
   }
 
@@ -52,8 +51,9 @@ export class App {
       set('debug', true);
       set('strictQuery', false); // for remove the warning
     }
-
+    console.log(dbConnection.url);
     await connect(dbConnection.url, dbConnection.options as ConnectOptions);
+    logger.info('Database connected');
   }
 
   private initializeMiddlewares() {

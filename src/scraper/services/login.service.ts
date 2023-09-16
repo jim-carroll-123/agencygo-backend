@@ -15,6 +15,7 @@ export class LoginBotService {
   public async execute(props: ILoginProps) {
     try {
       const { page, browser } = await getBrowserInstance();
+      await new Promise(r => setTimeout(r, TIMEOUT_BASE * 1.5));
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });
@@ -23,7 +24,6 @@ export class LoginBotService {
       await this.checkingForCaptcha(page);
       await this.clickLogin(page);
       await browser.close();
-      await this.saveSession();
     } catch (error) {
       throw error;
     }
@@ -137,6 +137,16 @@ export class LoginBotService {
         await this.checkingForCaptcha(page);
       }
       console.log('Login successful');
+
+      await page.waitForSelector('a[data-name="Profile"]', {
+        timeout: 10000,
+      });
+      await page.click('a[data-name="Profile"]');
+      const res = await page.waitForResponse(response => response.url().includes('https://onlyfans.com/api2/v2/users'));
+      const headers = res.headers();
+      console.log(headers);
+      // save headers on json file
+      fs.writeFileSync('./temp/headers.json', JSON.stringify(headers));
     } catch (error) {
       throw error;
     }
