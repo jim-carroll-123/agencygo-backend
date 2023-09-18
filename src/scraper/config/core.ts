@@ -5,14 +5,20 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 puppeteer.use(StealthPlugin());
 
-export const getBrowserInstance = async () => {
+export const getBrowserInstance = async (userDataDir?: string) => {
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
-  const browser = await puppeteer.launch({
+  let config: any = {
     headless: false,
     args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
     executablePath: executablePath(),
-    userDataDir: './temp',
-  });
+  };
+  if (userDataDir) {
+    config = {
+      ...config,
+      userDataDir,
+    };
+  }
+  const browser = await puppeteer.launch(config);
   const page = await browser.newPage();
   return { page, browser };
 };

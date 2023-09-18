@@ -164,24 +164,28 @@ export class LoginBotService {
     // need to save on cloud storage
   }
 
-  public async unzipSession(zipFilePath: string) {
-    const outputFolder = './temp';
+  public async unzipSession(zipFilePath: string, id: string) {
+    const outputFolder = `./temp/${id}`;
     const zip = new AdmZip(zipFilePath);
     zip.extractAllTo(outputFolder, true);
   }
 
-  public async checkSession() {
-    const { page, browser } = await getBrowserInstance();
+  public async checkSession(id: string) {
+    const { page, browser } = await getBrowserInstance(`./temp/${id}`);
     try {
       page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });
       await page.waitForSelector('h1[class="g-page-title m-scroll-top"]');
-      await new Promise(r => setTimeout(r, TIMEOUT_BASE));
       browser.close();
     } catch (error) {
       browser.close();
       throw error;
     }
+  }
+
+  public async cleanupSession(id: string) {
+    const path = `./temp/${id}`;
+    fs.rmdirSync(path, { recursive: true, maxRetries: 3, retryDelay: 1000 });
   }
 }

@@ -33,7 +33,6 @@ const CreatorSchema: Schema<Creator> = new Schema({
       enum: ['active', 'expired'],
       required: false,
     },
-    required: false,
   },
 });
 

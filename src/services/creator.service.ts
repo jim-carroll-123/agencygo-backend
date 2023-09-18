@@ -25,4 +25,30 @@ export class CreatorService {
 
     return deleteCreatorById;
   }
+
+  // get a creator by id
+  public async getCreatorById(creatorId: string): Promise<Creator> {
+    const findCreator: Creator = await CreatorModel.findById(creatorId);
+    if (!findCreator) throw new HttpException(409, "User doesn't exist");
+
+    return findCreator;
+  }
+
+  // update a creator by id
+  public async updateCreator(creatorId: string, creatorData: Creator): Promise<Creator> {
+    const updateCreatorById: Creator = await CreatorModel.findByIdAndUpdate(
+      {
+        _id: creatorId,
+      },
+      {
+        $set: creatorData,
+      },
+      {
+        new: true,
+      },
+    );
+    if (!updateCreatorById) throw new HttpException(409, "User doesn't exist");
+
+    return updateCreatorById;
+  }
 }

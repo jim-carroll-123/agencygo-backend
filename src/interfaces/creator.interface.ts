@@ -16,7 +16,7 @@ export interface Creator {
   internalNotes: string;
   assignEmployee: mongoose.Types.ObjectId | null; // The employee assigned to this creator
   autoRelink: boolean;
-  session?: {
+  session: {
     url: string;
     status: SessionStatus;
   };

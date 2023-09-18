@@ -1,4 +1,4 @@
-import { Creator } from '@/interfaces/creator.interface';
+import { Creator, SessionStatus } from '@/interfaces/creator.interface';
 import { LoginBotService } from '@/scraper/services/login.service';
 import { CreatorService } from '@/services/creator.service';
 import { NextFunction, Request, Response } from 'express';
@@ -32,12 +32,27 @@ export class CreatorController {
 
   public linkingOnlyfans = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // const creatorId: string = req.params.id;
+      const creatorId: string = req.params.id;
       const fileSession = req.file;
-      await this.login.unzipSession(fileSession.path);
-      await this.login.checkSession();
+      await this.login.unzipSession(fileSession.path, creatorId);
+      await this.login.checkSession(creatorId);
+      await this.login.cleanupSession(creatorId);
+      const creator = await this.creator.getCreatorById(creatorId);
+      const payload = Object.assign(creator, {
+        session: {
+          url: fileSession.path,
+          status: SessionStatus.Active,
+        },
+      });
+      const newCreator = await this.creator.updateCreator(creatorId, payload);
+      console.log(newCreator, {
+        session: {
+          url: fileSession.path,
+          status: SessionStatus.Active,
+        },
+      });
 
-      res.status(200).json({ message: 'creator linked, session valid' });
+      res.status(200).json({ data: newCreator, message: 'creator linked, session valid' });
     } catch (error) {
       next(error);
     }
