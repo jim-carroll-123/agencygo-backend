@@ -24,4 +24,9 @@ export class AgencyService {
       throw error;
     }
   }
+
+  public async getAllAgency(): Promise<Agency[]> {
+    const agency: Agency[] = await AgencyModel.find();
+    return agency;
+  }
 }

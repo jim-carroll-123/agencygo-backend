@@ -23,6 +23,11 @@ const UserSchema: Schema<User> = new Schema({
     type: Boolean,
     default: false,
   },
+  agencyId: {
+    type: Schema.Types.ObjectId,
+    ref: 'agencies',
+    required: true,
+  },
   isAgency: {
     type: Boolean,
     default: false,
@@ -34,6 +39,14 @@ const UserSchema: Schema<User> = new Schema({
       validator: (value: string) => value.length > 0,
       message: 'Password field is required',
     },
+  },
+  isEmployee: {
+    type: Boolean,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'chatter', 'manager'],
   },
 });
 

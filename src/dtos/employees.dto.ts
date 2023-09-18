@@ -3,7 +3,7 @@ import { IsString, IsEmail, IsEnum } from 'class-validator';
 enum Role {
   CHATTER = 'chatter',
   ADMIN = 'admin',
-  LEADER = 'team leader',
+  MANAGER = 'manager',
 }
 
 export class CreateEmployeeDto {
@@ -12,7 +12,9 @@ export class CreateEmployeeDto {
 
   @IsEmail()
   public employeeEmail;
+}
 
+export class AssignRoleDto {
   @IsEnum(Role)
   public role;
 }

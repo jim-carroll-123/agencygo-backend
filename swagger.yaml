@@ -1,6 +1,8 @@
 tags:
 - name: users
   description: users API
+- name: employees
+  description: employees API
 
 paths:
 # [GET] users
@@ -100,6 +102,148 @@ paths:
         500:
           description: 'Server Error'
 
+# [POST] employees
+  /employee/{agencyId}:
+    post:
+      tags:
+      - employees
+      summary: Add employee to agency Id
+      parameters:
+      - name: agencyId
+        in: path
+        description: Agency Id
+        required: true
+      - name: body
+        in: body
+        description: employee Data
+        required: true
+        schema:
+          $ref: '#/definitions/employees'
+        responses:
+          200: 
+            description: 'OK'
+          404:
+            description: 'Agency not found'
+          409: 
+            description: 'User already registered'
+          500: 
+            description: 'Something went wrong/Server Error'
+
+# [GET] Get employees of an agency
+  /employees/{agencyId}:
+    get:
+      tags: 
+      - employees
+      summary: Get all employees of an agency
+      parameters: 
+      - name: agencyId
+        in: path
+        description: Agency Id
+        required: true
+        responses:
+          200: 
+            description: 'OK'
+          500: 
+            description: 'Something went wrong/Server Error'
+
+# [GET] Get employee via the employeeId
+  /employee/{employeeId}:
+    get:
+      tags: 
+      - employees
+      summary: Get specific employee
+      parameters: 
+      - name: employeeId
+        in: path
+        description: Employee Id
+        required: true
+        responses:
+          200: 
+            description: 'OK'
+          500: 
+            description: 'Something went wrong/Server Error'
+
+# [PUT] employees
+  /employee/{employeeID}: #using ID - to be unique map.
+    put:
+      tags:
+      - employees
+      summary: update employee details
+      parameters:
+      - name: employeeID
+        in: path
+        description: employee ID
+        required: true
+      - name: body
+        in: body
+        description: employee Data
+        required: true
+        schema:
+          $ref: '#/definitions/employees'
+        responses:
+          200: 
+            description: 'OK'
+          404:
+            description: 'Employee not found'
+          500: 
+            description: 'Something went wrong/Server Error'
+
+# [DEL] employees
+  /employee:
+    delete:
+      tags: 
+      - employees
+      summary: delete all employees whose ids are provided in body
+      parameters:
+      - name: employeeIds
+        in: body
+        description: employeeIds in array
+        required: true
+        schema:
+          type: object
+          properties: 
+            employeeIds:
+              type: array
+              items:
+                type: string
+        responses:
+          200: 
+            description: 'OK'
+          404:
+            description: 'Employee not found'
+          500: 
+            description: 'Something went wrong/Server Error'
+
+# [PUT] employees
+  /employee/role/{employeeID}: #using ID - to be unique map.
+    put:
+      tags:
+      - employees
+      summary: assign employee role
+      parameters:
+      - name: employeeID
+        in: path
+        description: employee ID
+        required: true
+      - name: body
+        in: body
+        description: Role Data
+        required: true
+        schema:
+          type: object
+          properties:
+            role:
+              type: string
+              items:
+                enum: ['chatter', 'manager', 'admin']
+        responses:
+          200: 
+            description: 'OK'
+          404:
+            description: 'Employee not found'
+          500: 
+            description: 'Something went wrong/Server Error'
+
 # definitions
 definitions:
   users:
@@ -114,6 +258,27 @@ definitions:
       password:
         type: string
         description: user Password
+
+  employees:
+    type: object
+    required: 
+        - employeeEmail
+        - employeeName
+        - agencyId
+    properties:
+      employeeEmail: 
+        type: string
+        description: employee Email
+      employeeName: 
+        type: string
+        description: employee name
+      agencyId: 
+        type: ObjectID
+        description: Agency id
+      role: 
+        type: string
+        enum: ['manager', 'admin', 'chatter']
+        description: 'employee role'
 
 schemes:
  - https
