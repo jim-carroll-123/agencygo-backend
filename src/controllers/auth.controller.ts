@@ -22,7 +22,6 @@ export class AuthController {
 
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.scraper.getProfile();
       const userData: User = req.body;
       const { cookie, findUser } = await this.auth.login(userData);
 

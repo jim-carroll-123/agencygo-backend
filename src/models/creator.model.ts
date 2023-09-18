@@ -23,6 +23,18 @@ const CreatorSchema: Schema<Creator> = new Schema({
     type: Boolean,
     default: false,
   },
+  session: {
+    url: {
+      type: String,
+      required: false,
+    },
+    status: {
+      type: String,
+      enum: ['active', 'expired'],
+      required: false,
+    },
+    required: false,
+  },
 });
 
 export const CreatorModel = model<Creator & Document>('Creator', CreatorSchema);

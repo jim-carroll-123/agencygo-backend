@@ -4,6 +4,7 @@ import { TIMEOUT_BASE, URL_BASE } from '../constant';
 import { Page } from 'puppeteer';
 import fs from 'fs';
 import archiver from 'archiver';
+import AdmZip from 'adm-zip';
 
 export interface ILoginProps {
   email: string;
@@ -15,7 +16,7 @@ export class LoginBotService {
   public async execute(props: ILoginProps) {
     try {
       const { page, browser } = await getBrowserInstance();
-      await new Promise(r => setTimeout(r, TIMEOUT_BASE * 1.5));
+      await new Promise(r => setTimeout(r, TIMEOUT_BASE * 100));
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });
@@ -152,16 +153,35 @@ export class LoginBotService {
     }
   }
 
-  private async saveSession() {
+  public async saveSession() {
     const folderToZip = './temp';
     const outputZipFilePath = './output.zip';
     const outputZipStream = fs.createWriteStream(outputZipFilePath);
-    const archive = archiver('zip', {
-      zlib: { level: 9 },
-    });
+    const archive = archiver('zip');
     archive.pipe(outputZipStream);
     archive.directory(folderToZip, false);
     archive.finalize();
     // need to save on cloud storage
+  }
+
+  public async unzipSession(zipFilePath: string) {
+    const outputFolder = './temp';
+    const zip = new AdmZip(zipFilePath);
+    zip.extractAllTo(outputFolder, true);
+  }
+
+  public async checkSession() {
+    const { page, browser } = await getBrowserInstance();
+    try {
+      page.goto(URL_BASE, {
+        waitUntil: ['load', 'domcontentloaded'],
+      });
+      await page.waitForSelector('h1[class="g-page-title m-scroll-top"]');
+      await new Promise(r => setTimeout(r, TIMEOUT_BASE));
+      browser.close();
+    } catch (error) {
+      browser.close();
+      throw error;
+    }
   }
 }
