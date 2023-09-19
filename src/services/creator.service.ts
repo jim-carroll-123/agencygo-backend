@@ -5,6 +5,12 @@ import { Service } from 'typedi';
 
 @Service()
 export class CreatorService {
+  // get all creators
+  public async getCreators(): Promise<Creator[]> {
+    const creators: Creator[] = await CreatorModel.find();
+    return creators;
+  }
+
   public async createCreator(creatorData: Creator) {
     //TODO: Check if employee assigned exist
     try {

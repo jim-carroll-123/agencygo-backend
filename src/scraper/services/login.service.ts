@@ -13,10 +13,10 @@ export interface ILoginProps {
 
 @Service()
 export class LoginBotService {
-  public async execute(props: ILoginProps) {
+  public async execute(props: ILoginProps, id?: string) {
     try {
-      const { page, browser } = await getBrowserInstance();
-      await new Promise(r => setTimeout(r, TIMEOUT_BASE * 100));
+      const { page, browser } = await getBrowserInstance(id ? `./temp/${id}` : '');
+      await new Promise(r => setTimeout(r, TIMEOUT_BASE * 1.5));
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });
@@ -160,7 +160,7 @@ export class LoginBotService {
     const archive = archiver('zip');
     archive.pipe(outputZipStream);
     archive.directory(folderToZip, false);
-    archive.finalize();
+    await archive.finalize();
     // need to save on cloud storage
   }
 
@@ -171,7 +171,7 @@ export class LoginBotService {
   }
 
   public async checkSession(id: string) {
-    const { page, browser } = await getBrowserInstance(`./temp/${id}`);
+    const { page, browser } = await getBrowserInstance(id ? `./temp/${id}` : './temp');
     try {
       page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
