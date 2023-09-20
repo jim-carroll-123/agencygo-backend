@@ -18,7 +18,6 @@ export class LoginBotService {
   public async execute(props: ILoginProps, id?: string) {
     try {
       const { page, browser } = await getBrowserInstance(id ? `./temp/${id}` : '');
-      await new Promise(r => setTimeout(r, TIMEOUT_BASE * 1.5));
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });
