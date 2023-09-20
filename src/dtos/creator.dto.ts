@@ -27,13 +27,3 @@ export class CreatorDTO {
     status: string;
   };
 }
-
-export class CreatorLoginOFDTO {
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-
-  @IsNotEmpty()
-  @IsString()
-  email: string;
-}

@@ -1,10 +1,11 @@
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { getBrowserInstance } from '../config/core';
 import { TIMEOUT_BASE, URL_BASE } from '../constant';
 import { Page } from 'puppeteer';
 import fs from 'fs';
 import archiver from 'archiver';
 import AdmZip from 'adm-zip';
+import { SessionsService } from '@/services/sessions.service';
 
 export interface ILoginProps {
   email: string;
@@ -13,6 +14,7 @@ export interface ILoginProps {
 
 @Service()
 export class LoginBotService {
+  private sesions = Container.get(SessionsService);
   public async execute(props: ILoginProps, id?: string) {
     try {
       const { page, browser } = await getBrowserInstance(id ? `./temp/${id}` : '');
@@ -25,6 +27,7 @@ export class LoginBotService {
       await this.checkingForCaptcha(page);
       await this.clickLogin(page);
       await browser.close();
+      await this.saveSession(id);
     } catch (error) {
       throw error;
     }
@@ -138,30 +141,21 @@ export class LoginBotService {
         await this.checkingForCaptcha(page);
       }
       console.log('Login successful');
-
-      await page.waitForSelector('a[data-name="Profile"]', {
-        timeout: 10000,
-      });
-      await page.click('a[data-name="Profile"]');
-      const res = await page.waitForResponse(response => response.url().includes('https://onlyfans.com/api2/v2/users'));
-      const headers = res.headers();
-      console.log(headers);
-      // save headers on json file
-      fs.writeFileSync('./temp/headers.json', JSON.stringify(headers));
     } catch (error) {
       throw error;
     }
   }
 
-  public async saveSession() {
-    const folderToZip = './temp';
-    const outputZipFilePath = './output.zip';
+  public async saveSession(id: string) {
+    const folderToZip = `./temp/${id}`;
+    const outputZipFilePath = `./uploads/${id}.zip`;
     const outputZipStream = fs.createWriteStream(outputZipFilePath);
     const archive = archiver('zip');
     archive.pipe(outputZipStream);
     archive.directory(folderToZip, false);
     await archive.finalize();
-    // need to save on cloud storage
+    const fullPath = fs.realpathSync(outputZipFilePath);
+    await this.sesions.activeSessionServer(id, fullPath);
   }
 
   public async unzipSession(zipFilePath: string, id: string) {
