@@ -20,4 +20,10 @@ export class CreatorDTO {
 
   @IsBoolean()
   autoRelink: boolean;
+
+  @IsOptional()
+  session?: {
+    url: string;
+    status: string;
+  };
 }

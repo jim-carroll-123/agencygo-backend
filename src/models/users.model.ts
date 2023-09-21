@@ -26,7 +26,6 @@ const UserSchema: Schema<User> = new Schema({
   agencyId: {
     type: Schema.Types.ObjectId,
     ref: 'agencies',
-    required: true,
   },
   isAgency: {
     type: Boolean,

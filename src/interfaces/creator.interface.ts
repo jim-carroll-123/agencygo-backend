@@ -5,7 +5,7 @@ export enum Gender {
   Female = 'female',
 }
 export interface Creator {
-  _id?: string;
+  _id?: mongoose.Types.ObjectId;
   creatorName: string;
   gender: Gender;
   internalNotes: string;
