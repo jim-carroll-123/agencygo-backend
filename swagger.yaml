@@ -270,6 +270,87 @@ paths:
         description: Server Error
 
 
+# [POST] sessions client
+  /sessions/client/{creatorId}:
+    post:
+      tags:
+      - sessions
+      summary: Add client session
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      - name: body
+        in: body
+        description: session file
+        required: true
+        schema:
+          type: formData
+          properties:
+            file:
+              type: string
+              description: session file
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+    get:
+      tags:
+      - sessions
+      summary: Get client session
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [POST] sessions server
+  /sessions/server/{creatorId}:
+    post:
+      tags:
+      - sessions
+      summary: Add server session
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      - name: body
+        in: body
+        description: session credentials
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: session email
+            password:
+              type: string
+              description: session password
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+
 # definitions
 definitions:
   users:
@@ -330,6 +411,28 @@ definitions:
       autoRelink:
         type: boolean
         description: Auto Relink
+
+  sessions:
+    type: object
+    required:
+        - creatorId
+        - type
+        - status
+    properties:
+      url:
+        type: string
+        description: session url
+      creatorId:
+        type: ObjectID
+        description: Creator Id
+      type:
+        type: string
+        enum: ['client', 'server']
+        description: session type
+      status:
+        type: string
+        enum: ['active', 'inactive']
+        description: session status
 
 schemes:
  - https
