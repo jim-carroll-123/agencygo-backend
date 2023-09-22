@@ -51,9 +51,13 @@ export class App {
       set('debug', true);
       set('strictQuery', false); // for remove the warning
     }
-    console.log(dbConnection.url);
-    await connect(dbConnection.url, dbConnection.options as ConnectOptions);
-    logger.info('Database connected');
+
+    try {
+      await connect(dbConnection.url, dbConnection.options as ConnectOptions);
+      logger.info('Connected to database');
+    } catch (err) {
+      logger.error('DB connection failed');
+    }
   }
 
   private initializeMiddlewares() {
