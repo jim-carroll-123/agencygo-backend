@@ -31,6 +31,12 @@ export class CreatorService {
 
     return deleteCreatorById;
   }
+  public async getCreator(creatorId: string): Promise<Creator> {
+    const getCreator: Creator = await CreatorModel.findById(creatorId);
+    if (!getCreator) throw new HttpException(404, 'Creator Not Found');
+
+    return getCreator;
+  }
 
   // get a creator by id
   public async getCreatorById(creatorId: string): Promise<Creator> {

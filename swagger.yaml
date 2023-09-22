@@ -3,6 +3,11 @@ tags:
   description: users API
 - name: employees
   description: employees API
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
 
 paths:
 # [GET] users
@@ -243,6 +248,27 @@ paths:
             description: 'Employee not found'
           500: 
             description: 'Something went wrong/Server Error'
+# [GET] get creator Detail by admin
+/api/creator/getCreatorByAdmin/{creatorId}:
+  get:
+    tags:
+      - creator
+    summary: Get Creator Details by Creator ID (Admin)
+    parameters:
+      - name: creatorId
+        in: path
+        description: Creator ID
+        required: true
+    security:
+        - BearerAuth: []
+    responses:
+      '200':
+        description: OK
+      '404':
+        description: Not Found - Creator Not Found
+      '500':
+        description: Server Error
+
 
 # definitions
 definitions:
@@ -279,6 +305,31 @@ definitions:
         type: string
         enum: ['manager', 'admin', 'chatter']
         description: 'employee role'
+  Creator:
+    type: object
+    required:
+      - creatorName
+      - gender
+    properties:
+      creatorName:
+        type: string
+        description: Creator Name
+      gender:
+        type: string
+        enum:
+          - Male
+          - Female
+          - Other
+        description: Gender
+      internalNotes:
+        type: string
+        description: Internal Notes
+      assignEmployee:
+        type: string
+        description: Assigned Employee (Employee ID)
+      autoRelink:
+        type: boolean
+        description: Auto Relink
 
 schemes:
  - https

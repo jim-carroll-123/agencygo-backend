@@ -40,6 +40,17 @@ export class CreatorController {
     }
   };
 
+  public getCreatorByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const creatorId: string = req.params.creatorId;
+      const creatorDetails: Creator = await this.creator.getCreator(creatorId);
+
+      res.status(200).json({ data: creatorDetails });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public loginOnlyfans = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorId: string = req.params.id;
