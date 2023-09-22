@@ -14,7 +14,7 @@ export class AgencyRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/:id`, ValidationMiddleware(CreateAgencyDto, 'body'), this.agency.createAgency);
+    this.router.post(`${this.path}/:id`, ValidationMiddleware(CreateAgencyDto, true), this.agency.createAgency);
     this.router.get(`${this.path}`, this.agency.getAgency);
   }
 }

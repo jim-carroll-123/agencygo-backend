@@ -16,7 +16,7 @@ import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 
 export class App {
-  public app: express.Application;
+  public app: express.Express;
   public env: string;
   public port: string | number;
 
@@ -38,6 +38,7 @@ export class App {
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
+      // logRoutes(this.app);
     });
   }
 

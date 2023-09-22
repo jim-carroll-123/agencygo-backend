@@ -3,6 +3,11 @@ tags:
   description: users API
 - name: employees
   description: employees API
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
 
 paths:
 # [GET] users
@@ -243,6 +248,108 @@ paths:
             description: 'Employee not found'
           500: 
             description: 'Something went wrong/Server Error'
+# [GET] get creator Detail by admin
+/api/creator/getCreatorByAdmin/{creatorId}:
+  get:
+    tags:
+      - creator
+    summary: Get Creator Details by Creator ID (Admin)
+    parameters:
+      - name: creatorId
+        in: path
+        description: Creator ID
+        required: true
+    security:
+        - BearerAuth: []
+    responses:
+      '200':
+        description: OK
+      '404':
+        description: Not Found - Creator Not Found
+      '500':
+        description: Server Error
+
+
+# [POST] sessions client
+  /sessions/client/{creatorId}:
+    post:
+      tags:
+      - sessions
+      summary: Add client session
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      - name: body
+        in: body
+        description: session file
+        required: true
+        schema:
+          type: formData
+          properties:
+            file:
+              type: string
+              description: session file
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+    get:
+      tags:
+      - sessions
+      summary: Get client session
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [POST] sessions server
+  /sessions/server/{creatorId}:
+    post:
+      tags:
+      - sessions
+      summary: Add server session
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      - name: body
+        in: body
+        description: session credentials
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: session email
+            password:
+              type: string
+              description: session password
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
 
 # definitions
 definitions:
@@ -279,6 +386,53 @@ definitions:
         type: string
         enum: ['manager', 'admin', 'chatter']
         description: 'employee role'
+  Creator:
+    type: object
+    required:
+      - creatorName
+      - gender
+    properties:
+      creatorName:
+        type: string
+        description: Creator Name
+      gender:
+        type: string
+        enum:
+          - Male
+          - Female
+          - Other
+        description: Gender
+      internalNotes:
+        type: string
+        description: Internal Notes
+      assignEmployee:
+        type: string
+        description: Assigned Employee (Employee ID)
+      autoRelink:
+        type: boolean
+        description: Auto Relink
+
+  sessions:
+    type: object
+    required:
+        - creatorId
+        - type
+        - status
+    properties:
+      url:
+        type: string
+        description: session url
+      creatorId:
+        type: ObjectID
+        description: Creator Id
+      type:
+        type: string
+        enum: ['client', 'server']
+        description: session type
+      status:
+        type: string
+        enum: ['active', 'inactive']
+        description: session status
 
 schemes:
  - https
