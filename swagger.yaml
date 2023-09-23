@@ -1,8 +1,11 @@
 tags:
-- name: users
-  description: users API
-- name: employees
-  description: employees API
+  - name: users
+    description: users API
+  - name: employees
+    description: employees API
+  - name: sessions
+    description: Session API
+
 securityDefinitions:
   BearerAuth:
     type: apiKey
@@ -10,11 +13,11 @@ securityDefinitions:
     in: header
 
 paths:
-# [GET] users
+  # [GET] users
   /users:
     get:
       tags:
-      - users
+        - users
       summary: Find All Users
       responses:
         200:
@@ -22,18 +25,18 @@ paths:
         500:
           description: 'Server Error'
 
-# [POST] users
+    # [POST] users
     post:
       tags:
-      - users
+        - users
       summary: Add User
       parameters:
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
+        - name: body
+          in: body
+          description: user Data
+          required: true
+          schema:
+            $ref: '#/definitions/users'
       responses:
         201:
           description: 'Created'
@@ -44,17 +47,17 @@ paths:
         500:
           description: 'Server Error'
 
-# [GET] users/id
+  # [GET] users/id
   /users/{id}:
     get:
       tags:
-      - users
+        - users
       summary: Find User By Id
       parameters:
-      - name: id
-        in: path
-        description: User Id
-        required: true
+        - name: id
+          in: path
+          description: User Id
+          required: true
       responses:
         200:
           description: 'OK'
@@ -63,22 +66,22 @@ paths:
         500:
           description: 'Server Error'
 
-# [PUT] users/id
+    # [PUT] users/id
     put:
       tags:
-      - users
+        - users
       summary: Update User By Id
       parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
+        - name: id
+          in: path
+          description: user Id
+          required: true
+        - name: body
+          in: body
+          description: user Data
+          required: true
+          schema:
+            $ref: '#/definitions/users'
       responses:
         200:
           description: 'OK'
@@ -89,16 +92,16 @@ paths:
         500:
           description: 'Server Error'
 
-# [DELETE] users/id
+    # [DELETE] users/id
     delete:
       tags:
-      - users
+        - users
       summary: Delete User By Id
       parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
+        - name: id
+          in: path
+          description: user Id
+          required: true
       responses:
         200:
           description: 'OK'
@@ -107,190 +110,190 @@ paths:
         500:
           description: 'Server Error'
 
-# [POST] employees
+  # [POST] employees
   /employee/{agencyId}:
     post:
       tags:
-      - employees
+        - employees
       summary: Add employee to agency Id
       parameters:
-      - name: agencyId
-        in: path
-        description: Agency Id
-        required: true
-      - name: body
-        in: body
-        description: employee Data
-        required: true
-        schema:
-          $ref: '#/definitions/employees'
-        responses:
-          200: 
-            description: 'OK'
-          404:
-            description: 'Agency not found'
-          409: 
-            description: 'User already registered'
-          500: 
-            description: 'Something went wrong/Server Error'
+        - name: agencyId
+          in: path
+          description: Agency Id
+          required: true
+        - name: body
+          in: body
+          description: employee Data
+          required: true
+          schema:
+            $ref: '#/definitions/employees'
+      responses:
+        200:
+          description: 'OK'
+        404:
+          description: 'Agency not found'
+        409:
+          description: 'User already registered'
+        500:
+          description: 'Something went wrong/Server Error'
 
-# [GET] Get employees of an agency
+  # [GET] Get employees of an agency
   /employees/{agencyId}:
     get:
-      tags: 
-      - employees
+      tags:
+        - employees
       summary: Get all employees of an agency
-      parameters: 
-      - name: agencyId
-        in: path
-        description: Agency Id
-        required: true
-        responses:
-          200: 
-            description: 'OK'
-          500: 
-            description: 'Something went wrong/Server Error'
+      parameters:
+        - name: agencyId
+          in: path
+          description: Agency Id
+          required: true
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Something went wrong/Server Error'
 
-# [GET] Get employee via the employeeId
+  # [GET] Get employee via the employeeId
   /employee/{employeeId}:
     get:
-      tags: 
-      - employees
+      tags:
+        - employees
       summary: Get specific employee
-      parameters: 
-      - name: employeeId
-        in: path
-        description: Employee Id
-        required: true
-        responses:
-          200: 
-            description: 'OK'
-          500: 
-            description: 'Something went wrong/Server Error'
+      parameters:
+        - name: employeeId
+          in: path
+          description: Employee Id
+          required: true
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Something went wrong/Server Error'
 
-# [PUT] employees
-  /employee/{employeeID}: #using ID - to be unique map.
+  # [PUT] employees
+  /employee/{employeeID}: # using ID - to be unique map.
     put:
       tags:
-      - employees
+        - employees
       summary: update employee details
       parameters:
-      - name: employeeID
-        in: path
-        description: employee ID
-        required: true
-      - name: body
-        in: body
-        description: employee Data
-        required: true
-        schema:
-          $ref: '#/definitions/employees'
-        responses:
-          200: 
-            description: 'OK'
-          404:
-            description: 'Employee not found'
-          500: 
-            description: 'Something went wrong/Server Error'
+        - name: employeeID
+          in: path
+          description: employee ID
+          required: true
+        - name: body
+          in: body
+          description: employee Data
+          required: true
+          schema:
+            $ref: '#/definitions/employees'
+      responses:
+        200:
+          description: 'OK'
+        404:
+          description: 'Employee not found'
+        500:
+          description: 'Something went wrong/Server Error'
 
-# [DEL] employees
+  # [DEL] employees
   /employee:
     delete:
-      tags: 
-      - employees
+      tags:
+        - employees
       summary: delete all employees whose ids are provided in body
       parameters:
-      - name: employeeIds
-        in: body
-        description: employeeIds in array
-        required: true
-        schema:
-          type: object
-          properties: 
-            employeeIds:
-              type: array
-              items:
-                type: string
-        responses:
-          200: 
-            description: 'OK'
-          404:
-            description: 'Employee not found'
-          500: 
-            description: 'Something went wrong/Server Error'
+        - name: employeeIds
+          in: body
+          description: employeeIds in array
+          required: true
+          schema:
+            type: object
+            properties:
+              employeeIds:
+                type: array
+                items:
+                  type: string
+      responses:
+        200:
+          description: 'OK'
+        404:
+          description: 'Employee not found'
+        500:
+          description: 'Something went wrong/Server Error'
 
-# [PUT] employees
-  /employee/role/{employeeID}: #using ID - to be unique map.
+  # [PUT] employees
+  /employee/role/{employeeID}: # using ID - to be unique map.
     put:
       tags:
-      - employees
+        - employees
       summary: assign employee role
       parameters:
-      - name: employeeID
-        in: path
-        description: employee ID
-        required: true
-      - name: body
-        in: body
-        description: Role Data
-        required: true
-        schema:
-          type: object
-          properties:
-            role:
-              type: string
-              items:
+        - name: employeeID
+          in: path
+          description: employee ID
+          required: true
+        - name: body
+          in: body
+          description: Role Data
+          required: true
+          schema:
+            type: object
+            properties:
+              role:
+                type: string
                 enum: ['chatter', 'manager', 'admin']
-        responses:
-          200: 
-            description: 'OK'
-          404:
-            description: 'Employee not found'
-          500: 
-            description: 'Something went wrong/Server Error'
-# [GET] get creator Detail by admin
-/api/creator/getCreatorByAdmin/{creatorId}:
-  get:
-    tags:
-      - creator
-    summary: Get Creator Details by Creator ID (Admin)
-    parameters:
-      - name: creatorId
-        in: path
-        description: Creator ID
-        required: true
-    security:
+      responses:
+        200:
+          description: 'OK'
+        404:
+          description: 'Employee not found'
+        500:
+          description: 'Something went wrong/Server Error'
+
+  # [GET] get creator Detail by admin
+  /creator/getCreatorByAdmin/{creatorId}:
+    get:
+      tags:
+        - creator
+      summary: Get Creator Details by Creator ID (Admin)
+      parameters:
+        - name: creatorId
+          in: path
+          description: Creator ID
+          required: true
+      security:
         - BearerAuth: []
-    responses:
-      '200':
-        description: OK
-      '404':
-        description: Not Found - Creator Not Found
-      '500':
-        description: Server Error
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found - Creator Not Found
+        '500':
+          description: Server Error
 
-
-# [POST] sessions client
+  # [POST] sessions client
   /sessions/client/{creatorId}:
     post:
       tags:
-      - sessions
+        - sessions
       summary: Add client session
       parameters:
-      - name: creatorId
-        in: path
-        description: Creator Id
-        required: true
-      - name: body
-        in: body
-        description: session file
-        required: true
-        schema:
-          type: formData
-          properties:
-            file:
-              type: string
-              description: session file
+        - name: creatorId
+          in: path
+          description: Creator Id
+          required: true
+        - name: body
+          in: body
+          description: session file
+          required: true
+          schema:
+            type: formData
+            properties:
+              file:
+                type: string
+                description: session file
+      responses:
         201:
           description: 'Created'
         400:
@@ -299,15 +302,16 @@ paths:
           description: 'Conflict'
         500:
           description: 'Server Error'
+
     get:
       tags:
-      - sessions
+        - sessions
       summary: Get client session
       parameters:
-      - name: creatorId
-        in: path
-        description: Creator Id
-        required: true
+        - name: creatorId
+          in: path
+          description: Creator Id
+          required: true
       responses:
         200:
           description: 'OK'
@@ -316,30 +320,30 @@ paths:
         500:
           description: 'Server Error'
 
-# [POST] sessions server
+  # [POST] sessions server
   /sessions/server/{creatorId}:
     post:
       tags:
-      - sessions
+        - sessions
       summary: Add server session
       parameters:
-      - name: creatorId
-        in: path
-        description: Creator Id
-        required: true
-      - name: body
-        in: body
-        description: session credentials
-        required: true
-        schema:
-          type: object
-          properties:
-            email:
-              type: string
-              description: session email
-            password:
-              type: string
-              description: session password
+        - name: creatorId
+          in: path
+          description: Creator Id
+          required: true
+        - name: body
+          in: body
+          description: session credentials
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: session email
+              password:
+                type: string
+                description: session password
       responses:
         201:
           description: 'Created'
@@ -349,15 +353,14 @@ paths:
           description: 'Conflict'
         500:
           description: 'Server Error'
-
 
 # definitions
 definitions:
   users:
     type: object
     required:
-        - email
-        - password
+      - email
+      - password
     properties:
       email:
         type: string
@@ -368,21 +371,21 @@ definitions:
 
   employees:
     type: object
-    required: 
-        - employeeEmail
-        - employeeName
-        - agencyId
+    required:
+      - employeeEmail
+      - employeeName
+      - agencyId
     properties:
-      employeeEmail: 
+      employeeEmail:
         type: string
         description: employee Email
-      employeeName: 
+      employeeName:
         type: string
         description: employee name
-      agencyId: 
+      agencyId:
         type: ObjectID
         description: Agency id
-      role: 
+      role:
         type: string
         enum: ['manager', 'admin', 'chatter']
         description: 'employee role'
@@ -415,9 +418,9 @@ definitions:
   sessions:
     type: object
     required:
-        - creatorId
-        - type
-        - status
+      - creatorId
+      - type
+      - status
     properties:
       url:
         type: string
@@ -435,5 +438,5 @@ definitions:
         description: session status
 
 schemes:
- - https
- - http
+  - https
+  - http
