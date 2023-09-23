@@ -3,6 +3,8 @@ tags:
     description: users API
   - name: employees
     description: employees API
+  - name: creators
+    description: creators API
   - name: sessions
     description: Session API
 
@@ -255,7 +257,7 @@ paths:
   /creator/getCreatorByAdmin/{creatorId}:
     get:
       tags:
-        - creator
+        - creators
       summary: Get Creator Details by Creator ID (Admin)
       parameters:
         - name: creatorId
@@ -271,7 +273,56 @@ paths:
           description: Not Found - Creator Not Found
         '500':
           description: Server Error
+  # [GET] get all creator by an admin
+  /creators:
+    get:
+      tags:
+        - creators
+      summary: Find All Creators
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+  # [POST] create a new creator
+    post:
+      tags:
+        - creators
+      summary: Create a new creator
+      parameters:
+        - name: body
+          in: body
+          description: Creator Data
+          required: true
+          schema:
+            $ref: '#/definitions/Creator'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        500:
+          description: 'Server Error'
 
+  # [DELETE] delete a creator by ID
+  /creators/{id}:
+    delete:
+      tags:
+        - creators
+      summary: Delete a creator by ID
+      parameters:
+        - name: id
+          in: path
+          description: Creator ID
+          required: true
+      responses:
+        200:
+          description: 'OK'
+        404:
+          description: 'Not Found - Creator Not Found'
+        500:
+          description: 'Server Error'  
+  
   # [POST] sessions client
   /sessions/client/{creatorId}:
     post:

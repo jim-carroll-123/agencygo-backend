@@ -6,7 +6,7 @@ import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 import { Router } from 'express';
 
 export class CreatorRoute implements Routes {
-  public path = '/creator';
+  public path = '/creators';
   public router = Router();
   public creator = new CreatorController();
 
