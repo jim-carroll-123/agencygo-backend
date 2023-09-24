@@ -12,7 +12,7 @@ export class CreatorController {
     try {
       const findAllCreatorsData: Creator[] = await this.creator.getCreators();
 
-      res.status(200).json({ data: findAllCreatorsData, message: 'findAll' });
+      res.status(200).json({ data: findAllCreatorsData, message: 'success' });
     } catch (error) {
       next(error);
     }
