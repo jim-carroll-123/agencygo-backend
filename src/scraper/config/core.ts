@@ -8,7 +8,7 @@ puppeteer.use(StealthPlugin());
 export const getBrowserInstance = async (userDataDir?: string) => {
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
-    headless: true,
+    headless: false,
     args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
     executablePath: executablePath(),
   };

@@ -6,6 +6,14 @@ const SessionSchema: Schema<Session> = new Schema({
     type: String,
     default: '',
   },
+  key: {
+    type: String,
+    default: '',
+  },
+  bucket: {
+    type: String,
+    default: '',
+  },
   creatorId: {
     type: Schema.Types.ObjectId,
     ref: 'Creator',
