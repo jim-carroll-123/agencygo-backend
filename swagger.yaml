@@ -532,7 +532,7 @@ definitions:
         enum: ['active', 'inactive']
         description: session status
 
-Proxy:
+  Proxy:
     type: object
     required:
       - proxy_id
