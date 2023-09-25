@@ -405,6 +405,50 @@ paths:
         500:
           description: 'Server Error'
 
+# [POST] creator/assign-proxy/{creatorId}
+  /creators/assign-proxy/{creatorId}:
+    post:
+      tags:
+        - proxy
+      summary: Generate a Proxy for a Creator
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator Id
+        required: true
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found - Creator Not Found
+        '500':
+          description: Server Error
+
+# [GET] creator/get-proxy/{creatorId}
+  /creators/get-proxy/{creatorId}:
+    get:
+      tags:
+      - proxy
+      summary: Get Proxy Information by Creator ID
+      parameters:
+      - name: creatorId
+        in: path
+        description: Creator ID
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Proxy'
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict - Proxy doesn't exist
+        '500':
+          description: Server Error
+
 # definitions
 definitions:
   users:
@@ -487,6 +531,50 @@ definitions:
         type: string
         enum: ['active', 'inactive']
         description: session status
+
+Proxy:
+    type: object
+    required:
+      - proxy_id
+      - creator
+      - proxyAddress
+      - port
+      - valid
+      - username
+      - password
+    properties:
+      proxy_id:
+        type: string
+        description: Proxy ID
+      creator:
+        type: string
+        format: ObjectId
+        description: Creator ID
+      proxyAddress:
+        type: string
+        description: Proxy Address
+      port:
+        type: integer
+        format: int32
+        description: Proxy Port
+      valid:
+        type: boolean
+        description: Validity of the Proxy
+      username:
+        type: string
+        description: Proxy Username
+      password:
+        type: string
+        description: Proxy Password
+      country:
+        type: string
+        description: Country
+      city:
+        type: string
+        description: City
+      createdAt:
+        type: string
+        description: Creation Date
 
 schemes:
   - https
