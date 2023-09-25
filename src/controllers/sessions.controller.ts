@@ -4,21 +4,25 @@ import { CreatorService } from '@/services/creator.service';
 import { SessionsService } from '@/services/sessions.service';
 import { NextFunction, Request, Response } from 'express';
 import Container, { Service } from 'typedi';
-import fs from 'fs';
+import { StorageService } from '@/services/storage.service';
 
 @Service()
 export class SessionsController {
   private login = Container.get(LoginBotService);
   private creator = Container.get(CreatorService);
   private session = Container.get(SessionsService);
+  private storage = Container.get(StorageService);
 
   public createSessionClient = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorId: string = req.params.id;
       const fileSession = req.file;
       const creator = await this.creator.getCreatorById(creatorId);
+      const result = await this.storage.uploadFile(fileSession.buffer, `client-${creatorId}.zip`, true);
       const payload: Session = {
-        url: fileSession.path,
+        url: result.Location,
+        key: result.Key,
+        bucket: result.Bucket,
         creatorId: creator._id,
         type: SessionType.Client,
         status: SessionStatus.Active,
@@ -52,11 +56,11 @@ export class SessionsController {
     try {
       const creatorId: string = req.params.id;
       const sessions = await this.session.getSessionByCreatorId(creatorId, SessionType.Client);
-      const file = fs.readFileSync(sessions.url);
+      const file = await this.storage.getFile(sessions.key, sessions.bucket);
       const fileName = `${creatorId}.zip`;
       res.setHeader('Content-Type', 'application/zip');
       res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
-      res.send(file);
+      res.status(200).send(file.Body);
     } catch (error) {
       next(error);
     }

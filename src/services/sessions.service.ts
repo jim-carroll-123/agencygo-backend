@@ -1,10 +1,13 @@
 import { HttpException } from '@/exceptions/httpException';
 import { Session, SessionStatus, SessionType } from '@/interfaces/sessions.interface';
 import { SessionModel } from '@/models/sessions.model';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
+import { StorageService } from './storage.service';
+import fs from 'fs';
 
 @Service()
 export class SessionsService {
+  private storage = Container.get(StorageService);
   // get sessions by creatorId and type
   public async getSessionByCreatorId(creatorId: string, type: SessionType) {
     try {
@@ -30,7 +33,20 @@ export class SessionsService {
       if (session.length > 0) {
         // delete old session
         session?.forEach(async element => {
-          await SessionModel.findByIdAndDelete(element._id);
+          await SessionModel.findByIdAndDelete(element._id, {}, (err, doc) => {
+            if (!err && doc) {
+              if (doc.key && doc.bucket) {
+                console.log('deleting file');
+                this.storage.deleteFile(doc.key, doc.bucket);
+              }
+              if (doc.type === SessionType.Server) {
+                const isPathExist = fs.existsSync(`./temp/${doc._id}`);
+                if (isPathExist) {
+                  fs.rmSync(`./temp/${doc._id}`, { recursive: true });
+                }
+              }
+            }
+          });
         });
       }
       const createdSession = new SessionModel(sessionData);
@@ -44,23 +60,37 @@ export class SessionsService {
   }
 
   // active session server
-  public async activeSessionServer(sessionId: string, url: string) {
+  public async activeSessionServer(sessionId: string, file: Buffer | Blob, cleanUp: () => void) {
     try {
       const session = await SessionModel.findOne({ _id: sessionId });
       if (!session) throw new HttpException(409, "Sessions doesn't exist");
-      await SessionModel.findByIdAndUpdate(
-        {
-          _id: session._id,
-        },
-        {
-          status: SessionStatus.Active,
-          url,
-        },
-        {
-          new: true,
-        },
-      );
+      const cloudFile = await this.storage.uploadFile(file, `server-${sessionId}.zip`, true);
+      const newSession: Session = await new Promise((resolve, reject) => {
+        SessionModel.findByIdAndUpdate(
+          {
+            _id: session._id,
+          },
+          {
+            status: SessionStatus.Active,
+            url: cloudFile.Location,
+            key: cloudFile.Key,
+            bucket: cloudFile.Bucket,
+          },
+          {
+            new: true,
+          },
+          (err, doc) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(doc);
+          },
+        );
+      });
+      cleanUp();
+      return newSession;
     } catch (error) {
+      cleanUp();
       if (error.name === 'ValidationError') {
         throw new HttpException(400, error.message);
       }

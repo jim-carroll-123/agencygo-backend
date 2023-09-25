@@ -121,6 +121,21 @@ export class LoginBotService {
             }
             resolver(1);
           }),
+          new Promise(async resolver => {
+            // check is button login not disabled
+            const exist = await page.$('button[at-attr="submit"][type="submit"]');
+            if (!exist) {
+              await new Promise(r => setTimeout(r, TIMEOUT_BASE));
+            }
+            const button = await page.$('button[at-attr="submit"][type="submit"]');
+            if (button) {
+              const isDisabled = await page.evaluate(el => el.disabled, button);
+              if (!isDisabled) {
+                await this.clickLogin(page);
+              }
+            }
+            resolver(1);
+          }),
         ]);
       }
     } catch (error) {
@@ -152,9 +167,14 @@ export class LoginBotService {
     const archive = archiver('zip');
     archive.pipe(outputZipStream);
     archive.directory(folderToZip, false);
+    console.log('zipping session');
     await archive.finalize();
-    const fullPath = fs.realpathSync(outputZipFilePath);
-    await this.sesions.activeSessionServer(id, fullPath);
+    const file = fs.readFileSync(outputZipFilePath);
+    console.log('uploading session');
+    await this.sesions.activeSessionServer(id, file, () => {
+      console.log('cleaning up');
+      fs.unlinkSync(outputZipFilePath);
+    });
   }
 
   public async unzipSession(zipFilePath: string, id: string) {
