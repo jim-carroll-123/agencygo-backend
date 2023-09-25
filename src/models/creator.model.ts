@@ -23,6 +23,11 @@ const CreatorSchema: Schema<Creator> = new Schema({
     type: Boolean,
     default: false,
   },
+  proxy: {
+    type: Schema.Types.ObjectId,
+    ref: 'Proxy',
+    default: null,
+  },
 });
 
 export const CreatorModel = model<Creator & Document>('Creator', CreatorSchema);

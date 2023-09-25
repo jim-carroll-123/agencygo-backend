@@ -1,5 +1,6 @@
 import { Creator } from '@/interfaces/creator.interface';
 import { LoginBotService } from '@/scraper/services/login.service';
+import { IProxy } from '@interfaces/proxy.interface';
 import { CreatorService } from '@/services/creator.service';
 import { NextFunction, Request, Response } from 'express';
 import Container from 'typedi';
@@ -63,6 +64,26 @@ export class CreatorController {
       );
 
       res.status(200).json({ data: {}, message: 'creator logged in, session valid' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public generateProxy = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const creatorId: string = req.params.creatorId;
+      const proxyAddress = await this.creator.createProxy(creatorId);
+      res.status(200).json({ proxy: proxyAddress });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getProxyByCreator = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const creatorId: string = req.params.creatorId;
+      const findProxy: IProxy = await this.creator.getProxy(creatorId);
+      res.status(200).json({ data: findProxy });
     } catch (error) {
       next(error);
     }
