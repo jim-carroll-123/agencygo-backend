@@ -25,4 +25,15 @@ export class AgencyController {
       next(error);
     }
   };
+
+  public updateAgency = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const agencyId = req.params.agencyId;
+      const agencyData: Agency = req.body;
+      const updatedAgency = await this.agency.updateAgency(agencyId, agencyData);
+      res.status(200).json({ data: updatedAgency, message: 'Agency updated successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
