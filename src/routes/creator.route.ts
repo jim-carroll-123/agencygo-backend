@@ -6,7 +6,7 @@ import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 import { Router } from 'express';
 
 export class CreatorRoute implements Routes {
-  public path = '/creator';
+  public path = '/creators';
   public router = Router();
   public creator = new CreatorController();
 
@@ -18,6 +18,8 @@ export class CreatorRoute implements Routes {
     this.router.get(`${this.path}`, this.creator.getCreators);
     this.router.post(`${this.path}`, ValidationMiddleware(CreatorDTO), this.creator.createCreator);
     this.router.get(`${this.path}/getCreatorByAdmin/:creatorId`, AuthMiddleware, isAdminMiddleware, this.creator.getCreatorByAdmin);
+    this.router.post(`${this.path}/assign-proxy/:creatorId`, this.creator.generateProxy);
+    this.router.get(`${this.path}/get-proxy/:creatorId`, this.creator.getProxyByCreator);
     this.router.delete(`${this.path}/:id`, this.creator._deleteCreator);
   }
 }
