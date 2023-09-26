@@ -29,4 +29,11 @@ export class AgencyService {
     const agency: Agency[] = await AgencyModel.find();
     return agency;
   }
+
+  public async deleteAgency(agencyId: string): Promise<Agency> {
+    const deleteAgencyById: Agency = await AgencyModel.findByIdAndDelete(agencyId);
+    if (!deleteAgencyById) throw new HttpException(404, "Agency doesn't exist");
+
+    return deleteAgencyById;
+  }
 }
