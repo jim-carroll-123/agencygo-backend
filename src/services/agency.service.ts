@@ -29,4 +29,22 @@ export class AgencyService {
     const agency: Agency[] = await AgencyModel.find();
     return agency;
   }
+
+  public async updateAgency(agencyId: string, agencyData: Partial<Agency>) {
+    try {
+      const updatedAgency = await AgencyModel.findByIdAndUpdate(
+        { _id: agencyId },
+        {
+          $set: agencyData,
+        },
+        { new: true },
+      );
+      return updatedAgency;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, 'Something went wrong');
+    }
+  }
 }
