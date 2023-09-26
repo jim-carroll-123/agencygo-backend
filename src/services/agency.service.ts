@@ -30,21 +30,21 @@ export class AgencyService {
     return agency;
   }
 
-  public async updateAgency(agencyId: string, agencyData: Partial<Agency>) {
+  public updateAgency = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updatedAgency = await AgencyModel.findByIdAndUpdate(
-        { _id: agencyId },
-        {
-          $set: agencyData,
-        },
-        { new: true },
-      );
-      return updatedAgency;
+      const agencyId = req.params.agencyId;
+      const agencyData: Agency = req.body;
+      const updatedAgency = await this.agency.updateAgency(agencyId, agencyData);
+      res.status(200).json({ data: updatedAgency, message: 'Agency updated successfully' });
     } catch (error) {
-      if (error.status) {
-        throw error;
-      }
-      throw new HttpException(500, 'Something went wrong');
+      next(error);
     }
+  };
+
+  public async deleteAgency(agencyId: string): Promise<Agency> {
+    const deleteAgencyById: Agency = await AgencyModel.findByIdAndDelete(agencyId);
+    if (!deleteAgencyById) throw new HttpException(404, "Agency doesn't exist");
+
+    return deleteAgencyById;
   }
 }

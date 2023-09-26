@@ -36,4 +36,14 @@ export class AgencyController {
       next(error);
     }
   };
+
+  public deleteAgency = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const agencyId = req.params.agencyId;
+      const deleteAgencyData: Agency = await this.agency.deleteAgency(agencyId);
+      res.status(200).json({ data: deleteAgencyData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

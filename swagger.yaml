@@ -451,6 +451,24 @@ paths:
         '500':
           description: Server Error
 
+#[DELETE] /agency/delete-agency/:agencyId
+  /agency/delete-agency/:agencyId:
+    delete:
+      tags:
+        - agency
+      summary: Delete Agency By ID
+      parameters:
+        - name: agencyId
+          in: path
+          description: agencyId
+          required: true
+      responses:
+        200:
+          description: 'OK'
+        404:
+          description: 'Agency Not Found'
+        500:
+          description: 'Server Error' 
 # [GET] agencies
   /agency:
     get:
