@@ -7,6 +7,8 @@ tags:
     description: creators API
   - name: sessions
     description: Session API
+  - name: agency
+    description: agency API
 
 securityDefinitions:
   BearerAuth:
@@ -467,6 +469,72 @@ paths:
           description: 'Agency Not Found'
         500:
           description: 'Server Error' 
+# [GET] agencies
+  /agency:
+    get:
+      tags:
+        - agency
+      summary: Find All Agency
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Server Error
+
+#[POST] agencies
+  /agency/{id}:
+    post:
+      tags:
+        - agency
+      summary: Add agency 
+      parameters: 
+        - name: id
+          in: path
+          description: user Id
+          required: true
+        - name: body
+          in: body
+          description: agency Data
+          required: true
+          schema:
+            $ref: '#/definitions/Agency'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'  
+        500:
+          description: 'Server Error'
+
+#[patch] agency/:agencyId
+  /agency/update-agency/{agencyId}:
+    patch:
+      tags:
+        - agency
+      summary: Update agency By Id
+      parameters:
+        - name: agencyId
+          in: path
+          description: agency Id
+          required: true
+        - name: body
+          in: body
+          description: agency Data
+          required: true
+          schema:
+            $ref: '#/definitions/Agency'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
 
 # definitions
 definitions:
@@ -594,6 +662,31 @@ definitions:
       createdAt:
         type: string
         description: Creation Date
+
+  Agency:
+    type: object
+    required:
+      - userId
+      - agencyName
+      - numberOfCreators
+      - websiteUrl
+      - socialMediaLink
+    properties:
+      userId:
+        type: ObjectID
+        description: User ID associated with the agency
+      agencyName:
+        type: string
+        description: Name of the agency
+      numberOfCreators:
+        type: integer
+        description: Number of creators in the agency
+      websiteUrl:
+        type: string
+        description: Website URL of the agency
+      socialMediaLink:
+        type: string
+        description: Social media link of the agency
 
 schemes:
   - https
