@@ -13,3 +13,12 @@ export interface TokenData {
 export interface RequestWithUser extends Request {
   user: User;
 }
+
+export interface RequestSignUp {
+  email: string;
+  agencyName: string;
+  numberOfCreators: number;
+  agencyWebsite: string;
+  agencyMediaSocial: string;
+  password: string;
+}

@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { EmployeeService } from '@/services/employee.service';
-import { User } from '@/interfaces/users.interface';
+import { Employee, EmployeeCreate, EmployeeUpdate } from '@/interfaces/employee.interface';
 
 export class EmployeeController {
   public employee = Container.get(EmployeeService);
   // create employee
   public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const employeeData: User = req.body;
+      const employeeData: EmployeeCreate = req.body;
       const agencyId = req.params.id;
-      const createEmployeeData: Partial<User> = await this.employee.createEmployee(employeeData, agencyId);
+      const createEmployeeData: Employee = await this.employee.createEmployee(employeeData, agencyId);
 
       res.status(201).json({ data: createEmployeeData, message: 'Employee created successfully' });
     } catch (error) {
@@ -44,7 +44,7 @@ export class EmployeeController {
   public updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employeeId = req.params.employeeId;
-      const employeeData: User = req.body;
+      const employeeData: EmployeeUpdate = req.body;
       const updatedEmployee = await this.employee.updateEmployee(employeeId, employeeData);
       res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
     } catch (error) {
@@ -52,14 +52,11 @@ export class EmployeeController {
     }
   };
 
-  // delete employees in batch
-  public deleteEmployees = async (req: Request, res: Response, next: NextFunction) => {
+  // delete employee by id
+  public deleteEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const employeeIds = req.body.employeeIds;
-      const deletedEmployees = await this.employee.deleteEmployees(employeeIds);
-      if (!deletedEmployees.deletedCount) {
-        return res.status(404).json({ message: 'Invalid employee id' });
-      }
+      const employeeId = req.params.employeeId;
+      await this.employee.deleteEmployee(employeeId);
       res.status(200).json({ success: true, message: 'Employee deleted successfully' });
     } catch (error) {
       next(error);

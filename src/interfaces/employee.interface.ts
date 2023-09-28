@@ -6,11 +6,29 @@ enum Role {
   Manager = 'manager',
 }
 
+enum Status {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
 export interface Employee {
-  firstName: string;
-  lastName: string;
-  agencyId: Types.ObjectId;
+  name: string;
   email: string;
-  isEmployee: boolean;
+  agencyId: Types.ObjectId;
   role: Role;
+  userId: Types.ObjectId;
+  status: Status;
+}
+
+export interface EmployeeCreate {
+  name: string;
+  email: string;
+  role: Role;
+}
+
+export interface EmployeeUpdate {
+  name: string;
+  email: string;
+  role: Role;
+  agencyId: Types.ObjectId;
 }

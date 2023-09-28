@@ -30,14 +30,20 @@ export class AgencyService {
     return agency;
   }
 
-  public updateAgency = async (req: Request, res: Response, next: NextFunction) => {
+  public updateAgency = async (id: string, data: Agency) => {
     try {
-      const agencyId = req.params.agencyId;
-      const agencyData: Agency = req.body;
-      const updatedAgency = await this.agency.updateAgency(agencyId, agencyData);
-      res.status(200).json({ data: updatedAgency, message: 'Agency updated successfully' });
+      const newAgency: Agency = await AgencyModel.findByIdAndUpdate(
+        {
+          _id: id,
+        },
+        data,
+        {
+          new: true,
+        },
+      );
+      return newAgency;
     } catch (error) {
-      next(error);
+      throw error;
     }
   };
 

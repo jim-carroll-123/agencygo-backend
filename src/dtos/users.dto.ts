@@ -1,14 +1,24 @@
-import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsNumber } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  public firstName;
+  @IsNotEmpty()
+  public email: string;
 
   @IsString()
-  public lastName;
+  @IsNotEmpty()
+  public agencyName: string;
 
-  @IsEmail()
-  public email: string;
+  @IsNumber()
+  @IsNotEmpty()
+  public numberOfCreators: number;
+
+  @IsString()
+  @IsNotEmpty()
+  public agencyWebsite: string;
+
+  @IsString()
+  public agencyMediaSocial: string;
 
   @IsString()
   @IsNotEmpty()

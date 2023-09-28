@@ -1,5 +1,5 @@
 import { Session, SessionStatus, SessionType } from '@/interfaces/sessions.interface';
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const SessionSchema: Schema<Session> = new Schema({
   url: {
@@ -31,4 +31,4 @@ const SessionSchema: Schema<Session> = new Schema({
   },
 });
 
-export const SessionModel = model<Session & Document>('Session', SessionSchema);
+export const SessionModel = model<Session>('Session', SessionSchema);
