@@ -2,11 +2,11 @@ import { Employee } from '@/interfaces/employee.interface';
 import { Schema, model, Document } from 'mongoose';
 
 const EmployeeSchema: Schema<Employee> = new Schema({
-  employeeName: {
+  name: {
     type: String,
     required: true,
   },
-  employeeEmail: {
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -25,6 +25,14 @@ const EmployeeSchema: Schema<Employee> = new Schema({
   role: {
     type: String,
     enum: ['admin', 'chatter', 'manager'],
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'users',
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
   },
 });
 

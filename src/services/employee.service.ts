@@ -1,39 +1,53 @@
-import { Types } from 'mongoose';
 import { Service } from 'typedi';
 import { EmployeeModel } from '@/models/employee.model';
 import { HttpException } from '@/exceptions/httpException';
 import { AgencyModel } from '@/models/agency.model';
 import { UserModel } from '@/models/users.model';
-import { User } from '@/interfaces/users.interface';
+import { Employee, EmployeeCreate, EmployeeUpdate } from '@/interfaces/employee.interface';
+import { hash } from 'bcrypt';
 
 @Service()
 export class EmployeeService {
   // create employee
-  public async createEmployee(employeeData: User, agencyId: string): Promise<Partial<User>> {
+  public async createEmployee(employeeData: EmployeeCreate, agencyId: string): Promise<Employee> {
     try {
       const agency = await AgencyModel.findOne({ _id: agencyId });
       if (!agency) {
         throw new HttpException(404, 'Agency not found');
       }
-      const user = await UserModel.findOne({ email: employeeData.email });
-      if (user) {
+      const employeeExist = await EmployeeModel.findOne({ email: employeeData.email, agencyId: agencyId });
+      if (employeeExist) {
         throw new HttpException(409, `User already registered`);
       }
-      Object.assign(employeeData, { isEmployee: true });
-      if (employeeData.role) {
-        delete employeeData.role;
+      let user = await UserModel.findOne({ email: employeeData.email });
+      if (!user) {
+        // temp default password for development
+        const hashedPassword = await hash('development', 10);
+        const payload = {
+          firstName: employeeData.name,
+          lastName: '',
+          email: employeeData.email,
+          password: hashedPassword,
+          isEmployee: true,
+          role: employeeData.role,
+          agencyId: agencyId,
+        };
+        user = await UserModel.create(payload);
       }
-      // create the employee with agency id
-      const newEmployee = new UserModel({
-        ...employeeData,
-        agencyId: new Types.ObjectId(agencyId),
+      const employee = await EmployeeModel.create({
+        name: employeeData.name,
+        email: employeeData.email,
+        agencyId: agencyId,
+        role: employeeData.role,
+        userId: user._id,
+        status: 'active',
       });
-      // save the employee
-      return await newEmployee.save();
+      return employee;
     } catch (error) {
       if (error.status) {
         throw error;
       }
+      console.log(error?.message || error?.msg);
       throw new HttpException(500, 'Something went wrong');
     }
   }
@@ -41,7 +55,8 @@ export class EmployeeService {
   // get all employees of a agency
   public async getAgencyEmployees(agencyId: string) {
     try {
-      const employees = await UserModel.find({ agencyId: agencyId }).lean();
+      const employees = await EmployeeModel.find({ agencyId: agencyId });
+      console.log(employees);
       return employees;
     } catch (error) {
       if (error.status) {
@@ -65,24 +80,17 @@ export class EmployeeService {
   }
 
   // update employee by an employee id
-  public async updateEmployee(employeeId: string, employeeData: Partial<User>) {
+  public async updateEmployee(employeeId: string, employeeData: EmployeeUpdate) {
     try {
-      if (employeeData.role) {
-        delete employeeData.role;
-      }
-      const updatedEmployee = await UserModel.findByIdAndUpdate(
-        {
-          _id: employeeId,
+      const employee = await EmployeeModel.findByIdAndUpdate(employeeId, {
+        $set: {
+          name: employeeData.name,
+          email: employeeData.email,
+          role: employeeData.role,
+          agencyId: employeeData.agencyId,
         },
-        {
-          $set: employeeData,
-          $inc: { __v: 1 },
-        },
-        {
-          new: true,
-        },
-      );
-      return updatedEmployee;
+      });
+      return employee;
     } catch (error) {
       if (error.status) {
         throw error;
@@ -91,13 +99,11 @@ export class EmployeeService {
     }
   }
 
-  // delete employees in a batch
-  public async deleteEmployees(employeeIds: [string]) {
+  // delete employees by employee id
+  public async deleteEmployee(employeeId: string) {
     try {
-      const deletedEmployees = await UserModel.deleteMany({
-        _id: { $in: employeeIds },
-      });
-      return deletedEmployees;
+      const deleteEmployee = await EmployeeModel.findByIdAndDelete(employeeId);
+      return deleteEmployee;
     } catch (error) {
       if (error.status) {
         throw error;

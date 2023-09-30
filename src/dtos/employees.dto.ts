@@ -8,10 +8,27 @@ enum Role {
 
 export class CreateEmployeeDto {
   @IsString()
-  public employeeName;
+  public name: string;
 
   @IsEmail()
-  public employeeEmail;
+  public email: string;
+
+  @IsString()
+  public role: Role;
+}
+
+export class UpdateEmployeeDto {
+  @IsString()
+  public name: string;
+
+  @IsEmail()
+  public email: string;
+
+  @IsString()
+  public role: Role;
+
+  @IsString()
+  public agencyId: string;
 }
 
 export class AssignRoleDto {

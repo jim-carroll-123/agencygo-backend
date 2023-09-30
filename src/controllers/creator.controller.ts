@@ -30,6 +30,17 @@ export class CreatorController {
     }
   };
 
+  public updateCreator = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = req.params.id;
+      const creatorData: Creator = req.body;
+      const updateCreatorData: Creator = await this.creator.updateCreator(id, creatorData);
+      res.status(201).json({ data: updateCreatorData, message: 'creator updated successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public _deleteCreator = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorId: string = req.params.id;
