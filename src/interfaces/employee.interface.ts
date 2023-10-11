@@ -31,4 +31,5 @@ export interface EmployeeUpdate {
   email: string;
   role: Role;
   agencyId: Types.ObjectId;
+  status:string
 }

@@ -88,6 +88,7 @@ export class EmployeeService {
           email: employeeData.email,
           role: employeeData.role,
           agencyId: employeeData.agencyId,
+          status:employeeData.status
         },
       });
       return employee;
