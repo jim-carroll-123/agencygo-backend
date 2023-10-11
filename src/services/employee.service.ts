@@ -7,7 +7,7 @@ import { Employee, EmployeeCreate, EmployeeUpdate } from '@/interfaces/employee.
 import{Emails} from '@utils/email'
 import { hash } from 'bcrypt';
 import {Email} from '@/interfaces/common.interface'
-import {generateEmailTemplate}from '../template/activateEmployee'
+import {generateEmailTemplateForActivation}from '../template/activateEmployee'
 
 @Service()
 export class EmployeeService {
@@ -46,7 +46,7 @@ export class EmployeeService {
         status: 'active',
       });
 
-      let template= generateEmailTemplate(employee,agency.agencyName)
+      let template= generateEmailTemplateForActivation(employee,agency.agencyName)
       let emailData:Email={
         to:employee.email,
         subject:"Activate Employee Account",
