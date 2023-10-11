@@ -1,6 +1,6 @@
 
 import { URL } from "../config/index";
-export const generateEmailTemplate = (body:any) => {
+export const generateEmailTemplateForResetPassword = (body:any) => {
   const { _id:id,email } = body;
 const resetPasswordTemplate = `
 <!DOCTYPE html>

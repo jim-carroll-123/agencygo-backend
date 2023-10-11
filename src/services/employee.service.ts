@@ -46,7 +46,7 @@ export class EmployeeService {
         status: 'active',
       });
 
-      let template= generateEmailTemplate(employee,null)
+      let template= generateEmailTemplate(employee,agency.agencyName)
       let emailData:Email={
         to:employee.email,
         subject:"Activate Employee Account",

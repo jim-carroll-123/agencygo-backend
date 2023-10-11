@@ -1,6 +1,6 @@
 
 import { URL } from "../config/index";
-export const generateEmailTemplate = (body:any,agencyName:string) => {
+export const generateEmailTemplateForActivation = (body:any,agencyName:string) => {
   const { _id:id } = body;
   const activateAccountTemplate = `
 <!DOCTYPE html>
