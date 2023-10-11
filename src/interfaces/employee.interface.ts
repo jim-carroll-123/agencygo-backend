@@ -18,6 +18,7 @@ export interface Employee {
   role: Role;
   userId: Types.ObjectId;
   status: Status;
+  password:string;
 }
 
 export interface EmployeeCreate {
@@ -31,4 +32,6 @@ export interface EmployeeUpdate {
   email: string;
   role: Role;
   agencyId: Types.ObjectId;
+  password:string,
+  status:Status
 }

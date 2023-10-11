@@ -6,6 +6,9 @@ const EmployeeSchema: Schema<Employee> = new Schema({
     type: String,
     required: true,
   },
+password:{
+type:String,
+},
   email: {
     type: String,
     required: true,
@@ -34,6 +37,7 @@ const EmployeeSchema: Schema<Employee> = new Schema({
     type: String,
     enum: ['active', 'inactive'],
   },
+
 });
 
 export const EmployeeModel = model<Employee & Document>('employee', EmployeeSchema);
