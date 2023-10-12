@@ -25,6 +25,7 @@ export class EmployeeRoute implements Routes {
       ValidationMiddleware(UpdateEmployeeDto),
       this.employee.updateEmployee,
     );
+
     this.router.delete(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.deleteEmployee);
     this.router.put(
       `${this.path}/role/:employeeId`,

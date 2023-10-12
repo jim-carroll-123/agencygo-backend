@@ -4,7 +4,10 @@ import { HttpException } from '@/exceptions/httpException';
 import { AgencyModel } from '@/models/agency.model';
 import { UserModel } from '@/models/users.model';
 import { Employee, EmployeeCreate, EmployeeUpdate } from '@/interfaces/employee.interface';
+import{Emails} from '@utils/email'
 import { hash } from 'bcrypt';
+import {Email} from '@/interfaces/common.interface'
+import {generateEmailTemplateForActivation}from '../template/activateEmployee'
 
 @Service()
 export class EmployeeService {
@@ -42,6 +45,14 @@ export class EmployeeService {
         userId: user._id,
         status: 'active',
       });
+
+      let template= generateEmailTemplateForActivation(employee,agency.agencyName)
+      let emailData:Email={
+        to:employee.email,
+        subject:"Activate Employee Account",
+        template:template
+      }
+      await new Emails().sendEmail(emailData)
       return employee;
     } catch (error) {
       if (error.status) {
@@ -82,13 +93,15 @@ export class EmployeeService {
   // update employee by an employee id
   public async updateEmployee(employeeId: string, employeeData: EmployeeUpdate) {
     try {
+      const hashedPassword = await hash(employeeData.password, 10);
       const employee = await EmployeeModel.findByIdAndUpdate(employeeId, {
         $set: {
           name: employeeData.name,
           email: employeeData.email,
           role: employeeData.role,
           agencyId: employeeData.agencyId,
-          status:employeeData.status
+          status:employeeData.status,
+          password:hashedPassword
         },
       });
       return employee;
