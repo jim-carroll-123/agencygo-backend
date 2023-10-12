@@ -14,11 +14,10 @@ const CreatorSchema: Schema<Creator> = new Schema({
   internalNotes: {
     type: String,
   },
-  assignEmployee: {
+  assignEmployee: [{
     type: Schema.Types.ObjectId,
     ref: 'Employee',
-    default: null,
-  },
+  }],
   autoRelink: {
     type: Boolean,
     default: false,

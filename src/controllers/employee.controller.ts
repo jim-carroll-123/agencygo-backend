@@ -73,4 +73,15 @@ export class EmployeeController {
       next(error);
     }
   };
+
+  public searchEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const queryData = req.query;
+      console.log(queryData,"000000000000000000000000000000")
+      const employee = await this.employee.getEmployees(queryData);
+      res.status(200).json({ data: employee, message: 'Employee fetched successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

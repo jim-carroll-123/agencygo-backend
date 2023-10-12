@@ -25,6 +25,7 @@ export interface EmployeeCreate {
   name: string;
   email: string;
   role: Role;
+  creator:Types.ObjectId
 }
 
 export interface EmployeeUpdate {
