@@ -1,6 +1,8 @@
 import puppeteer from 'puppeteer-extra';
 import { Page, executablePath } from 'puppeteer';
 import path from 'path';
+import { getProxyUser } from './proxy';
+import pluginProxy from 'puppeteer-extra-plugin-proxy';
 
 const login = async (page: Page) => {
   // await new Promise((r) => setTimeout(r, 15000));
@@ -81,14 +83,28 @@ const login = async (page: Page) => {
 };
 
 const main = async () => {
+  const proxyUser = await getProxyUser();
+  puppeteer.use(
+    pluginProxy({
+      address: proxyUser.proxy_address,
+      port: proxyUser.port,
+      credentials: {
+        username: proxyUser.username,
+        password: proxyUser.password,
+      },
+    }),
+  );
+
   const pathToExtension = path.join(__dirname, './extensions/2captcha-solver');
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
     executablePath: executablePath(),
+    userDataDir: './temp',
   });
   const page = await browser.newPage();
-  await login(page);
+  page.goto('https://iproyal.com/ip-lookup');
+  // await login(page);
   // browser.close();
 };
 
