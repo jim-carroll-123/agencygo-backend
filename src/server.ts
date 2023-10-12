@@ -7,9 +7,18 @@ import { AgencyRoute } from '@routes/agency.route';
 import { CreatorRoute } from './routes/creator.route';
 import { SessionsRoute } from './routes/sessions.route';
 import { EmailRoute } from '@routes/common.route';
-
+import { RoleRoute } from './routes/roles.route';
 ValidateEnv();
 
-const app = new App([new UserRoute(), new AuthRoute(), new AgencyRoute(), new EmployeeRoute(), new CreatorRoute(), new SessionsRoute(),new EmailRoute()]);
+const app = new App([
+  new UserRoute(),
+  new AuthRoute(),
+  new AgencyRoute(),
+  new EmployeeRoute(),
+  new CreatorRoute(),
+  new SessionsRoute(),
+  new EmailRoute(),
+  new RoleRoute(),
+]);
 
 app.listen();
