@@ -112,6 +112,7 @@ export class EmployeeService {
           password: hashedPassword,
         },
       });
+      
       return employee;
     } catch (error) {
       if (error.status) {
@@ -211,5 +212,55 @@ export class EmployeeService {
       }
       throw new HttpException(500, 'Something went wrong');
     }
-  }
+  };
+
+  //Batch operations update
+
+  public async updateBatchEmployee(employeeId: string[], employeeRole: string | undefined, agencyId: string | undefined) {
+    try {
+      const updateFields: any = {};
+
+      if (employeeRole) {
+        updateFields.role = employeeRole;
+      }
+
+      if (agencyId) {
+        updateFields.agencyId = agencyId;
+      }
+
+      const updatedEmployees = await Promise.all(employeeId.map(async (id) => {
+        const employee = await EmployeeModel.findByIdAndUpdate(id, { $set: updateFields }, { new: true });
+
+        if (!employee) {
+          throw new HttpException(404, `Employee with ID ${id} not found`);
+        }
+        return employee;
+      }));
+
+      return updatedEmployees;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, 'Something went wrong');
+    }
+  };
+
+  public async deleteBatchEmployeesByIds(employeeIds: string[]) {
+    try {
+      console.log(employeeIds,"-----------------------")
+        const employeeObjectIds = employeeIds.map(id =>new mongoose.Types.ObjectId(id));
+        const deletedEmployees = await EmployeeModel.deleteMany({ _id: { $in: employeeObjectIds } });
+        if (deletedEmployees.deletedCount === 0) {
+            throw new HttpException(404, 'No matching employees found for deletion');
+        }
+        return deletedEmployees;
+    } catch (error) {
+        if (error.status) {
+            throw error;
+        }
+        throw new HttpException(500, 'Something went wrong');
+    }
+}
+
 }
