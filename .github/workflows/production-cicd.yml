@@ -21,6 +21,7 @@ jobs:
           echo DBCONN_STR={{ secrets.DB_URI }} >> .env.production.local
           echo AWS_ACCESS_KEY_ID={{ secrets.AWS_ACCESS_KEY }} >> .env.production.local
           echo AWS_SECRET_ACCESS_KEY={{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.production.local
+          echo AWS_REGION=us-east-2 >> .env.production.local
           echo BUCKET_PUBLIC=agencygo-public >> .env.production.local
           echo BUCKET_PRIVATE=agencygo-private >> .env.production.local
           echo PROXY_API_KEY={{secrets.PROXY_API_KEY}} >> .env.production.local
@@ -33,7 +34,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'eu-east-2'
+          aws-region: 'us-east-2'
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
