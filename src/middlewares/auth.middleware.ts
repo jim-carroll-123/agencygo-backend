@@ -17,7 +17,6 @@ const getAuthorization = (req: RequestWithUser) => {
 
 export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    console.log("=======================================")
     const Authorization = getAuthorization(req);
 
     if (Authorization) {

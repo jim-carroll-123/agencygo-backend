@@ -15,8 +15,7 @@ export class EmployeeRoute implements Routes {
   }
 
   private initializeRoutes() {
-    // this.router.post(`${this.path}/:id`, AuthMiddleware, isAdminMiddleware, ValidationMiddleware(CreateEmployeeDto), this.employee.createEmployee);
-    this.router.post(`${this.path}/:id`,  this.employee.createEmployee);
+    this.router.post(`${this.path}/:id`, AuthMiddleware, isAdminMiddleware, ValidationMiddleware(CreateEmployeeDto), this.employee.createEmployee);
     this.router.get(`${this.path}s/:agencyId`, AuthMiddleware, this.employee.getEmployees);
     this.router.get(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployee);
     this.router.put(
