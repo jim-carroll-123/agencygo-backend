@@ -44,7 +44,7 @@ export const generateEmailTemplateForActivation = (body:any,agencyName:string) =
 				display: inline-block;
 				text-decoration: none;
 				padding: 11px 19px;
-				color:#fff;
+				color:#fff !important;
 				font-size: 14px;
 				font-weight: 500;
 				font-family: Arial, Helvetica, sans-serif;
@@ -117,11 +117,11 @@ export const generateEmailTemplateForActivation = (body:any,agencyName:string) =
 									button below:
 								</p>
 							</div>
-							<a href=${URL}/employee/${id} target="_blank" class="activateButton">
+							<a href=${URL}/activate-account/${id} target="_blank" class="activateButton">
 								Activate account
 							</a>
 							<p style="margin: 15px 0px; color: #000">
-								Or open this link in the browser: <a href=${URL}/employee/${id}>link here</a>
+								Or open this link in the browser: <a href=${URL}/activate-account/${id}>link here</a>
 							</p>
 							<div
 								style="
