@@ -3,11 +3,13 @@ import { EmployeeModel } from '@/models/employee.model';
 import { HttpException } from '@/exceptions/httpException';
 import { AgencyModel } from '@/models/agency.model';
 import { UserModel } from '@/models/users.model';
+import { CreatorModel } from '@models/creator.model';
 import { Employee, EmployeeCreate, EmployeeUpdate } from '@/interfaces/employee.interface';
-import{Emails} from '@utils/email'
+import { Emails } from '@utils/email';
 import { hash } from 'bcrypt';
-import {Email} from '@/interfaces/common.interface'
-import {generateEmailTemplateForActivation}from '../template/activateEmployee'
+import { Email } from '@/interfaces/common.interface';
+import { generateEmailTemplateForActivation } from '../template/activateEmployee';
+import mongoose from 'mongoose';
 
 @Service()
 export class EmployeeService {
@@ -45,14 +47,20 @@ export class EmployeeService {
         userId: user._id,
         status: 'active',
       });
-
-      let template= generateEmailTemplateForActivation(employee,agency.agencyName)
-      let emailData:Email={
-        to:employee.email,
-        subject:"Activate Employee Account",
-        template:template
+      if (employeeData.creator) {
+        const data = await CreatorModel.findOneAndUpdate(
+          { _id: new mongoose.Types.ObjectId(employeeData.creator) },
+          { $push: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+          { returnDocument: 'after' },
+        );
       }
-      await new Emails().sendEmail(emailData)
+      let template = generateEmailTemplateForActivation(employee, agency.agencyName);
+      let emailData: Email = {
+        to: employee.email,
+        subject: 'Activate Employee Account',
+        template: template,
+      };
+      await new Emails().sendEmail(emailData);
       return employee;
     } catch (error) {
       if (error.status) {
@@ -100,8 +108,8 @@ export class EmployeeService {
           email: employeeData.email,
           role: employeeData.role,
           agencyId: employeeData.agencyId,
-          status:employeeData.status,
-          password:hashedPassword
+          status: employeeData.status,
+          password: hashedPassword,
         },
       });
       return employee;
@@ -147,6 +155,56 @@ export class EmployeeService {
         { new: true },
       );
       return employee;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, 'Something went wrong');
+    }
+  }
+
+  public async getEmployees(getData: any) {
+    try {
+      let filter = {};
+      if (getData.creator) {
+        let employeesId = await CreatorModel.findOne({ _id: getData.creator });
+        filter = { _id: { $in: employeesId.assignEmployee } };
+      }
+      if (getData.name) {
+        filter = {
+          ...filter,
+          name: new RegExp(`${getData.name}`),
+        };
+      }
+      if (getData.status) {
+        filter = {
+          ...filter,
+          status: getData.status,
+        };
+      }
+      const employees = await EmployeeModel.aggregate([
+        {
+          $match: filter,
+        },
+        {
+          $lookup: {
+            from: 'creators',
+            localField: '_id',
+            foreignField: 'assignEmployee',
+            as: 'creatorName',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            role: 1,
+            status: 1,
+            creatorName: { $first: '$creatorName.creatorName' },
+          },
+        },
+      ]);
+      return employees;
     } catch (error) {
       if (error.status) {
         throw error;
