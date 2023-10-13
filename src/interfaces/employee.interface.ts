@@ -34,5 +34,7 @@ export interface EmployeeUpdate {
   role: Role;
   agencyId: Types.ObjectId;
   password:string,
-  status:Status
+  status:Status,
+  creator:string[],
+  is
 }
