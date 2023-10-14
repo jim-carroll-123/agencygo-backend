@@ -13,21 +13,26 @@ jobs:
         uses: actions/checkout@v3
       - name: Create env file
         run: |
-          touch .env.production.local
-          echo NODE_ENV=production >> .env.production.local
-          echo PORT=3000 >> .env.production.local
-          echo ORIGIN=* >> .env.production.local
-          echo CREDENTIALS=true >> .env.production.local
-          echo DBCONN_STR={{ secrets.DB_URI }} >> .env.production.local
-          echo AWS_ACCESS_KEY_ID={{ secrets.AWS_ACCESS_KEY }} >> .env.production.local
-          echo AWS_SECRET_ACCESS_KEY={{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.production.local
-          echo AWS_REGION=us-east-2 >> .env.production.local
-          echo BUCKET_PUBLIC=agencygo-public >> .env.production.local
-          echo BUCKET_PRIVATE=agencygo-private >> .env.production.local
-          echo PROXY_API_KEY={{secrets.PROXY_API_KEY}} >> .env.production.local
-          echo PROXY_URL=https://proxy.webshare.io/api/v2/proxy/list/ >> .env.production.local
-          echo SENDGRID_API_KEY={{secrets.SENDGRID_API_KEY}} >> .env.production.local
-          echo SENDER=admin@agencygo.ai >> .env.production.local
+          touch .env
+          echo NODE_ENV=production >> .env
+          echo PORT=3000 >> .env
+          echo ORIGIN=* >> .env
+          echo CREDENTIALS=true >> .env
+          echo DBCONN_STR={{ secrets.DB_URI }} >> .env
+          echo LOG_FORMAT=dev >> .env
+          echo LOG_DIR=../logs >> .env
+          echo SECRET_KEY={{secrets.JWT_SECRET}} >> .env
+          echo AWS_ACCESS_KEY_ID={{ secrets.AWS_ACCESS_KEY }} >> .env
+          echo AWS_SECRET_ACCESS_KEY={{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+          echo AWS_REGION=us-east-2 >> .env
+          echo BUCKET_PUBLIC=agencygo-public >> .env
+          echo BUCKET_PRIVATE=agencygo-private >> .env
+          echo PROXY_API_KEY={{secrets.PROXY_API_KEY}} >> .env
+          echo PROXY_URL=https://proxy.webshare.io/api/v2/proxy/list/ >> .env
+          echo SENDGRID_API_KEY={{secrets.SENDGRID_API_KEY}} >> .env
+          echo SENDER=admin@agencygo.ai >> .env
+          ls -al
+          pwd
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
