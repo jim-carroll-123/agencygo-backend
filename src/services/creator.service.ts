@@ -7,6 +7,7 @@ import { Service } from 'typedi';
 
 import axios from 'axios';
 import { PROXY_API_KEY, PROXY_URL } from '@config';
+import mongoose from 'mongoose';
 
 @Service()
 export class CreatorService {
@@ -162,5 +163,67 @@ export class CreatorService {
     if (!updateCreatorById) throw new HttpException(409, "User doesn't exist");
 
     return updateCreatorById;
+  }
+
+  public async assignCreatorToEmployee(creatorIds: any, employeeId: any): Promise<Creator[]> {
+    try {
+      const updateOperations = creatorIds.map(creatorId => {
+        return CreatorModel.findByIdAndUpdate({ _id: creatorId }, { $push: { assignEmployee: employeeId } }, { new: true });
+      });
+      const updatedCreators = await Promise.all(updateOperations);
+      return updatedCreators;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async searchCreator(getData: any) {
+    const filter: any = {};
+
+    console.log(typeof getData.status);
+    if (getData.creator) {
+      filter.creatorName = new RegExp(getData.creator, 'i');
+    }
+
+    if (getData.status) {
+      getData.status = Boolean(getData.status);
+      filter.status = getData.status;
+    }
+
+    if (getData.plateformlink) {
+      getData.plateformlink = Boolean(getData.plateformlink);
+      filter.plateform = Boolean(getData.plateformlink);
+    }
+
+    if (getData.employeeId) {
+      const employeId = new mongoose.Types.ObjectId(getData.employeeId);
+      filter.assignEmployee = { $in: [employeId] };
+    }
+    const creator = await CreatorModel.aggregate([
+      { $match: filter },
+      {
+        $lookup: {
+          from: 'employees',
+          localField: 'assignEmployee',
+          foreignField: '_id',
+          as: 'assignEmployee',
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          creatorName: 1,
+          status: 1,
+          assignEmployee: 1,
+          plateform: 1,
+          gender: 1,
+          internalNotes: 1,
+          autoRelink: 1,
+          proxy: 1,
+        },
+      },
+    ]);
+
+    return creator;
   }
 }

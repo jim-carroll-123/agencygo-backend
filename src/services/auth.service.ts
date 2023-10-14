@@ -11,7 +11,7 @@ import { EmployeeModel } from '@/models/employee.model';
 import { Agency } from '@/interfaces/agency.interface';
 import { Employee } from '@/interfaces/employee.interface';
 
-const createToken = (user: User): TokenData => {
+const createToken = (user: User): any => {
   const dataStoredInToken: DataStoredInToken = { _id: user._id };
   const expiresIn: number = 60 * 60;
 
@@ -24,7 +24,7 @@ const createCookie = (tokenData: TokenData): string => {
 
 @Service()
 export class AuthService {
-  public async signup(userData: RequestSignUp): Promise<{ cookie: string; user: User }> {
+  public async signup(userData: RequestSignUp): Promise<{ user: User }> {
     const findUser: User = await UserModel.findOne({ email: userData.email });
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
     const hashedPassword = await hash(userData.password, 10);
@@ -48,12 +48,12 @@ export class AuthService {
     });
 
     const tokenData = createToken(updateUserData);
-    const cookie = createCookie(tokenData);
+    // const cookie = createCookie(tokenData);
 
-    return { cookie, user: updateUserData };
+    return { user: updateUserData };
   }
 
-  public async login(userData: User): Promise<{ cookie: string; findUser: User }> {
+  public async login(userData: User): Promise<{ findUser: User }> {
     const findUser: User = await UserModel.findOne({ email: userData.email });
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
@@ -61,9 +61,9 @@ export class AuthService {
     if (!isPasswordMatching) throw new HttpException(409, 'Invalid Credentials'); // should not let user know which field is wrong
 
     const tokenData = createToken(findUser);
-    const cookie = createCookie(tokenData);
+    // const cookie = createCookie(tokenData);
 
-    return { cookie, findUser };
+    return { findUser, tokenData };
   }
 
   public async logout(userData: User): Promise<User> {

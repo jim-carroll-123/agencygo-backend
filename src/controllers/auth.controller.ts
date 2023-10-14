@@ -12,8 +12,7 @@ export class AuthController {
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: RequestSignUp = req.body;
-      const { cookie, user } = await this.auth.signup(userData);
-      res.setHeader('Set-Cookie', [cookie]);
+      const { user } = await this.auth.signup(userData);
       res.status(201).json({ data: user, message: 'signup successfully' });
     } catch (error) {
       next(error);
@@ -23,10 +22,23 @@ export class AuthController {
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.body;
-      const { cookie, findUser } = await this.auth.login(userData);
-
-      res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findUser, message: 'login successfully' });
+      const { findUser, tokenData } = await this.auth.login(userData);
+      res.setHeader('authorization', tokenData.token);
+      res.status(200).json({
+        data: {
+          firstName: findUser.firstName,
+          lastName: findUser.lastName,
+          email: findUser.email,
+          agencyId: findUser.agencyId,
+          role: findUser.role,
+          Id: findUser._id,
+          isAdmin: findUser.isAdmin,
+          isAgency: findUser.isAgency,
+          isVerfied: findUser.isVerified,
+        },
+        token: tokenData,
+        message: 'login successfully',
+      });
     } catch (error) {
       next(error);
     }
@@ -37,7 +49,7 @@ export class AuthController {
       const userData: User = req.user;
       await this.auth.logout(userData);
 
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
+      res.setHeader('authorization', ['Authorization=; Max-age=0']);
       res.status(200).json({ message: 'logout' });
     } catch (error) {
       next(error);
