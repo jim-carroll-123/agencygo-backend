@@ -18,6 +18,7 @@ jobs:
           echo PORT=3000 >> .env
           echo ORIGIN=* >> .env
           echo CREDENTIALS=true >> .env
+          echo DUMMY_ENV=my-var >> .env
           echo DBCONN_STR=${{ secrets.DB_URI }} >> .env
           echo LOG_FORMAT=dev >> .env
           echo LOG_DIR=../logs >> .env
