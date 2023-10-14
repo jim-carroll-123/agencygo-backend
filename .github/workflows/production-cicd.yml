@@ -19,7 +19,7 @@ jobs:
           echo ORIGIN=* >> .env
           echo CREDENTIALS=true >> .env
           echo DUMMY_ENV=my-var >> .env
-          echo DBCONN_STR=${{ secrets.DB_URI }} >> .env
+          echo DBCONN_STR="${{ secrets.DB_URI }}" >> .env
           echo LOG_FORMAT=dev >> .env
           echo LOG_DIR=../logs >> .env
           echo SECRET_KEY=${{secrets.JWT_SECRET}} >> .env
