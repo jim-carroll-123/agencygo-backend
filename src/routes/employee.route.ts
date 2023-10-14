@@ -34,6 +34,12 @@ export class EmployeeRoute implements Routes {
       ValidationMiddleware(AssignRoleDto, true),
       this.employee.assignRoleToEmployee,
     );
-
+    this.router.put(
+      `${this.path}`,
+      AuthMiddleware,
+      isAdminMiddleware,
+      this.employee.updateBatchEmployee,
+    );
+    this.router.delete(`${this.path}`, this.employee.deleteBatchEmployeeById);
   }
 }

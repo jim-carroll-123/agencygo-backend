@@ -44,7 +44,7 @@ const resetPasswordTemplate = `
 				display: inline-block;
 				text-decoration: none;
 				padding: 11px 19px;
-				color: #ffffff;
+				color: #fff !important;
 				font-size: 14px;
 				font-weight: 500;
 				font-family: Arial, Helvetica, sans-serif;
