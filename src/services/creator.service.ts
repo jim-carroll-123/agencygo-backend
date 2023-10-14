@@ -13,7 +13,29 @@ import mongoose from 'mongoose';
 export class CreatorService {
   // get all creators
   public async getCreators(): Promise<Creator[]> {
-    const creators: Creator[] = await CreatorModel.find();
+    const creators: Creator[] = await CreatorModel.aggregate([
+      {
+        $lookup: {
+          from: 'employees',
+          localField: 'assignEmployee',
+          foreignField: '_id',
+          as: 'assignEmployee',
+        },
+      },
+      {
+        $project: {
+          creatorName: 1,
+          status: 1,
+          'assignEmployee.name': 1,
+          'assignEmployee._id': 1,
+          plateform: 1,
+          gender: 1,
+          internalNotes: 1,
+          autoRelink: 1,
+          proxy: 1,
+        },
+      },
+    ]);
     return creators;
   }
 
@@ -167,10 +189,24 @@ export class CreatorService {
 
   public async assignCreatorToEmployee(creatorIds: any, employeeId: any): Promise<Creator[]> {
     try {
-      const updateOperations = creatorIds.map(creatorId => {
-        return CreatorModel.findByIdAndUpdate({ _id: creatorId }, { $push: { assignEmployee: employeeId } }, { new: true });
-      });
-      const updatedCreators = await Promise.all(updateOperations);
+      const updatedCreators: Creator[] = [];
+
+      for (const creatorId of creatorIds) {
+        const creator = await CreatorModel.findById(creatorId);
+
+        if (!creator) {
+          throw new Error(`Creator with ID ${creatorId} not found.`);
+        }
+
+        if (creator.assignEmployee.includes(employeeId)) {
+          throw new Error(`Employee with ID ${employeeId} is already assigned to Creator with ID ${creatorId}.`);
+        }
+
+        creator.assignEmployee.push(employeeId);
+        const updatedCreator = await creator.save();
+        updatedCreators.push(updatedCreator);
+      }
+
       return updatedCreators;
     } catch (error) {
       throw error;
