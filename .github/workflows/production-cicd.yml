@@ -33,7 +33,6 @@ jobs:
           echo SENDGRID_API_KEY=${{secrets.SENDGRID_API_KEY}} >> .env
           echo SENDER=admin@agencygo.ai >> .env
           ls -al
-          cat .env
           pwd
 
       - name: Configure AWS credentials

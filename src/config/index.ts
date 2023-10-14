@@ -6,7 +6,7 @@ const envFilePath = path.join(__dirname, '../..', `.env.${process.env.NODE_ENV |
 if (fs.existsSync(envFilePath)) {
   config({ path: envFilePath });
 } else {
-  console.info('[Error] env file is missing! It will be used default .env, if exist.');
+  console.info('[Info] env file is missing! It will be used default .env, if exist.');
   config();
 }
 
