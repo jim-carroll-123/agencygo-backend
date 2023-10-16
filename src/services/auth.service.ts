@@ -13,7 +13,7 @@ import { Employee } from '@/interfaces/employee.interface';
 
 const createToken = (user: User): any => {
   const dataStoredInToken: DataStoredInToken = { _id: user._id };
-  const expiresIn: number = 60 * 60;
+  const expiresIn: number = 60 * 60 * 24;
 
   return { expiresIn, token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }) };
 };

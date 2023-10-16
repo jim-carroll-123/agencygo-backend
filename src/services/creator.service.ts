@@ -101,10 +101,8 @@ export class CreatorService {
       let proxy = await this.findUnassignedProxy();
 
       if (!proxy) {
-        //if no unassign proxy avaible then fetch new if available
         const newProxies = await this.fetchProxyListFromApi();
 
-        //filter already exiting proxies
         const uniqueNewProxies = await this.filterUniqueProxies(newProxies);
 
         await this.addToProxyPool(uniqueNewProxies);
