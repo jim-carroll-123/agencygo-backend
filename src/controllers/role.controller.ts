@@ -48,7 +48,6 @@ export class RoleController {
   public searchRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const searchTerm = req.query;
-      console.log(searchTerm, '-------------------------------------------->>>');
       const searchResult = await this.role.searchRole(searchTerm);
       res.status(200).json({ data: searchResult, message: 'searched' });
     } catch (error) {
