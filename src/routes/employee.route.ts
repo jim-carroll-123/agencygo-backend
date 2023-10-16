@@ -21,7 +21,6 @@ export class EmployeeRoute implements Routes {
     this.router.put(
       `${this.path}/:employeeId`,
       AuthMiddleware,
-      isAdminMiddleware,
       ValidationMiddleware(UpdateEmployeeDto),
       this.employee.updateEmployee,
     );

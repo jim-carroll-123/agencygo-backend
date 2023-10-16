@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum } from 'class-validator';
+import { IsString, IsEmail, IsEnum,IsOptional } from 'class-validator';
 
 enum Role {
   CHATTER = 'chatter',
@@ -18,15 +18,19 @@ export class CreateEmployeeDto {
 }
 
 export class UpdateEmployeeDto {
+  @IsOptional()
   @IsString()
   public name: string;
 
+  @IsOptional()
   @IsEmail()
   public email: string;
 
+  @IsOptional()
   @IsString()
   public role: Role;
-
+  
+  @IsOptional()
   @IsString()
   public agencyId: string;
 }
