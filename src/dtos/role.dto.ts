@@ -15,5 +15,5 @@ export class UpdateRoleDto {
   public description: string;
 
   @IsString()
-  public status: 'active' | 'inactive';
+  public status: string;
 }

@@ -38,7 +38,7 @@ export class RoleController {
   public updateRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const roleId: string = req.params.id;
-      const userData = req.body;
+      const userData: Role = req.body;
       const updateRoleData: Role = await this.role.updateRole(roleId, userData);
       res.status(200).json({ data: updateRoleData, message: 'data updated' });
     } catch (error) {

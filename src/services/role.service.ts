@@ -13,7 +13,7 @@ export class RoleService {
       if (isrole) {
         throw new HttpException(409, `Role already registered`);
       }
-      const role = await RoleModel.create({ rolename: rolename, description: roleData.description, status: 'inactive' });
+      const role = await RoleModel.create({ rolename: rolename, description: roleData.description });
       return role;
     } catch (error) {
       throw new HttpException(500, 'Something went wrong');
@@ -55,9 +55,19 @@ export class RoleService {
   }
   public async searchRole(searchTerm): Promise<Role[]> {
     try {
-      const filter = {
-        rolename: new RegExp(`${searchTerm.searchTerm}`),
-      };
+      let filter = {};
+      if (searchTerm.searchTerm) {
+        filter = {
+          ...filter,
+          rolename: new RegExp(`${searchTerm.searchTerm}`),
+        };
+      }
+      if (searchTerm.status) {
+        filter = {
+          ...filter,
+          status: searchTerm.status,
+        };
+      }
       const role = await RoleModel.aggregate([
         {
           $match: filter,
