@@ -220,13 +220,13 @@ export class CreatorService {
     }
 
     if (getData.status) {
-      getData.status = Boolean(getData.status);
+      getData.status = Boolean(getData.status === 'true' ? true : false);
       filter.status = getData.status;
     }
 
     if (getData.plateformlink) {
-      getData.plateformlink = Boolean(getData.plateformlink);
-      filter.plateform = Boolean(getData.plateformlink);
+      getData.plateformlink = Boolean(getData.plateformlink === 'true' ? true : false);
+      filter.plateform = getData.plateformlink;
     }
 
     if (getData.employeeId) {
@@ -248,7 +248,8 @@ export class CreatorService {
           _id: 1,
           creatorName: 1,
           status: 1,
-          assignEmployee: 1,
+          'assignEmployee.name': 1,
+          'assignEmployee._id': 1,
           plateform: 1,
           gender: 1,
           internalNotes: 1,

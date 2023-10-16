@@ -21,8 +21,12 @@ export class EmployeeRoute implements Routes {
     this.router.put(
       `${this.path}/:employeeId`,
       AuthMiddleware,
+<<<<<<< HEAD
       isAdminMiddleware,
       ValidationMiddleware(UpdateEmployeeDto, true),
+=======
+      ValidationMiddleware(UpdateEmployeeDto),
+>>>>>>> 769573cc96a75f47a0cdad4b75cbe4c972a5ea2a
       this.employee.updateEmployee,
     );
     this.router.get(`${this.path}/search/data`, this.employee.searchEmployee);
