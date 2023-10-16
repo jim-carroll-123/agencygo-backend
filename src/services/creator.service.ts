@@ -7,12 +7,35 @@ import { Service } from 'typedi';
 
 import axios from 'axios';
 import { PROXY_API_KEY, PROXY_URL } from '@config';
+import mongoose from 'mongoose';
 
 @Service()
 export class CreatorService {
   // get all creators
   public async getCreators(): Promise<Creator[]> {
-    const creators: Creator[] = await CreatorModel.find();
+    const creators: Creator[] = await CreatorModel.aggregate([
+      {
+        $lookup: {
+          from: 'employees',
+          localField: 'assignEmployee',
+          foreignField: '_id',
+          as: 'assignEmployee',
+        },
+      },
+      {
+        $project: {
+          creatorName: 1,
+          status: 1,
+          'assignEmployee.name': 1,
+          'assignEmployee._id': 1,
+          plateform: 1,
+          gender: 1,
+          internalNotes: 1,
+          autoRelink: 1,
+          proxy: 1,
+        },
+      },
+    ]);
     return creators;
   }
 
@@ -162,5 +185,81 @@ export class CreatorService {
     if (!updateCreatorById) throw new HttpException(409, "User doesn't exist");
 
     return updateCreatorById;
+  }
+
+  public async assignCreatorToEmployee(creatorIds: any, employeeId: any): Promise<Creator[]> {
+    try {
+      const updatedCreators: Creator[] = [];
+
+      for (const creatorId of creatorIds) {
+        const creator = await CreatorModel.findById(creatorId);
+
+        if (!creator) {
+          throw new Error(`Creator with ID ${creatorId} not found.`);
+        }
+
+        if (creator.assignEmployee.includes(employeeId)) {
+          throw new Error(`Employee with ID ${employeeId} is already assigned to Creator with ID ${creatorId}.`);
+        }
+
+        creator.assignEmployee.push(employeeId);
+        const updatedCreator = await creator.save();
+        updatedCreators.push(updatedCreator);
+      }
+
+      return updatedCreators;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async searchCreator(getData: any) {
+    const filter: any = {};
+
+    console.log(typeof getData.status);
+    if (getData.creator) {
+      filter.creatorName = new RegExp(getData.creator, 'i');
+    }
+
+    if (getData.status) {
+      getData.status = Boolean(getData.status);
+      filter.status = getData.status;
+    }
+
+    if (getData.plateformlink) {
+      getData.plateformlink = Boolean(getData.plateformlink);
+      filter.plateform = Boolean(getData.plateformlink);
+    }
+
+    if (getData.employeeId) {
+      const employeId = new mongoose.Types.ObjectId(getData.employeeId);
+      filter.assignEmployee = { $in: [employeId] };
+    }
+    const creator = await CreatorModel.aggregate([
+      { $match: filter },
+      {
+        $lookup: {
+          from: 'employees',
+          localField: 'assignEmployee',
+          foreignField: '_id',
+          as: 'assignEmployee',
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          creatorName: 1,
+          status: 1,
+          assignEmployee: 1,
+          plateform: 1,
+          gender: 1,
+          internalNotes: 1,
+          autoRelink: 1,
+          proxy: 1,
+        },
+      },
+    ]);
+
+    return creator;
   }
 }

@@ -12,4 +12,6 @@ export interface Creator {
   assignEmployee: mongoose.Types.ObjectId | null; // The employee assigned to this creator
   autoRelink: boolean;
   proxy: mongoose.Types.ObjectId | null;
+  status: boolean;
+  plateform: boolean;
 }

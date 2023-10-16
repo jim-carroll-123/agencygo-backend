@@ -14,10 +14,12 @@ const CreatorSchema: Schema<Creator> = new Schema({
   internalNotes: {
     type: String,
   },
-  assignEmployee: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Employee',
-  }],
+  assignEmployee: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Employee',
+    },
+  ],
   autoRelink: {
     type: Boolean,
     default: false,
@@ -26,6 +28,14 @@ const CreatorSchema: Schema<Creator> = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Proxy',
     default: null,
+  },
+  status: {
+    type: Boolean,
+    default: true,
+  },
+  plateform: {
+    type: Boolean,
+    default: false,
   },
 });
 
