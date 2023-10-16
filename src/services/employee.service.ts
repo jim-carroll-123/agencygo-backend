@@ -95,7 +95,7 @@ export class EmployeeService {
             status: 1,
             userId:1,
             agencyId:1,
-            creatorName:  '$creatorName.creatorName' ,
+            assignedCreators:  '$creatorName.creatorName' ,
           },
         },
       ]);
@@ -244,7 +244,7 @@ export class EmployeeService {
             status: 1,
             userId:1,
             agencyId:1,
-            creatorName: '$creatorName.creatorName' ,
+            assignedCreators: '$creatorName.creatorName' ,
           },
         },
       ]);
