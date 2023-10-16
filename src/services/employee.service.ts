@@ -190,7 +190,7 @@ export class EmployeeService {
       if (getData.name) {
         filter = {
           ...filter,
-          name: new RegExp(`${getData.name}`),
+          name: new RegExp(`${getData.name}`,"i"),
         };
       }
       if (getData.status) {
@@ -199,6 +199,7 @@ export class EmployeeService {
           status: getData.status,
         };
       }
+
       const employees = await EmployeeModel.aggregate([
         {
           $match: filter,
