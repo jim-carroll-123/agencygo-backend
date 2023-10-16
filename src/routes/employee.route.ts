@@ -22,7 +22,7 @@ export class EmployeeRoute implements Routes {
       `${this.path}/:employeeId`,
       AuthMiddleware,
       isAdminMiddleware,
-      ValidationMiddleware(UpdateEmployeeDto),
+      ValidationMiddleware(UpdateEmployeeDto, true),
       this.employee.updateEmployee,
     );
     this.router.get(`${this.path}/search/data`, this.employee.searchEmployee);
@@ -34,12 +34,7 @@ export class EmployeeRoute implements Routes {
       ValidationMiddleware(AssignRoleDto, true),
       this.employee.assignRoleToEmployee,
     );
-    this.router.put(
-      `${this.path}`,
-      AuthMiddleware,
-      isAdminMiddleware,
-      this.employee.updateBatchEmployee,
-    );
+    this.router.put(`${this.path}`, AuthMiddleware, isAdminMiddleware, this.employee.updateBatchEmployee);
     this.router.delete(`${this.path}`, this.employee.deleteBatchEmployeeById);
   }
 }
