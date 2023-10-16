@@ -134,7 +134,7 @@ const resetPasswordTemplate = `
 								</p>
 								<p style="margin-bottom: 2px; color: #7e8299">
 									We've received a request to reset the password for the infloww
-									account associated with <a href=${email}></a>
+									account associated with <a href="#">${email}</a>
 								</p>
 								<p>To reset your password, click the link below:</p>
 								<hr />

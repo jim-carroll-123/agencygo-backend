@@ -30,7 +30,7 @@ export class EmailController {
       const employee  = await EmployeeModel.findOne({ _id: id });
       let template= generateEmailTemplateForResetPassword(employee)
       let emailData:Email={
-        to:req.body.to,
+        to:employee.email,
         subject:"Reset Password",
         template:template
       }
