@@ -14,7 +14,7 @@ export class RoleRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}`, ValidationMiddleware(CreateRoleDto, 'body', true), this.role.createRole);
+    this.router.post(`${this.path}`, ValidationMiddleware(CreateRoleDto, true), this.role.createRole);
     this.router.get(`${this.path}`, this.role.getRole);
     this.router.patch(`${this.path}/:id`, this.role.updateRole);
     this.router.delete(`${this.path}/:id`, this.role.deleteRole);

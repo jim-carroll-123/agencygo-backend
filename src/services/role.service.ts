@@ -13,7 +13,7 @@ export class RoleService {
       if (isrole) {
         throw new HttpException(409, `Role already registered`);
       }
-      const role = await RoleModel.create({ rolename: rolename, description: roleData.description });
+      const role = await RoleModel.create({ rolename: rolename, description: roleData.description, status: 'inactive' });
       return role;
     } catch (error) {
       throw new HttpException(500, 'Something went wrong');
