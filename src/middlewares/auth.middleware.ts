@@ -16,6 +16,10 @@ const getAuthorization = (req: RequestWithUser) => {
 };
 
 export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  if(req.body.newInvite){
+    return next();
+  }
+
   try {
     const Authorization = getAuthorization(req);
 
