@@ -74,8 +74,31 @@ export class EmployeeService {
   // get all employees of a agency
   public async getAgencyEmployees(agencyId: string) {
     try {
-      const employees = await EmployeeModel.find({ agencyId: agencyId });
-      console.log(employees);
+      const employees = await EmployeeModel.aggregate([
+        {
+          $match: {agencyId: new mongoose.Types.ObjectId(agencyId)},
+        },
+        {
+          $lookup: {
+            from: 'creators',
+            localField: '_id',
+            foreignField: 'assignEmployee',
+            as: 'creatorName',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            email:1,
+            role: 1,
+            status: 1,
+            userId:1,
+            agencyId:1,
+            assignedCreators:  '$creatorName.creatorName' ,
+          },
+        },
+      ]);
       return employees;
     } catch (error) {
       if (error.status) {
@@ -216,9 +239,12 @@ export class EmployeeService {
           $project: {
             _id: 1,
             name: 1,
+            email:1,
             role: 1,
             status: 1,
-            creatorName: { $first: '$creatorName.creatorName' },
+            userId:1,
+            agencyId:1,
+            assignedCreators: '$creatorName.creatorName' ,
           },
         },
       ]);
