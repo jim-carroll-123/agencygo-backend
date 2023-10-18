@@ -45,7 +45,7 @@ export class EmployeeService {
         agencyId: agencyId,
         role: employeeData.role,
         userId: user._id,
-        status: 'active',
+        status: 'inactive',
       });
       if (employeeData.creator) {
         const data = await CreatorModel.findOneAndUpdate(
@@ -74,8 +74,31 @@ export class EmployeeService {
   // get all employees of a agency
   public async getAgencyEmployees(agencyId: string) {
     try {
-      const employees = await EmployeeModel.find({ agencyId: agencyId });
-      console.log(employees);
+      const employees = await EmployeeModel.aggregate([
+        {
+          $match: {agencyId: new mongoose.Types.ObjectId(agencyId)},
+        },
+        {
+          $lookup: {
+            from: 'creators',
+            localField: '_id',
+            foreignField: 'assignEmployee',
+            as: 'creatorName',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            email:1,
+            role: 1,
+            status: 1,
+            userId:1,
+            agencyId:1,
+            assignedCreators:  '$creatorName.creatorName' ,
+          },
+        },
+      ]);
       return employees;
     } catch (error) {
       if (error.status) {
@@ -101,8 +124,10 @@ export class EmployeeService {
   // update employee by an employee id
   public async updateEmployee(employeeId: string, employeeData: EmployeeUpdate) {
     try {
-      const hashedPassword = await hash(employeeData.password, 10);
-      const employee = await EmployeeModel.findByIdAndUpdate(employeeId, {
+      let hashedPassword:string
+      if(employeeData.password){
+       hashedPassword = await hash(employeeData.password, 10);}
+      const employee = await EmployeeModel.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(employeeId) }, {
         $set: {
           name: employeeData.name,
           email: employeeData.email,
@@ -111,7 +136,22 @@ export class EmployeeService {
           status: employeeData.status,
           password: hashedPassword,
         },
-      });
+      },{ returnDocument: 'after' },);
+      if (employeeData.creator) {
+        const updatedEmployees = await Promise.all(
+          employeeData.creator.map(async id => {
+            const data = await CreatorModel.findOneAndUpdate(
+              { _id: new mongoose.Types.ObjectId(id) },
+              {  $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+              { returnDocument: 'after' },
+            );
+            if (!data) {
+              throw new HttpException(404, `Employee with ID ${id} not found`);
+            }
+            return data;
+          }),
+        );
+      }
       return employee;
     } catch (error) {
       if (error.status) {
@@ -173,7 +213,7 @@ export class EmployeeService {
       if (getData.name) {
         filter = {
           ...filter,
-          name: new RegExp(`${getData.name}`),
+          name: new RegExp(`${getData.name}`,"i"),
         };
       }
       if (getData.status) {
@@ -182,6 +222,7 @@ export class EmployeeService {
           status: getData.status,
         };
       }
+
       const employees = await EmployeeModel.aggregate([
         {
           $match: filter,
@@ -198,13 +239,66 @@ export class EmployeeService {
           $project: {
             _id: 1,
             name: 1,
+            email:1,
             role: 1,
             status: 1,
-            creatorName: { $first: '$creatorName.creatorName' },
+            userId:1,
+            agencyId:1,
+            assignedCreators: '$creatorName.creatorName' ,
           },
         },
       ]);
       return employees;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, 'Something went wrong');
+    }
+  }
+
+  //Batch operations update
+
+  public async updateBatchEmployee(employeeId: string[], employeeRole: string | undefined, agencyId: string | undefined) {
+    try {
+      const updateFields: any = {};
+
+      if (employeeRole) {
+        updateFields.role = employeeRole;
+      }
+
+      if (agencyId) {
+        updateFields.agencyId = agencyId;
+      }
+
+      const updatedEmployees = await Promise.all(
+        employeeId.map(async id => {
+          const employee = await EmployeeModel.findByIdAndUpdate(id, { $set: updateFields }, { new: true });
+
+          if (!employee) {
+            throw new HttpException(404, `Employee with ID ${id} not found`);
+          }
+          return employee;
+        }),
+      );
+
+      return updatedEmployees;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, 'Something went wrong');
+    }
+  }
+
+  public async deleteBatchEmployeesByIds(employeeIds: string[]) {
+    try {
+      const employeeObjectIds = employeeIds.map(id => new mongoose.Types.ObjectId(id));
+      const deletedEmployees = await EmployeeModel.deleteMany({ _id: { $in: employeeObjectIds } });
+      if (deletedEmployees.deletedCount === 0) {
+        throw new HttpException(404, 'No matching employees found for deletion');
+      }
+      return deletedEmployees;
     } catch (error) {
       if (error.status) {
         throw error;

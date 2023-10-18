@@ -15,9 +15,15 @@ export class CreatorDTO {
   internalNotes?: string;
 
   @IsOptional()
-  @IsString()
-  assignEmployee?: string;
+  assignEmployee?: string[];
 
   @IsBoolean()
   autoRelink: boolean;
+
+  @IsBoolean()
+  status: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  plateform: boolean;
 }

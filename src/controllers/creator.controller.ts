@@ -99,4 +99,24 @@ export class CreatorController {
       next(error);
     }
   };
+  public assignCreatorToEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const creatorsId: any[] = req.body.creatorId;
+      const employeeId: any = req.body.employeeId;
+      const assignCreator = await this.creator.assignCreatorToEmployee(creatorsId, employeeId);
+      res.status(200).json({ data: 'creators added to employees' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public searchFilter = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const queryData = req.query;
+      const creator = await this.creator.searchCreator(queryData);
+      res.status(200).json({ data: creator, message: 'creator fetched successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

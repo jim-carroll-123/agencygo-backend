@@ -13,7 +13,7 @@ export class EmailController {
       const agency = await AgencyModel.findOne({ _id: employee.agencyId });
       let template= generateEmailTemplateForActivation(id,agency.agencyName)
       let emailData:Email={
-        to:req.body.to,
+        to:employee.email,
         subject:"Account activation",
         template:template
       }
@@ -30,7 +30,7 @@ export class EmailController {
       const employee  = await EmployeeModel.findOne({ _id: id });
       let template= generateEmailTemplateForResetPassword(employee)
       let emailData:Email={
-        to:req.body.to,
+        to:employee.email,
         subject:"Reset Password",
         template:template
       }
