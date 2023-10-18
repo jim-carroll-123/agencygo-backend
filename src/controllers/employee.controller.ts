@@ -84,23 +84,23 @@ export class EmployeeController {
     }
   };
 
-    // batch update employee
-    public updateBatchEmployee = async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const {employeeId} = req.body;
-        const employeeRole=req.query.role || "";
-        const agencyId=req.query.agencyId || "";
-        const updatedEmployee = await this.employee.updateBatchEmployee(employeeId, employeeRole,agencyId);
-        res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
-      } catch (error) {
-        next(error);
-      }
-    };
+  // batch update employee
+  public updateBatchEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { employeeId } = req.body;
+      const employeeRole = req.query.role || '';
+      const agencyId = req.query.agencyId || '';
+      const updatedEmployee = await this.employee.updateBatchEmployee(employeeId, employeeRole, agencyId);
+      res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-      // delete employee by id
+  // delete employee by id
   public deleteBatchEmployeeById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {employeeId} = req.body;
+      const { employeeId } = req.body;
       await this.employee.deleteBatchEmployeesByIds(employeeId);
       res.status(200).json({ success: true, message: 'Employee deleted successfully' });
     } catch (error) {
