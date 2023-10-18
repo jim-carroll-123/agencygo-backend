@@ -54,8 +54,8 @@ export class EmployeeService {
           { returnDocument: 'after' },
         );
       }
-      let template = generateEmailTemplateForActivation(employee, agency.agencyName);
-      let emailData: Email = {
+      const template = generateEmailTemplateForActivation(employee, agency.agencyName);
+      const emailData: Email = {
         to: employee.email,
         subject: 'Activate Employee Account',
         template: template,
@@ -124,25 +124,30 @@ export class EmployeeService {
   // update employee by an employee id
   public async updateEmployee(employeeId: string, employeeData: EmployeeUpdate) {
     try {
-      let hashedPassword:string
-      if(employeeData.password){
-       hashedPassword = await hash(employeeData.password, 10);}
-      const employee = await EmployeeModel.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(employeeId) }, {
-        $set: {
-          name: employeeData.name,
-          email: employeeData.email,
-          role: employeeData.role,
-          agencyId: employeeData.agencyId,
-          status: employeeData.status,
-          password: hashedPassword,
+      let hashedPassword: string;
+      if (employeeData.password) {
+        hashedPassword = await hash(employeeData.password, 10);
+      }
+      const employee = await EmployeeModel.findOneAndUpdate(
+        { _id: new mongoose.Types.ObjectId(employeeId) },
+        {
+          $set: {
+            name: employeeData.name,
+            email: employeeData.email,
+            role: employeeData.role,
+            agencyId: employeeData.agencyId,
+            status: employeeData.status,
+            password: hashedPassword,
+          },
         },
-      },{ returnDocument: 'after' },);
+        { returnDocument: 'after' },
+      );
       if (employeeData.creator) {
         const updatedEmployees = await Promise.all(
           employeeData.creator.map(async id => {
             const data = await CreatorModel.findOneAndUpdate(
               { _id: new mongoose.Types.ObjectId(id) },
-              {  $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+              { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
               { returnDocument: 'after' },
             );
             if (!data) {
@@ -207,7 +212,7 @@ export class EmployeeService {
     try {
       let filter = {};
       if (getData.creator) {
-        let employeesId = await CreatorModel.findOne({ _id: getData.creator });
+        const employeesId = await CreatorModel.findOne({ _id: getData.creator });
         filter = { _id: { $in: employeesId.assignEmployee } };
       }
       if (getData.name) {

@@ -53,4 +53,41 @@ export class RoleService {
       throw new HttpException(500, 'Something went wrong');
     }
   }
+  public async searchRole(searchTerm): Promise<Role[]> {
+    try {
+      let filter = {};
+      if (searchTerm.searchTerm) {
+        filter = {
+          ...filter,
+          rolename: new RegExp(`${searchTerm.searchTerm}`),
+        };
+      }
+      if (searchTerm.status) {
+        filter = {
+          ...filter,
+          status: searchTerm.status,
+        };
+      }
+      const role = await RoleModel.aggregate([
+        {
+          $match: filter,
+        },
+        {
+          $project: {
+            _id: 1,
+            rolename: 1,
+            description: 1,
+            status: 1,
+          },
+        },
+      ]);
+      if (role.length != 0) {
+        return role;
+      } else {
+        throw new HttpException(404, 'Role not found');
+      }
+    } catch (error) {
+      throw new HttpException(500, 'Something went wrong');
+    }
+  }
 }

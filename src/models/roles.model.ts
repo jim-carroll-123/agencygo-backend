@@ -11,6 +11,11 @@ const RoleSchema = new Schema<Role>({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'inactive',
+  },
 });
 
 // Create the Role model
