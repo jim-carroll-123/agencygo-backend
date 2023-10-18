@@ -8,6 +8,7 @@ export class UserBotService {
   public async getProfile() {
     try {
       const { page, browser } = await getBrowserInstance();
+
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });

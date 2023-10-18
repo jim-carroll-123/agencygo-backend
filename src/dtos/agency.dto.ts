@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAgencyDto {
   @IsString()
@@ -12,4 +12,8 @@ export class CreateAgencyDto {
 
   @IsString()
   public socialMediaLink;
+
+  @IsString()
+  @IsOptional()
+  public agencyLogo;
 }

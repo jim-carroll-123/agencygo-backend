@@ -2,6 +2,8 @@ import { Agency } from '@/interfaces/agency.interface';
 import { AgencyService } from '@/services/agency.service';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
+import { uploadToS3 } from '@/utils/fileUpload';
+import path from 'path';
 
 export class AgencyController {
   public agency = Container.get(AgencyService);
@@ -30,6 +32,11 @@ export class AgencyController {
     try {
       const agencyId = req.params.agencyId;
       const agencyData: Agency = req.body;
+      if (req.file) {
+        const originalnameWithoutSpaces = req.file.originalname.replace(/\s/g, '');
+        const result = await uploadToS3(req.file.buffer, originalnameWithoutSpaces + Date.now() + path.extname(req.file.originalname));
+        agencyData.agencyLogo = result.Location;
+      }
       const updatedAgency = await this.agency.updateAgency(agencyId, agencyData);
       res.status(200).json({ data: updatedAgency, message: 'Agency updated successfully' });
     } catch (error) {
