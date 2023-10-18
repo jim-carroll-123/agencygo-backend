@@ -16,19 +16,9 @@ export class EmployeeRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/:id`, AuthMiddleware, isAdminMiddleware, ValidationMiddleware(CreateEmployeeDto), this.employee.createEmployee);
-    this.router.get(`${this.path}s/:agencyId`,AuthMiddleware, this.employee.getEmployees);
+    this.router.get(`${this.path}s/:agencyId`, AuthMiddleware, this.employee.getEmployees);
     this.router.get(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployee);
-    this.router.put(
-      `${this.path}/:employeeId`,
-      AuthMiddleware,
-<<<<<<< HEAD
-      isAdminMiddleware,
-      ValidationMiddleware(UpdateEmployeeDto, true),
-=======
-      ValidationMiddleware(UpdateEmployeeDto),
->>>>>>> 769573cc96a75f47a0cdad4b75cbe4c972a5ea2a
-      this.employee.updateEmployee,
-    );
+    this.router.put(`${this.path}/:employeeId`, AuthMiddleware, ValidationMiddleware(UpdateEmployeeDto), this.employee.updateEmployee);
     this.router.get(`${this.path}/search/data`, this.employee.searchEmployee);
     this.router.delete(`${this.path}/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.deleteEmployee);
     this.router.put(
