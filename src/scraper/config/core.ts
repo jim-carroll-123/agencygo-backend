@@ -2,10 +2,29 @@ import puppeteer from 'puppeteer-extra';
 import { executablePath } from 'puppeteer';
 import path from 'path';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import pluginProxy from 'puppeteer-extra-plugin-proxy';
 
 puppeteer.use(StealthPlugin());
 
-export const getBrowserInstance = async (userDataDir?: string) => {
+export const getBrowserInstance = async (
+  proxy: {
+    username: string;
+    hostname: string;
+    port: number;
+    password: string;
+  },
+  userDataDir?: string,
+) => {
+  puppeteer.use(
+    pluginProxy({
+      address: proxy.hostname,
+      port: proxy.port,
+      credentials: {
+        username: proxy.username,
+        password: proxy.password,
+      },
+    }),
+  );
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
     headless: false,

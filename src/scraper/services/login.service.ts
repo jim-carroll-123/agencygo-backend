@@ -6,10 +6,15 @@ import fs from 'fs';
 import archiver from 'archiver';
 import AdmZip from 'adm-zip';
 import { SessionsService } from '@/services/sessions.service';
+import { createProxyUser } from './proxy.service';
 
 export interface ILoginProps {
   email: string;
   password: string;
+  proxy: {
+    username: string;
+    password: string;
+  };
 }
 
 @Service()
@@ -17,7 +22,20 @@ export class LoginBotService {
   private sesions = Container.get(SessionsService);
   public async execute(props: ILoginProps, id?: string) {
     try {
-      const { page, browser } = await getBrowserInstance(id ? `./temp/${id}` : '');
+      // Function to generate a random word
+      function generateRandomWord(length: number) {
+        const charset = 'abcdefghijklmnopqrstuvwxyz';
+        let randomWord = '';
+        for (let i = 0; i < length; i++) {
+          randomWord += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        return randomWord;
+      }
+
+      const uid = generateRandomWord(7);
+      const proxyUser = await createProxyUser({ creatorId: uid });
+      const { page, browser } = await getBrowserInstance(proxyUser.proxy, id ? `./temp/${id}` : '');
+      await page.goto('https://iproyal.com/ip-lookup');
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
       });
@@ -28,6 +46,7 @@ export class LoginBotService {
       await browser.close();
       await this.saveSession(id);
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }

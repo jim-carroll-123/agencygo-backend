@@ -66,14 +66,19 @@ export class CreatorController {
   public loginOnlyfans = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorId: string = req.params.id;
-      this.login.execute(
+      const result = await this.login.execute(
         {
           email: req.body.email,
           password: req.body.password,
+          proxy: {
+            username: '',
+            password: '',
+          },
         },
         creatorId,
       );
 
+      console.log(result);
       res.status(200).json({ data: {}, message: 'creator logged in, session valid' });
     } catch (error) {
       next(error);
