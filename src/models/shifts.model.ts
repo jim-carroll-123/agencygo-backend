@@ -3,11 +3,11 @@ import { Shifts } from '@interfaces/shifts.interface';
 
 const ShiftSchema: Schema<Shifts> = new Schema({
   employeeId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'employee',
   },
   creatorId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Creator',
   },
   startTime: {
@@ -31,8 +31,16 @@ const ShiftSchema: Schema<Shifts> = new Schema({
     default: '',
   },
   repeat: {
-    type: [String],
-    default: [],
+    type: {},
+    default: {
+      sunday: false,
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false,
+    },
   },
   status: {
     type: Boolean,

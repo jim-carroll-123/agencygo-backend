@@ -17,7 +17,6 @@ export class ShiftsController {
   public createShift = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data: Shifts = req.body;
-      console.log(data);
       const shiftCreated: Shifts = await this.shift.createShift(data);
       res.status(200).json({ message: 'Shift created', data: shiftCreated });
     } catch (error) {
@@ -38,6 +37,14 @@ export class ShiftsController {
       const shiftId = req.params.id;
       const deleteShift = await this.shift.deleteShift(shiftId);
       res.status(200).json({ message: 'Shift Deleted', data: deleteShift });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getEmployees = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const shiftEmployees = await this.shift.getAllEmployees();
+      res.status(200).json({ message: 'Shift Employees', data: shiftEmployees });
     } catch (error) {
       next(error);
     }

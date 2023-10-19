@@ -14,9 +14,10 @@ export class ShiftRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, this.shiftsController.getShifts);
-    this.router.post(`${this.path}`, this.shiftsController.createShift);
-    this.router.put(`${this.path}/:id`, this.shiftsController.updateShift);
-    this.router.delete(`${this.path}/:id`, this.shiftsController.deleteShift);
+    this.router.get(`${this.path}`, ValidationMiddleware, this.shiftsController.getShifts);
+    this.router.post(`${this.path}`, ValidationMiddleware, this.shiftsController.createShift);
+    // this.router.put(`${this.path}/:id`, ValidationMiddleware, this.shiftsController.updateShift);
+    this.router.delete(`${this.path}/:id`, ValidationMiddleware, this.shiftsController.deleteShift);
+    this.router.get(`${this.path}/employees`, ValidationMiddleware, this.shiftsController.getEmployees);
   }
 }

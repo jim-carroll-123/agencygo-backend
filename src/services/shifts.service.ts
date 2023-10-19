@@ -2,17 +2,49 @@ import { Service } from 'typedi';
 import { HttpException } from '@exceptions/httpException';
 import { ShiftModel } from '@models/shifts.model';
 import { Shifts } from '@interfaces/shifts.interface';
+import { EmployeeModel } from '@/models/employee.model';
+import { Employee } from '@/interfaces/employee.interface';
+import { CreatorModel } from '@/models/creator.model';
 
 @Service()
 export class ShiftServices {
   public async findAllShifts(): Promise<Shifts[]> {
-    const shifts: Shifts[] = await ShiftModel.find();
+    const shifts: Shifts[] = await CreatorModel.aggregate([
+      {
+        $lookup: {
+          from: 'shifts',
+          localField: '_id',
+          foreignField: 'creatorId',
+          as: 'shifts',
+        },
+      },
+      {
+        $unwind: {
+          path: '$shifts',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'employees',
+          localField: 'shifts.employeeId',
+          foreignField: '_id',
+          as: 'shifts.employee',
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$creatorName' },
+          shifts: { $push: '$shifts' },
+        },
+      },
+    ]);
     if (!shifts) throw new HttpException(409, 'Shifts not found');
 
     return shifts;
   }
   public async createShift(shiftData: Shifts) {
-    console.log(shiftData);
     const shiftResponce: Shifts = await ShiftModel.create({
       startTime: shiftData.startTime,
       endTime: shiftData.endTime,
@@ -37,5 +69,11 @@ export class ShiftServices {
     if (!deleteShiftById) throw new HttpException(409, 'Shift not found');
 
     return deleteShiftById;
+  }
+  public async getAllEmployees() {
+    const allEmployees: Employee[] = await EmployeeModel.find();
+    if (!allEmployees) throw new HttpException(409, 'Employees not found');
+
+    return allEmployees;
   }
 }
