@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Routes } from '@interfaces/routes.interface';
-import {EmailController} from "@controllers/common.controller"
+import { EmailController } from '@controllers/common.controller';
 
 export class EmailRoute implements Routes {
   public path = '/email';
