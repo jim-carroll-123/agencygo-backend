@@ -23,6 +23,9 @@ const AgencySchema: Schema<Agency> = new Schema({
     type: String,
     required: true,
   },
+  agencyLogo: {
+    type: String,
+  },
 });
 
 export const AgencyModel = model<Agency & Document>('Agency', AgencySchema);

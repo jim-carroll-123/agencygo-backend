@@ -21,4 +21,5 @@ export interface RequestSignUp {
   agencyWebsite: string;
   agencyMediaSocial: string;
   password: string;
+  agencyLogo: string;
 }
