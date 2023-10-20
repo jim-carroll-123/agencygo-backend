@@ -3,11 +3,17 @@ import { LoginBotService } from '@/scraper/services/login.service';
 import { IProxy } from '@interfaces/proxy.interface';
 import { CreatorService } from '@/services/creator.service';
 import { NextFunction, Request, Response } from 'express';
+import { getBrowserInstance } from '../scraper/config/core';
 import Container from 'typedi';
+import { StorageService } from '../services/storage.service';
+import path from 'path';
+import AdmZip from 'adm-zip';
+import fs from 'fs';
 
 export class CreatorController {
   public creator = Container.get(CreatorService);
   private login = Container.get(LoginBotService);
+  private storage = Container.get(StorageService);
 
   public getCreators = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -65,20 +71,15 @@ export class CreatorController {
 
   public loginOnlyfans = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const creatorId: string = req.params.id;
-      const result = await this.login.execute(
-        {
-          email: req.body.email,
-          password: req.body.password,
-          proxy: {
-            username: '',
-            password: '',
-          },
-        },
-        creatorId,
-      );
+      const creatorId = req.query.creatorId as string;
+      console.log(creatorId);
 
-      console.log(result);
+      await this.login.execute({
+        email: req.body.email,
+        password: req.body.password,
+        creatorId,
+      });
+
       res.status(200).json({ data: {}, message: 'creator logged in, session valid' });
     } catch (error) {
       next(error);
@@ -122,6 +123,68 @@ export class CreatorController {
       res.status(200).json({ data: creator, message: 'creator fetched successfully' });
     } catch (error) {
       next(error);
+    }
+  };
+
+  public scrapeCreatorFinananceReports = async (req: Request, res: Response, next: NextFunction) => {
+    const proxy = {
+      proxy_user: { username: 'agusr1', user_pass: 'agusr1' },
+      proxy: {
+        username: 'agusr1',
+        hostname: 'geo.iproyal.com',
+        port: 12321,
+        password: 'agusr1_country-us',
+        protocol: 'http|https',
+      },
+    };
+
+    const sessionBucket = {
+      ServerSideEncryption: 'AES256',
+      Location: 'https://agencygo-public.s3.us-east-2.amazonaws.com/server-agusr1.zip',
+      Bucket: 'agencygo-public',
+      Key: 'server-agusr1.zip',
+      ETag: '"9ad0d5e3002b9ea36278067499e1ffd0-3"',
+    };
+
+    const usrDataDir = path.join(__dirname, `../scraper/temp/${proxy.proxy_user.username}`);
+
+    function directoryHasFiles(directoryPath) {
+      // Read the contents of the directory
+      const files = fs.readdirSync(directoryPath);
+
+      // Check if there are any files in the directory
+      if (files.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    const unzipBuffer = async (buffer: Buffer) => {
+      const zip = new AdmZip(buffer);
+      zip.extractAllTo(usrDataDir, true);
+    };
+
+    try {
+      if (!directoryHasFiles(usrDataDir)) {
+        const file = await this.storage.getFile(sessionBucket.Key, sessionBucket.Bucket);
+        await unzipBuffer(file.Body as any);
+      }
+
+      const { browser, page } = await getBrowserInstance(proxy.proxy, usrDataDir);
+
+      await page.goto('https://onlyfans.com/', {
+        waitUntil: ['load', 'domcontentloaded'],
+      });
+
+      await page.waitForTimeout(4000);
+
+      await browser.close();
+
+      res.send(sessionBucket);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
     }
   };
 }

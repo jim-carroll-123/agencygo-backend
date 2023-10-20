@@ -15,16 +15,16 @@ export const getBrowserInstance = async (
   },
   userDataDir?: string,
 ) => {
-  puppeteer.use(
-    pluginProxy({
-      address: proxy.hostname,
-      port: proxy.port,
-      credentials: {
-        username: proxy.username,
-        password: proxy.password,
-      },
-    }),
-  );
+  // puppeteer.use(
+  //   pluginProxy({
+  //     address: proxy.hostname,
+  //     port: proxy.port,
+  //     credentials: {
+  //       username: proxy.username,
+  //       password: proxy.password,
+  //     },
+  //   }),
+  // );
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
     headless: false,

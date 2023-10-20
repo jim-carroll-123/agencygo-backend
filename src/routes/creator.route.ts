@@ -26,5 +26,6 @@ export class CreatorRoute implements Routes {
     this.router.get(`${this.path}/search`, this.creator.searchFilter);
     // Experimental Route
     this.router.post(`${this.path}/login-onlyfans`, ValidationMiddleware(CreatorCredsDTO), this.creator.loginOnlyfans);
+    this.router.post(`${this.path}/scrape-financial-reports`, this.creator.scrapeCreatorFinananceReports);
   }
 }

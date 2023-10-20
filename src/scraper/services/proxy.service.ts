@@ -22,7 +22,7 @@ const createProxyUser = async ({ creatorId }) => {
     {
       username: creatorId,
       password: creatorId,
-      traffic: 2,
+      traffic: 0.01,
     },
     {
       headers: {
@@ -36,7 +36,7 @@ const createProxyUser = async ({ creatorId }) => {
       username: proxyUser.data.username,
       password: proxyUser.data.password,
       proxyCount: 1,
-      rotation: 'sticky',
+      rotation: 'random',
       location: '_country-us',
       highEndPool: true,
       format: '{hostname}:{port}@{username}:{password}',
@@ -69,7 +69,6 @@ const createProxyUser = async ({ creatorId }) => {
     },
   };
 
-  console.log(proxyObj);
   return proxyObj;
 };
 
