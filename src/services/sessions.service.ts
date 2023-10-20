@@ -65,28 +65,7 @@ export class SessionsService {
       const session = await SessionModel.findOne({ _id: sessionId });
       if (!session) throw new HttpException(409, "Sessions doesn't exist");
       const cloudFile = await this.storage.uploadFile(file, `server-${sessionId}.zip`, true);
-      const newSession: Session = await new Promise((resolve, reject) => {
-        SessionModel.findByIdAndUpdate(
-          {
-            _id: session._id,
-          },
-          {
-            status: SessionStatus.Active,
-            url: cloudFile.Location,
-            key: cloudFile.Key,
-            bucket: cloudFile.Bucket,
-          },
-          {
-            new: true,
-          },
-          (err, doc) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(doc);
-          },
-        );
-      });
+
       cleanUp();
       return newSession;
     } catch (error) {

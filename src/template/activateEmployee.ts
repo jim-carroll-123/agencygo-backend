@@ -1,7 +1,6 @@
-
-import { URL } from "../config/index";
-export const generateEmailTemplateForActivation = (body:any,agencyName:string) => {
-  const { _id:id } = body;
+import { URL } from '../config/index';
+export const generateEmailTemplateForActivation = (body: any, agencyName: string) => {
+  const { _id: id } = body;
   const activateAccountTemplate = `
 <!DOCTYPE html>
 <html>
@@ -145,6 +144,6 @@ export const generateEmailTemplateForActivation = (body:any,agencyName:string) =
 		</div>
 	</body>
 </html>
-`
-return activateAccountTemplate;
-    }
+`;
+  return activateAccountTemplate;
+};

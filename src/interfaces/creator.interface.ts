@@ -14,4 +14,5 @@ export interface Creator {
   proxy: mongoose.Types.ObjectId | null;
   status: boolean;
   plateform: boolean;
+  creatorImage: string;
 }
