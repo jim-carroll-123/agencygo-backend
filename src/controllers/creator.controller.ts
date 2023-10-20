@@ -128,35 +128,36 @@ export class CreatorController {
 
   public scrapeCreatorFinananceReports = async (req: Request, res: Response, next: NextFunction) => {
     const proxy = {
-      proxy_user: { username: 'agusr1', user_pass: 'agusr1' },
+      proxy_user: { username: 'agusr5', user_pass: 'agusr5' },
       proxy: {
-        username: 'agusr1',
+        username: 'agusr5',
         hostname: 'geo.iproyal.com',
         port: 12321,
-        password: 'agusr1_country-us',
+        password: 'agusr5_country-us',
         protocol: 'http|https',
       },
     };
 
     const sessionBucket = {
       ServerSideEncryption: 'AES256',
-      Location: 'https://agencygo-public.s3.us-east-2.amazonaws.com/server-agusr1.zip',
+      Location: 'https://agencygo-public.s3.us-east-2.amazonaws.com/server-agusr5.zip',
       Bucket: 'agencygo-public',
-      Key: 'server-agusr1.zip',
-      ETag: '"9ad0d5e3002b9ea36278067499e1ffd0-3"',
+      Key: 'server-agusr5.zip',
+      ETag: '"34ebb149508608235cc7f86988d6215f-3"',
     };
 
     const usrDataDir = path.join(__dirname, `../scraper/temp/${proxy.proxy_user.username}`);
 
-    function directoryHasFiles(directoryPath) {
-      // Read the contents of the directory
-      const files = fs.readdirSync(directoryPath);
-
-      // Check if there are any files in the directory
-      if (files.length > 0) {
-        return true;
-      } else {
-        return false;
+    function directoryHasFiles(directoryPath: string) {
+      try {
+        // Attempt to read the contents of the directory
+        const files = fs.readdirSync(directoryPath);
+        // Check if there are any files in the directory
+        return files.length > 0;
+      } catch (error) {
+        // Handle the error, such as directory not existing
+        console.error(`Error reading directory: ${error.message}`);
+        return false; // Directory doesn't exist or couldn't be read
       }
     }
 
@@ -173,15 +174,35 @@ export class CreatorController {
 
       const { browser, page } = await getBrowserInstance(proxy.proxy, usrDataDir);
 
-      await page.goto('https://onlyfans.com/', {
+      function logToFile(logMessage, logFilePath) {
+        const logLine = `${logMessage}\n`;
+
+        fs.appendFile(logFilePath, logLine, err => {
+          if (err) {
+            console.error(`Error writing to the log file: ${err}`);
+          } else {
+            console.log(`Logged: ${logMessage}`);
+          }
+        });
+      }
+
+      page.on('response', async pageReq => {
+        const url = pageReq.url();
+        if (url.includes('https://onlyfans.com/api2/v2/payouts/transactions')) {
+          const data = await pageReq.json();
+          res.send(data);
+        }
+      });
+
+      await page.goto('https://onlyfans.com/my/statistics/statements/earnings', {
         waitUntil: ['load', 'domcontentloaded'],
       });
 
-      await page.waitForTimeout(4000);
+      // await page.waitForTimeout(40000);
 
-      await browser.close();
+      // await browser.close();
 
-      res.send(sessionBucket);
+      // res.send(sessionBucket);
     } catch (err) {
       console.log(err);
       res.send(err);

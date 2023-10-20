@@ -22,7 +22,7 @@ const createProxyUser = async ({ creatorId }) => {
     {
       username: creatorId,
       password: creatorId,
-      traffic: 0.01,
+      traffic: 0.03,
     },
     {
       headers: {

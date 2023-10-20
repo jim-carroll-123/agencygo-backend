@@ -183,7 +183,8 @@ export class LoginBotService {
       console.log('uploading session');
       const cloudFile = await this.storage.uploadFile(file, `server-${id}.zip`, false);
       console.log(cloudFile);
-      // fs.unlinkSync(outputZipFilePath);
+      fs.unlinkSync(outputZipFilePath);
+      // fs.unlinkSync(folderToZip);
     } catch (err) {
       console.log(err);
     }
