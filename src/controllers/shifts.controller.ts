@@ -3,6 +3,11 @@ import { Container } from 'typedi';
 import { Shifts } from '@interfaces/shifts.interface';
 import { ShiftServices } from '@services/shifts.service';
 
+interface $conflict {
+  message: string;
+  success: boolean;
+}
+
 export class ShiftsController {
   public shift = Container.get(ShiftServices);
 
@@ -17,8 +22,12 @@ export class ShiftsController {
   public createShift = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data: Shifts = req.body;
-      const shiftCreated: Shifts = await this.shift.createShift(data);
-      res.status(200).json({ message: 'Shift created', data: shiftCreated });
+      const shiftCreated: { success: boolean; data: Shifts } | $conflict = await this.shift.createShift(data);
+      if (shiftCreated.success) {
+        res.status(200).json({ message: 'Shift created' });
+      } else {
+        res.status(409).json({ message: 'Shift already exist' });
+      }
     } catch (error) {
       next(error);
     }

@@ -3,7 +3,7 @@ import { ShiftsController } from '@controllers/shifts.controller';
 import { ShiftsDto } from '@dtos/shifts.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
-
+import { AuthMiddleware } from '@/middlewares/auth.middleware';
 export class ShiftRoute implements Routes {
   public path = '/shifts';
   public router = Router();
@@ -14,10 +14,10 @@ export class ShiftRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, ValidationMiddleware, this.shiftsController.getShifts);
-    this.router.post(`${this.path}`, ValidationMiddleware, this.shiftsController.createShift);
+    this.router.get(`${this.path}`, AuthMiddleware, this.shiftsController.getShifts);
+    this.router.post(`${this.path}`, AuthMiddleware, ValidationMiddleware(ShiftsDto), this.shiftsController.createShift);
     // this.router.put(`${this.path}/:id`, ValidationMiddleware, this.shiftsController.updateShift);
-    this.router.delete(`${this.path}/:id`, ValidationMiddleware, this.shiftsController.deleteShift);
-    this.router.get(`${this.path}/employees`, ValidationMiddleware, this.shiftsController.getEmployees);
+    this.router.delete(`${this.path}/:id`, AuthMiddleware, this.shiftsController.deleteShift);
+    this.router.get(`${this.path}/employees`, AuthMiddleware, this.shiftsController.getEmployees);
   }
 }

@@ -45,6 +45,26 @@ export class ShiftServices {
     return shifts;
   }
   public async createShift(shiftData: Shifts) {
+    const { startDate, endDate, creatorId, repeat } = shiftData;
+    const existingShifts = await ShiftModel.find({
+      creatorId: creatorId,
+      $or: [
+        {
+          $and: [{ startDate: { $lte: endDate } }, { endDate: { $gte: startDate } }],
+        },
+      ],
+    });
+    for (const existingShift of existingShifts) {
+      for (const day in repeat) {
+        if (repeat[day] && existingShift.repeat[day]) {
+          const response = {
+            success: false,
+            message: 'Shift scheduling conflict detected. Please choose a different time or date.',
+          };
+          return response;
+        }
+      }
+    }
     const shiftResponce: Shifts = await ShiftModel.create({
       startTime: shiftData.startTime,
       endTime: shiftData.endTime,
@@ -56,7 +76,7 @@ export class ShiftServices {
       repeat: shiftData.repeat,
     });
 
-    return shiftResponce;
+    return { success: true, data: shiftResponce };
   }
   public async updateShift(shiftId: string, shiftData: Shifts) {
     const updatedShiftData: Shifts = await ShiftModel.findByIdAndUpdate(shiftId, { shiftData }, { new: true });
