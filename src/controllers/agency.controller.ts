@@ -28,6 +28,16 @@ export class AgencyController {
     }
   };
 
+  public getsingleagency = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const agencyId = req.params.agencyId;
+      const findSignleAgency: Agency = await this.agency.getsingleagency(agencyId);
+      res.status(200).json({ data: findSignleAgency, message: 'success' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public updateAgency = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const agencyId = req.params.agencyId;

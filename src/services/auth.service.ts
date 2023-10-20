@@ -10,6 +10,9 @@ import { AgencyModel } from '@/models/agency.model';
 import { EmployeeModel } from '@/models/employee.model';
 import { Agency } from '@/interfaces/agency.interface';
 import { Employee } from '@/interfaces/employee.interface';
+import { Email } from '@/interfaces/common.interface';
+import { generateEmailTemplateForForgotPassword } from '../template/forgotPassword';
+import { Emails } from '@/utils/email';
 
 const createToken = (user: User): any => {
   const dataStoredInToken: DataStoredInToken = { _id: user._id };
@@ -93,6 +96,24 @@ export class AuthService {
         }
         response.employee = employee;
       }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+  public async forgotpassword(email: string) {
+    try {
+      const user = await UserModel.findOne({ email: email });
+      if (!user) {
+        throw new HttpException(404, 'email does not exist');
+      }
+      const template = generateEmailTemplateForForgotPassword(email, user._id);
+      const emailData: Email = {
+        to: email,
+        subject: 'Forgot password',
+        template: template,
+      };
+      const response = await new Emails().sendEmail(emailData);
       return response;
     } catch (error) {
       throw error;

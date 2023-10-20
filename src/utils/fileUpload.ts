@@ -1,12 +1,6 @@
 import * as AWS from 'aws-sdk';
-import { BUCKET_PUBLIC, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } from '@config';
-
-const awsConfiguration = {
-  accessKeyId: AWS_ACCESS_KEY_ID,
-  secretAccessKey: AWS_SECRET_ACCESS_KEY,
-  region: AWS_REGION,
-};
-const S3 = new AWS.S3(awsConfiguration);
+import { BUCKET_PUBLIC } from '@config';
+import { s3 } from '@config';
 
 export const uploadToS3 = async (fileData: Buffer, fileName: string): Promise<any> => {
   let contentType = '';
@@ -29,7 +23,7 @@ export const uploadToS3 = async (fileData: Buffer, fileName: string): Promise<an
   };
 
   try {
-    const result = await S3.upload(params).promise();
+    const result = await s3.upload(params).promise();
     return result;
   } catch (err) {
     console.log('here', err);

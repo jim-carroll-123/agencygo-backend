@@ -12,8 +12,4 @@ export class CreateAgencyDto {
 
   @IsString()
   public socialMediaLink;
-
-  @IsString()
-  @IsOptional()
-  public agencyLogo;
 }

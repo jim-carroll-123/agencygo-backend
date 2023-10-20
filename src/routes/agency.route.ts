@@ -17,6 +17,7 @@ export class AgencyRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/:id`, AuthMiddleware, isAdminMiddleware, ValidationMiddleware(CreateAgencyDto, true), this.agency.createAgency);
+    this.router.get(`${this.path}/:agencyId`, AuthMiddleware, this.agency.getsingleagency);
     this.router.delete(`${this.path}/delete-agency/:agencyId`, AuthMiddleware, isAdminMiddleware, this.agency.deleteAgency);
     this.router.get(`${this.path}`, AuthMiddleware, this.agency.getAgency);
     this.router.patch(

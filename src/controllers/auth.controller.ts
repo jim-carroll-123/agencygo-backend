@@ -71,4 +71,13 @@ export class AuthController {
       next(error);
     }
   };
+  public forgotPassword = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const getEmail = req.body.email;
+      const response = await this.auth.forgotpassword(getEmail);
+      res.status(200).json({ response });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
