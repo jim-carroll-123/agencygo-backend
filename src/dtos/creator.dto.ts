@@ -27,3 +27,12 @@ export class CreatorDTO {
   @IsOptional()
   plateform: boolean;
 }
+
+export class CreatorCredsDTO {
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+}
