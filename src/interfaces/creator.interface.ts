@@ -11,7 +11,8 @@ export interface Creator {
   internalNotes: string;
   assignEmployee: mongoose.Types.ObjectId | null; // The employee assigned to this creator
   autoRelink: boolean;
-  proxy: mongoose.Types.ObjectId | null;
+  sessionBucket: object | null;
+  proxy: object | null;
   status: boolean;
   plateform: boolean;
 }

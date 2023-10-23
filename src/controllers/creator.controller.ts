@@ -128,22 +128,22 @@ export class CreatorController {
 
   public scrapeCreatorFinananceReports = async (req: Request, res: Response, next: NextFunction) => {
     const proxy = {
-      proxy_user: { username: 'agusr5', user_pass: 'agusr5' },
+      proxy_user: { username: 'agusr33', user_pass: 'agusr33' },
       proxy: {
-        username: 'agusr5',
+        username: 'agusr33',
         hostname: 'geo.iproyal.com',
         port: 12321,
-        password: 'agusr5_country-us',
+        password: 'agusr33_country-us',
         protocol: 'http|https',
       },
     };
 
     const sessionBucket = {
       ServerSideEncryption: 'AES256',
-      Location: 'https://agencygo-public.s3.us-east-2.amazonaws.com/server-agusr5.zip',
+      Location: 'https://agencygo-public.s3.us-east-2.amazonaws.com/server-agusr33.zip',
       Bucket: 'agencygo-public',
-      Key: 'server-agusr5.zip',
-      ETag: '"34ebb149508608235cc7f86988d6215f-3"',
+      Key: 'server-agusr33.zip',
+      ETag: '"48c14c3f493960b1547b421dd40c644d-3"',
     };
 
     const usrDataDir = path.join(__dirname, `../scraper/temp/${proxy.proxy_user.username}`);
