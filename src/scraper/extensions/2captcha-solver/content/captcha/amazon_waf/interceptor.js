@@ -14,14 +14,14 @@
 
     let interceptorFunc = function () {
 
-        const initHelper = function (inputId, arguments) {
+        const initHelper = function (inputId, args) {
             registerCaptchaWidget({
                 captchaType: "amazon_waf",
                 inputId: inputId,
                 widgetId: inputId,
-                sitekey: arguments.key,
-                iv: arguments.iv,
-                context: arguments.context,
+                sitekey: args.key,
+                iv: args.iv,
+                context: args.context,
                 pageurl: window.location.href,
             });
         };
