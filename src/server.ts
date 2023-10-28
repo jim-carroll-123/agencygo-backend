@@ -10,6 +10,7 @@ import { EmailRoute } from '@routes/common.route';
 import { RoleRoute } from './routes/roles.route';
 import { ShiftRoute } from './routes/shift.route';
 import { InvoicingRoute } from './routes/invoicing.route';
+import { PayrollRoute } from './routes/payroll.routes';
 ValidateEnv();
 
 const app = new App([
@@ -20,6 +21,7 @@ const app = new App([
   new EmployeeRoute(),
   new CreatorRoute(),
   new SessionsRoute(),
+  new PayrollRoute(),
   new EmailRoute(),
   new RoleRoute(),
   new ShiftRoute(),
