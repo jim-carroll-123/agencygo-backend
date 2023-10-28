@@ -26,5 +26,4 @@ const InvoicingSchema: Schema<Invoicing> = new Schema({
         required: true,
       },
 })
-
-export const InvoicingModel = model<Invoicing & Document>('Agency', InvoicingSchema)
+export const InvoicingModel = model<Invoicing & Document>('Invoicing', InvoicingSchema);

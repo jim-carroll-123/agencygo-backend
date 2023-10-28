@@ -6,60 +6,60 @@ import { InvoicingModel } from '@/models/invoicing.model';
 
 @Service()
 export class InvoicingService {
-    public async createInvoicing(InvoicingData: Invoicing, userId: string): Promise<Invoicing> {
+  public async createInvoicing(invoicingData: Invoicing): Promise<Invoicing> {
+    try {
+        const newInvoicing = new InvoicingModel({
+            ...invoicingData,
+        });
+        // Save the Invoicing
+        const createdInvoicing = await newInvoicing.save();
+        return createdInvoicing;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+    public async getAllInvoicing(): Promise<Invoicing[]> {
+        const invoicings: Invoicing[] = await InvoicingModel.find();
+        return invoicings;
+    }
+
+    public async getsingleInvoicing(invoicingId: string): Promise<Invoicing> {
         try {
-          const user = await UserModel.findOne({ _id: userId });
-          if (!user) {
-            throw new HttpException(404, `User not found`);
-          }
-          const newInvoicing = new InvoicingModel({
-            ...InvoicingData,
-            userId: user._id,
-          });
-          // save the Invoicing
-          const createdInvoicing = await newInvoicing.save();
-          return createdInvoicing;
+            const getInvoicing: Invoicing = await InvoicingModel.findOne({ _id: invoicingId });
+            return getInvoicing;
         } catch (error) {
-          throw error;
+            throw error;
         }
+    }
+
+    public async deleteInvoicing(invoicingId: string): Promise<Invoicing> {
+      try {
+          const deletedInvoicing = await InvoicingModel.findByIdAndDelete(invoicingId);
+          if (!deletedInvoicing) throw new HttpException(404, "Invoicing doesn't exist");
+          return deletedInvoicing;
+      } catch (error) {
+          throw error;
       }
-
-      // public async getAllInvoicing(): Promise<Invoicing[]> {
-      //   const Invoicing: Invoicing[] = await InvoicingModel.find();
-      //   return Invoicing;
-      // }
-    
-      // public async getsingleInvoicing(InvoicingId: string): Promise<Invoicing> {
-      //   try {
-      //     const getInvoicing: Invoicing = await InvoicingModel.findOne({ _id: InvoicingId });
-      //     return getInvoicing;
-      //   } catch (error) {
-      //     throw error;
-      //   }
-      // }
-    
-      // public updateInvoicing = async (id: string, data: Invoicing) => {
-      //   try {
-      //     const newInvoicing: Invoicing = await InvoicingModel.findByIdAndUpdate(
-      //       {
-      //         _id: id,
-      //       },
-      //       data,
-      //       {
-      //         new: true,
-      //       },
-      //     );
-      //     return newInvoicing;
-      //   } catch (error) {
-      //     throw error;
-      //   }
-      // };
-    
-      // public async deleteInvoicing(InvoicingId: string): Promise<Invoicing> {
-      //   const deleteInvoicingById: Invoicing = await InvoicingModel.findByIdAndDelete(InvoicingId);
-      //   if (!deleteInvoicingById) throw new HttpException(404, "Invoicing doesn't exist");
-    
-      //   return deleteInvoicingById;
-      // }
-
+  }
+  
+  public async updateInvoicing(id: string, data: Invoicing): Promise<Invoicing> {
+      try {
+          const updatedInvoicing = await InvoicingModel.findByIdAndUpdate(
+              {
+                  _id: id,
+              },
+              data,
+              {
+                  new: true,
+              }
+          );
+          if (!updatedInvoicing) throw new HttpException(404, "Invoicing doesn't exist");
+          return updatedInvoicing;
+      } catch (error) {
+          throw error;
+      }
+  }
+  
 }

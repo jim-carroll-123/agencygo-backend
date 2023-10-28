@@ -16,7 +16,7 @@ const app = new App([
   new UserRoute(),
   new AuthRoute(),
   new AgencyRoute(),
-  // new InvoicingRoute(),
+  new InvoicingRoute(),
   new EmployeeRoute(),
   new CreatorRoute(),
   new SessionsRoute(),
