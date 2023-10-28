@@ -9,12 +9,14 @@ import { SessionsRoute } from './routes/sessions.route';
 import { EmailRoute } from '@routes/common.route';
 import { RoleRoute } from './routes/roles.route';
 import { ShiftRoute } from './routes/shift.route';
+import { InvoicingRoute } from './routes/invoicing.route';
 ValidateEnv();
 
 const app = new App([
   new UserRoute(),
   new AuthRoute(),
   new AgencyRoute(),
+  // new InvoicingRoute(),
   new EmployeeRoute(),
   new CreatorRoute(),
   new SessionsRoute(),

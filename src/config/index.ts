@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
 import { S3 } from './aws';
+ console.log(process.env.NODE_ENV)
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
