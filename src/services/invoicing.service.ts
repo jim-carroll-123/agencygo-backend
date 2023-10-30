@@ -20,10 +20,18 @@ export class InvoicingService {
 }
 
 
-    public async getAllInvoicing(): Promise<Invoicing[]> {
-        const invoicings: Invoicing[] = await InvoicingModel.find();
-        return invoicings;
+public async getAllInvoicing(page: number, limit: number): Promise<{ data: Invoicing[], total: number }> {
+    try {
+        const skip = (page - 1) * limit;
+        const total = await InvoicingModel.countDocuments();
+        const invoicings: Invoicing[] = await InvoicingModel.find().skip(skip).limit(limit);
+
+        return { data: invoicings, total };
+    } catch (error) {
+        throw error;
     }
+}
+
 
     public async getsingleInvoicing(invoicingId: string): Promise<Invoicing> {
         try {

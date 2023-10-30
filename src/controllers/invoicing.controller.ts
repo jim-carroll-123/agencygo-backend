@@ -23,13 +23,17 @@ export class InvoicingController {
 
     public getInvoicing = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const findAllUsersInvoicing: Invoicing[] = await this.invoicing.getAllInvoicing();
-            res.status(200).json({ data: findAllUsersInvoicing, message: 'success' });
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+    
+            const result = await this.invoicing.getAllInvoicing(page, limit);
+    
+            res.status(200).json({ data: result.data, total: result.total, message: 'success' });
         } catch (error) {
             next(error);
         }
     };
-
+    
     public getsingleInvoicing = async (req: Request, res: Response, next: NextFunction) => {
       try {
           const InvoicingId = req.params.id; // Use "id" instead of "InvoicingId"
