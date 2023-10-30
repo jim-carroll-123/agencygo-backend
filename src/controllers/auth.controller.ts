@@ -1,10 +1,19 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { RequestSignUp, RequestWithUser } from '@interfaces/auth.interface';
+import { RequestSignUp, RequestWithUser, DataStoredInToken } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import { AuthService } from '@services/auth.service';
 import { Scraper } from '@/scraper';
 
+import { sign } from 'jsonwebtoken';
+import { SECRET_KEY } from '@config';
+
+const createToken = (user: User): any => {
+  const dataStoredInToken: DataStoredInToken = { _id: user._id };
+  const expiresIn: number = 60 * 60 * 24;
+
+  return { expiresIn, token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }) };
+};
 export class AuthController {
   public auth = Container.get(AuthService);
   public scraper = Container.get(Scraper);
@@ -80,4 +89,43 @@ export class AuthController {
       next(error);
     }
   };
+
+  public generatetwiliotoken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const AccessToken = require('twilio').jwt.AccessToken;
+      const VideoGrant = AccessToken.VideoGrant;
+
+      // Your Twilio Account SID and API Key SID/Secret
+      const accountSid = process.env.TWILIO_ACCOUNT_SID;
+      const apiKeySid = process.env.TWILIO_API_KEY;
+      const apiKeySecret = process.env.TWILIO_SECRET_KEY;
+
+      const userData: User = req.body;
+      // const { tokenData } = await this.auth.generatetoken(userData);
+
+      const identity = req.body.email;
+      // Create an access token
+      const accessToken = new AccessToken(accountSid, apiKeySid, apiKeySecret, {
+        identity: identity,
+      });
+      // Add a Video grant to the token
+      const videoGrant = new VideoGrant();
+      accessToken.addGrant(videoGrant);
+
+      // Serialize the token to a JWT
+      const token = accessToken.toJwt();
+      const tokenData = createToken(accessToken);
+      res.status(200).json({
+        // data: { tokenData, accessToken: token },
+        data: token ,
+        message: 'token get',
+      });
+    }
+    catch (error) {
+      console.log(error)
+      res.status(400).json({
+        error,
+      });
+    }
+  }
 }

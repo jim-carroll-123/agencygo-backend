@@ -20,5 +20,6 @@ export class AuthRoute implements Routes {
     this.router.get(`${this.path}verify`, AuthMiddleware, this.auth.verify);
     this.router.post(`${this.path}logout`, AuthMiddleware, this.auth.logOut);
     this.router.post(`${this.path}/forgot-password`, this.auth.forgotPassword);
+    this.router.post(`${this.path}twiliotoken`,this.auth.generatetwiliotoken);
   }
 }

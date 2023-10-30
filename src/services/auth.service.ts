@@ -56,7 +56,7 @@ export class AuthService {
     return { user: updateUserData };
   }
 
-  public async login(userData: User): Promise<{ findUser: User }> {
+  public async login(userData: User): Promise<{ findUser: User, tokenData: any }> {
     const findUser: User = await UserModel.findOne({ email: userData.email });
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
@@ -64,6 +64,7 @@ export class AuthService {
     if (!isPasswordMatching) throw new HttpException(409, 'Invalid Credentials'); // should not let user know which field is wrong
 
     const tokenData = createToken(findUser);
+    console.log(tokenData);
     // const cookie = createCookie(tokenData);
 
     return { findUser, tokenData };
@@ -119,4 +120,5 @@ export class AuthService {
       throw error;
     }
   }
+
 }

@@ -10,6 +10,7 @@ import { hash } from 'bcrypt';
 import { Email } from '@/interfaces/common.interface';
 import { generateEmailTemplateForActivation } from '../template/activateEmployee';
 import mongoose from 'mongoose';
+import { Creator } from '@/interfaces/creator.interface';
 
 @Service()
 export class EmployeeService {
@@ -104,7 +105,7 @@ export class EmployeeService {
       if (error.status) {
         throw error;
       }
-      throw new HttpException(500, 'Something went wrong');
+      throw new HttpException(500, `${error.message}`);
     }
   }
 
@@ -212,8 +213,9 @@ export class EmployeeService {
     try {
       let filter = {};
       if (getData.creator) {
-        const employeesId = await CreatorModel.findOne({ _id: getData.creator });
+        const employeesId: Creator = await CreatorModel.findOne({ _id: getData.creator }) as Creator;
         filter = { _id: { $in: employeesId.assignEmployee } };
+        console.log('--------', employeesId)
       }
       if (getData.name) {
         filter = {

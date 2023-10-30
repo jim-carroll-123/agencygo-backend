@@ -9,6 +9,7 @@ import { SessionsRoute } from './routes/sessions.route';
 import { EmailRoute } from '@routes/common.route';
 import { RoleRoute } from './routes/roles.route';
 import { ShiftRoute } from './routes/shift.route';
+import { ChatRoute } from './routes/chat.route';
 ValidateEnv();
 
 const app = new App([
@@ -21,6 +22,7 @@ const app = new App([
   new EmailRoute(),
   new RoleRoute(),
   new ShiftRoute(),
+  new ChatRoute(),
 ]);
 
 app.listen();
