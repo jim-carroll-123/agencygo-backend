@@ -15,10 +15,11 @@ export class PayrollRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.payroll.getPayrolls);
-    this.router.get(`${this.path}/:id`, this.payroll.getSinglePayroll);
-    this.router.post(`${this.path}`, ValidationMiddleware(CreatePayrollDto), this.payroll.createPayroll);
-    this.router.delete(`${this.path}/:id`, this.payroll.deletePayroll);
+this.router.get(`${this.path}/:id`, this.payroll.getSinglePayroll);
+this.router.post(`${this.path}`, ValidationMiddleware(CreatePayrollDto), this.payroll.createPayroll);
+this.router.delete(`${this.path}/:id`, this.payroll.deletePayroll);
 this.router.put(`${this.path}/:id`, ValidationMiddleware(CreatePayrollDto, true), this.payroll.updatePayroll);
+
 
 }
 
