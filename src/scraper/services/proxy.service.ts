@@ -1,5 +1,17 @@
 import axios from 'axios';
 
+function generateRandomUID(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let uid = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    uid += characters.charAt(randomIndex);
+  }
+
+  return uid;
+}
+
 const getProxyUser = async () => {
   const apiUrl = 'https://proxy.webshare.io/api/v2/proxy/list/?mode=direct&page=1&page_size=25';
   const apiKey = 'zhm9omgfqo0ftcll0rkfomir8mvksdwvy4vc0a3i';
@@ -12,10 +24,12 @@ const getProxyUser = async () => {
   return response.data.results[0];
 };
 
-const createProxyUser = async ({ creatorId }) => {
+const createProxyUser = async () => {
   const proxyUserApiUrl = 'https://dashboard.iproyal.com/api/residential/royal/reseller/sub-users';
   const proxyCredsApiUrl = 'https://dashboard.iproyal.com/api/residential/royal/reseller/access/generate-proxy-list';
   const proxyProtocol = 'http|https';
+
+  const creatorId = generateRandomUID(6);
 
   const proxyUser = await axios.post(
     proxyUserApiUrl,

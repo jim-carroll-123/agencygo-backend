@@ -9,6 +9,7 @@ import { SessionsService } from '@/services/sessions.service';
 import { createProxyUser } from './proxy.service';
 import path from 'path';
 import { StorageService } from '../../services/storage.service';
+import { CreatorModel } from '@/models/creator.model';
 
 export interface ILoginProps {
   email: string;
@@ -22,8 +23,7 @@ export class LoginBotService {
   private storage = Container.get(StorageService);
   public async execute(props: ILoginProps) {
     try {
-      const proxyUser = await createProxyUser({ creatorId: props.creatorId });
-      console.log(proxyUser);
+      const proxyUser = await createProxyUser();
       const { page, browser } = await getBrowserInstance(proxyUser.proxy, path.join(__dirname, `../temp/${props.creatorId}`));
       // await page.goto('https://iproyal.com/ip-lookup');
       await page.goto(URL_BASE, {
@@ -34,7 +34,14 @@ export class LoginBotService {
       await this.checkingForCaptcha(page);
       await this.clickLogin(page);
       await browser.close();
-      await this.saveSession(props.creatorId);
+      const sessionBucket = await this.saveSession(props.creatorId);
+      await CreatorModel.updateOne(
+        { _id: props.creatorId },
+        {
+          $set: { proxy: proxyUser, sessionBucket },
+        },
+      );
+      return;
     } catch (error) {
       console.log(error);
       throw error;
@@ -182,9 +189,9 @@ export class LoginBotService {
       const file = fs.createReadStream(outputZipFilePath);
       console.log('uploading session');
       const cloudFile = await this.storage.uploadFile(file, `server-${id}.zip`, false);
-      console.log(cloudFile);
       fs.unlinkSync(outputZipFilePath);
       // fs.unlinkSync(folderToZip);
+      return cloudFile;
     } catch (err) {
       console.log(err);
     }

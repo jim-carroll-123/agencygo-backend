@@ -19,13 +19,6 @@ export class CreatorDTO {
 
   @IsBoolean()
   autoRelink: boolean;
-
-  @IsBoolean()
-  status: boolean;
-
-  @IsBoolean()
-  @IsOptional()
-  plateform: boolean;
 }
 
 export class CreatorCredsDTO {

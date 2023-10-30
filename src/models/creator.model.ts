@@ -39,9 +39,15 @@ const CreatorSchema: Schema<Creator> = new Schema({
     type: Boolean,
     default: true,
   },
-  plateform: {
-    type: Boolean,
-    default: false,
+  ofcreds: {
+    email: {
+      type: String,
+      default: null,
+    },
+    password: {
+      type: String,
+      default: null,
+    },
   },
 });
 
