@@ -7,4 +7,5 @@ export interface Agency {
   numberOfCreators: number;
   websiteUrl: string;
   socialMediaLink: string;
+  agencyLogo: string;
 }

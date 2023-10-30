@@ -9,6 +9,7 @@ import { StorageService } from '../services/storage.service';
 import path from 'path';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
+import { uploadToS3 } from '@/utils/fileUpload';
 
 export class CreatorController {
   public creator = Container.get(CreatorService);
@@ -28,6 +29,13 @@ export class CreatorController {
   public createCreator = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorData: Creator = req.body;
+      console.log(req.file);
+      console.log(creatorData);
+      if (req.file) {
+        const originalnameWithoutSpaces = req.file.originalname.replace(/\s/g, '');
+        const result = await uploadToS3(req.file.buffer, originalnameWithoutSpaces + Date.now() + path.extname(req.file.originalname));
+        creatorData.creatorName = result.Location;
+      }
       const creatorDetails: Creator = await this.creator.createCreator(creatorData);
 
       res.status(201).json({ data: creatorDetails, message: 'creator added successfully' });

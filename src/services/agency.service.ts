@@ -30,6 +30,15 @@ export class AgencyService {
     return agency;
   }
 
+  public async getsingleagency(agencyId: string): Promise<Agency> {
+    try {
+      const getagency: Agency = await AgencyModel.findOne({ _id: agencyId });
+      return getagency;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public updateAgency = async (id: string, data: Agency) => {
     try {
       const newAgency: Agency = await AgencyModel.findByIdAndUpdate(

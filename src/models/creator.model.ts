@@ -2,6 +2,9 @@ import { Creator, Gender } from '@/interfaces/creator.interface';
 import { Schema, model, Document } from 'mongoose';
 
 const CreatorSchema: Schema<Creator> = new Schema({
+  creatorImage: {
+    type: String,
+  },
   creatorName: {
     type: String,
     required: true,

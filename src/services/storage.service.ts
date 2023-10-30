@@ -1,5 +1,5 @@
 import { BUCKET_PRIVATE, BUCKET_PUBLIC } from '@/config';
-import { s3 } from '@/config/aws';
+import { s3 } from '@/config';
 import { HttpException } from '@/exceptions/httpException';
 import { Service } from 'typedi';
 import { ManagedUpload } from 'aws-sdk/clients/s3';

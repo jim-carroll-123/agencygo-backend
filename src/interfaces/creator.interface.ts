@@ -15,4 +15,5 @@ export interface Creator {
   proxy: object | null;
   status: boolean;
   plateform: boolean;
+  creatorImage: string;
 }

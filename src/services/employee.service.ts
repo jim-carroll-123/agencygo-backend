@@ -76,7 +76,7 @@ export class EmployeeService {
     try {
       const employees = await EmployeeModel.aggregate([
         {
-          $match: {agencyId: new mongoose.Types.ObjectId(agencyId)},
+          $match: { agencyId: new mongoose.Types.ObjectId(agencyId) },
         },
         {
           $lookup: {
@@ -90,12 +90,12 @@ export class EmployeeService {
           $project: {
             _id: 1,
             name: 1,
-            email:1,
+            email: 1,
             role: 1,
             status: 1,
-            userId:1,
-            agencyId:1,
-            assignedCreators:  '$creatorName.creatorName' ,
+            userId: 1,
+            agencyId: 1,
+            assignedCreators: '$creatorName.creatorName',
           },
         },
       ]);
@@ -218,7 +218,7 @@ export class EmployeeService {
       if (getData.name) {
         filter = {
           ...filter,
-          name: new RegExp(`${getData.name}`,"i"),
+          name: new RegExp(`${getData.name}`, 'i'),
         };
       }
       if (getData.status) {
@@ -244,12 +244,12 @@ export class EmployeeService {
           $project: {
             _id: 1,
             name: 1,
-            email:1,
+            email: 1,
             role: 1,
             status: 1,
-            userId:1,
-            agencyId:1,
-            assignedCreators: '$creatorName.creatorName' ,
+            userId: 1,
+            agencyId: 1,
+            assignedCreators: '$creatorName.creatorName',
           },
         },
       ]);
