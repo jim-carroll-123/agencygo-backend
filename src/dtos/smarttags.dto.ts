@@ -1,6 +1,6 @@
 import { IsDate, IsDateString, IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class CreateInvoicingDto {
+export class CreatesmartTagsDto {
   @IsString()
   public userId;
 

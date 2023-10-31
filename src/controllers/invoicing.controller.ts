@@ -4,9 +4,17 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { uploadToS3 } from '@/utils/fileUpload';
 import path from 'path';
+import PDFDocument from 'pdfkit';
+import { Readable } from 'stream';
+import fs from 'fs';
 
 export class InvoicingController {
 
+    private readonly invoicingService: InvoicingService;
+
+  constructor() {
+    this.invoicingService = new InvoicingService();
+  }
     public invoicing = Container.get(InvoicingService);
 
     public createInvoicing = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,7 +40,7 @@ export class InvoicingController {
 
     public getsingleInvoicing = async (req: Request, res: Response, next: NextFunction) => {
       try {
-          const InvoicingId = req.params.id; // Use "id" instead of "InvoicingId"
+          const InvoicingId = req.params.id; 
           const findSingleInvoicing: Invoicing = await this.invoicing.getsingleInvoicing(InvoicingId);
           res.status(200).json({ data: findSingleInvoicing, message: 'success' });
       } catch (error) {
@@ -60,6 +68,5 @@ public updateInvoicing = async (req: Request, res: Response, next: NextFunction)
         next(error);
     }
 };
-
 
 }

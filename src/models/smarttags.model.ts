@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
-import { Invoicing } from '@/interfaces/invoicing.interface';
+import { smartTags } from '@/interfaces/smarttags.interface';
 
-const InvoicingSchema: Schema<Invoicing> = new Schema({
+const smartTagsSchema: Schema<smartTags> = new Schema({
 
     userId: {
         type: Schema.Types.ObjectId,
@@ -30,4 +30,4 @@ const InvoicingSchema: Schema<Invoicing> = new Schema({
         required: true,
     }
 })
-export const InvoicingModel = model<Invoicing & Document>('Invoicing', InvoicingSchema);
+export const smartTagsModel = model<smartTags & Document>('smartTags', smartTagsSchema);
