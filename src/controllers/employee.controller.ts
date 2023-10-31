@@ -46,7 +46,8 @@ export class EmployeeController {
       const employeeId = req.params.employeeId;
       const employeeData: EmployeeUpdate = req.body;
       const updatedEmployee = await this.employee.updateEmployee(employeeId, employeeData);
-      res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
+      if(!updatedEmployee) return res.status(404).json({ data: updatedEmployee, message: 'Employee not found' });
+      else return res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
     } catch (error) {
       next(error);
     }

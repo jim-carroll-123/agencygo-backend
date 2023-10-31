@@ -81,11 +81,7 @@ export class RoleService {
           },
         },
       ]);
-      if (role.length != 0) {
-        return role;
-      } else {
-        throw new HttpException(404, 'Role not found');
-      }
+      return role;
     } catch (error) {
       throw new HttpException(500, 'Something went wrong');
     }
