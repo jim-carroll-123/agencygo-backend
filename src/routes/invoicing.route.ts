@@ -23,3 +23,4 @@ this.router.put(`${this.path}/:id`, ValidationMiddleware(CreateInvoicingDto, tru
 }
 
 }
+
