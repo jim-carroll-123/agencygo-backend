@@ -70,11 +70,11 @@ const createProxyUser = async () => {
   const [username, password] = userPassString.split(':');
 
   const proxyObj = {
-    proxy_user: {
+    proxyUser: {
       username,
       user_pass: proxyUser.data.password,
     },
-    proxy: {
+    creds: {
       username,
       hostname,
       port: parseInt(port),
