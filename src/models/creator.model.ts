@@ -2,6 +2,10 @@ import { Creator, Gender } from '@/interfaces/creator.interface';
 import { Schema, model, Document } from 'mongoose';
 
 const CreatorSchema: Schema<Creator> = new Schema({
+  agencyId:{
+    type:Schema.Types.ObjectId,
+    ref:"Agency"
+  },
   creatorName: {
     type: String,
     required: true,
