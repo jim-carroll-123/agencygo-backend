@@ -8,4 +8,8 @@ export interface Agency {
   websiteUrl: string;
   socialMediaLink: string;
   agencyLogo: string;
+  primaryColor: string;
+  secondaryColor: string;
+  email: string;
+  phone: string;
 }
