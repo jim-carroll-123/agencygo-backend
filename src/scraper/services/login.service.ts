@@ -9,6 +9,7 @@ import { SessionsService } from '@/services/sessions.service';
 import { createProxyUser } from './proxy.service';
 import path from 'path';
 import { StorageService } from '../../services/storage.service';
+import { CreatorModel } from '@/models/creator.model';
 
 export interface ILoginProps {
   email: string;
@@ -22,9 +23,8 @@ export class LoginBotService {
   private storage = Container.get(StorageService);
   public async execute(props: ILoginProps) {
     try {
-      const proxyUser = await createProxyUser({ creatorId: props.creatorId });
-      console.log(proxyUser);
-      const { page, browser } = await getBrowserInstance(proxyUser.proxy, path.join(__dirname, `../temp/${props.creatorId}`));
+      const proxyUser = await createProxyUser();
+      const { page, browser } = await getBrowserInstance(proxyUser.creds, path.join(__dirname, `../temp/${props.creatorId}`));
       // await page.goto('https://iproyal.com/ip-lookup');
       await page.goto(URL_BASE, {
         waitUntil: ['load', 'domcontentloaded'],
@@ -34,7 +34,14 @@ export class LoginBotService {
       await this.checkingForCaptcha(page);
       await this.clickLogin(page);
       await browser.close();
-      await this.saveSession(props.creatorId);
+      const sessionBucket = await this.saveSession(props.creatorId);
+      await CreatorModel.updateOne(
+        { _id: props.creatorId },
+        {
+          $set: { proxy: proxyUser, sessionBucket, ofcreds: { email, password } },
+        },
+      );
+      return;
     } catch (error) {
       console.log(error);
       throw error;
@@ -170,24 +177,20 @@ export class LoginBotService {
   }
 
   public async saveSession(id: string) {
-    try {
-      const folderToZip = path.join(__dirname, `../temp/${id}`);
-      const outputZipFilePath = path.join(__dirname, `../uploads/${id}.zip`);
-      const outputZipStream = fs.createWriteStream(outputZipFilePath);
-      const archive = archiver('zip');
-      archive.pipe(outputZipStream);
-      archive.directory(folderToZip, false);
-      console.log('zipping session');
-      await archive.finalize();
-      const file = fs.createReadStream(outputZipFilePath);
-      console.log('uploading session');
-      const cloudFile = await this.storage.uploadFile(file, `server-${id}.zip`, false);
-      console.log(cloudFile);
-      fs.unlinkSync(outputZipFilePath);
-      // fs.unlinkSync(folderToZip);
-    } catch (err) {
-      console.log(err);
-    }
+    const folderToZip = path.join(__dirname, `../temp/${id}`);
+    const outputZipFilePath = path.join(__dirname, `../uploads/${id}.zip`);
+    const outputZipStream = fs.createWriteStream(outputZipFilePath);
+    const archive = archiver('zip');
+    archive.pipe(outputZipStream);
+    archive.directory(folderToZip, false);
+    console.log('zipping session');
+    await archive.finalize();
+    const file = fs.createReadStream(outputZipFilePath);
+    console.log('uploading session');
+    const cloudFile = await this.storage.uploadFile(file, `server-${id}.zip`, false);
+    // fs.unlinkSync(outputZipFilePath);
+    // fs.unlinkSync(folderToZip);
+    return cloudFile;
   }
 
   public async unzipSession(zipFilePath: string, id: string) {
