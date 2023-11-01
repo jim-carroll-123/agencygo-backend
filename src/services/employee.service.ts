@@ -129,8 +129,9 @@ export class EmployeeService {
       if (employeeData.password) {
         hashedPassword = await hash(employeeData.password, 10);
       }
+      console.log(employeeId)
       const employee = await EmployeeModel.findOneAndUpdate(
-        { _id: new mongoose.Types.ObjectId(employeeId) },
+        { _id: employeeId},
         {
           $set: {
             name: employeeData.name,

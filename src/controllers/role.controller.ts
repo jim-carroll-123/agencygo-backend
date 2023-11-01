@@ -49,7 +49,8 @@ export class RoleController {
     try {
       const searchTerm = req.query;
       const searchResult = await this.role.searchRole(searchTerm);
-      res.status(200).json({ data: searchResult, message: 'searched' });
+      if(searchResult.length === 0) return res.status(404).json({ data: searchResult, message: 'roles not found' });
+      else return res.status(200).json({ data: searchResult, message: 'searched' });
     } catch (error) {
       next(error);
     }
