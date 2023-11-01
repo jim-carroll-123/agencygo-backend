@@ -1,6 +1,6 @@
-import { IsDate, IsDateString, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsDateString, IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class CreateInvoicingDto {
+export class CreatesmartTagsDto {
   @IsString()
   public userId;
 
@@ -17,5 +17,6 @@ export class CreateInvoicingDto {
   public description;
 
   @IsDateString()
-  public date: Date;
+  public date:Date
+  
 }

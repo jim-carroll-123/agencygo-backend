@@ -5,18 +5,19 @@ export enum Gender {
   Female = 'female',
 }
 export interface Creator {
-  _id?: mongoose.Types.ObjectId;
+  creatorImage: string;
   creatorName: string;
   agencyId: mongoose.Types.ObjectId | null;
   gender: Gender;
   internalNotes: string;
-  assignEmployee: mongoose.Types.ObjectId | null; // The employee assigned to this creator
+  assignEmployee: mongoose.Types.ObjectId | null;
   autoRelink: boolean;
-  proxy: mongoose.Types.ObjectId | null;
+  proxy: object | null;
+  sessionBucket: object | null;
   status: boolean;
   plateform: boolean;
   ofcreds: {
-    email: string,
-    password: string
-  }
+    email: string;
+    password: string;
+  };
 }

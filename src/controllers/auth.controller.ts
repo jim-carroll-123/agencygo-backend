@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
-import { Container } from 'typedi';
+import { Scraper } from '@/scraper';
 import { RequestSignUp, RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import { AuthService } from '@services/auth.service';
-import { Scraper } from '@/scraper';
+import { NextFunction, Request, Response } from 'express';
+import { Container } from 'typedi';
 
 export class AuthController {
   public auth = Container.get(AuthService);
@@ -67,6 +67,15 @@ export class AuthController {
       };
 
       res.status(200).json({ data: response, message: 'verify' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public forgotPassword = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const getEmail = req.body.email;
+      const response = await this.auth.forgotpassword(getEmail);
+      res.status(200).json({ response });
     } catch (error) {
       next(error);
     }

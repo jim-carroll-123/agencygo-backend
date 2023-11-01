@@ -10,6 +10,9 @@ import { AgencyModel } from '@/models/agency.model';
 import { EmployeeModel } from '@/models/employee.model';
 import { Agency } from '@/interfaces/agency.interface';
 import { Employee } from '@/interfaces/employee.interface';
+import { Email } from '@/interfaces/common.interface';
+import { generateEmailTemplateForForgotPassword } from '../template/forgotPassword';
+import { Emails } from '@/utils/email';
 
 const createToken = (user: User): any => {
   const dataStoredInToken: DataStoredInToken = { _id: user._id };
@@ -24,7 +27,7 @@ const createCookie = (tokenData: TokenData): string => {
 
 @Service()
 export class AuthService {
-  public async signup(userData: RequestSignUp): Promise<{ user: User }> {
+  public async signup(userData: RequestSignUp): Promise<{ user: User; tokenData: { expiresIn: number; token: string } }> {
     const findUser: User = await UserModel.findOne({ email: userData.email });
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
     const hashedPassword = await hash(userData.password, 10);
@@ -50,10 +53,10 @@ export class AuthService {
     const tokenData = createToken(updateUserData);
     // const cookie = createCookie(tokenData);
 
-    return { user: updateUserData };
+    return { user: updateUserData, tokenData };
   }
 
-  public async login(userData: User): Promise<{ findUser: User }> {
+  public async login(userData: User): Promise<{ findUser: User; tokenData: { expiresIn: number; token: string } }> {
     const findUser: User = await UserModel.findOne({ email: userData.email });
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
@@ -94,6 +97,24 @@ export class AuthService {
         }
         response.employee = employee;
       }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+  public async forgotpassword(email: string) {
+    try {
+      const user = await UserModel.findOne({ email: email });
+      if (!user) {
+        throw new HttpException(404, 'email does not exist');
+      }
+      const template = generateEmailTemplateForForgotPassword(email, user._id);
+      const emailData: Email = {
+        to: email,
+        subject: 'Forgot password',
+        template: template,
+      };
+      const response = await new Emails().sendEmail(emailData);
       return response;
     } catch (error) {
       throw error;

@@ -1,5 +1,5 @@
 import { BUCKET_PRIVATE, BUCKET_PUBLIC } from '@/config';
-import { s3 } from '@/config/aws';
+import { S3 as s3 } from '@/config/aws';
 import { HttpException } from '@/exceptions/httpException';
 import { Service } from 'typedi';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
@@ -7,7 +7,7 @@ import { S3 } from 'aws-sdk';
 
 @Service()
 export class StorageService {
-  public async uploadFile(file: Buffer | Blob, filename: string, isPrivate?: boolean) {
+  public async uploadFile(file: Buffer | Blob | any, filename: string, isPrivate?: boolean) {
     try {
       const result: ManagedUpload.SendData = await new Promise((resolve, reject) => {
         s3.upload(
@@ -15,6 +15,7 @@ export class StorageService {
             Bucket: isPrivate ? BUCKET_PRIVATE : BUCKET_PUBLIC,
             Key: filename,
             Body: file,
+            ContentType: 'application/zip',
           },
           {},
           (err, data) => {
@@ -27,6 +28,7 @@ export class StorageService {
       });
       return result;
     } catch (error) {
+      console.log(error);
       if (error.name === 'ValidationError') {
         throw new HttpException(400, error.message);
       }

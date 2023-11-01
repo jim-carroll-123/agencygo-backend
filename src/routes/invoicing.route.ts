@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { InvoicingController } from '@/controllers/invoicing.controller'; 
-import { CreateInvoicingDto } from '@/dtos/invoicing.dto'; 
+import { InvoicingController } from '@/controllers/invoicing.controller';
+import { CreateInvoicingDto } from '@/dtos/invoicing.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
 
@@ -18,8 +18,6 @@ export class InvoicingRoute implements Routes {
     this.router.get(`${this.path}/:id`, this.invoicing.getsingleInvoicing);
     this.router.post(`${this.path}`, ValidationMiddleware(CreateInvoicingDto), this.invoicing.createInvoicing);
     this.router.delete(`${this.path}/:id`, this.invoicing.deleteInvoicing);
-this.router.put(`${this.path}/:id`, ValidationMiddleware(CreateInvoicingDto, true), this.invoicing.updateInvoicing);
-
-}
-
+    this.router.put(`${this.path}/:id`, ValidationMiddleware(CreateInvoicingDto, true), this.invoicing.updateInvoicing);
+  }
 }

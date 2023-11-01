@@ -28,13 +28,20 @@ const CreatorSchema: Schema<Creator> = new Schema({
     default: false,
   },
   proxy: {
-    type: Schema.Types.ObjectId,
-    ref: 'Proxy',
+    type: Object,
+    default: null,
+  },
+  sessionBucket: {
+    type: Object,
     default: null,
   },
   status: {
     type: Boolean,
     default: true,
+  },
+  plateform: {
+    type: Boolean,
+    default: false,
   },
   ofcreds: {
     email: {
