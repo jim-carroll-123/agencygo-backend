@@ -118,7 +118,7 @@ export class CreatorController {
       const creatorsId: any[] = req.body.creatorId;
       const employeeId: any = req.body.employeeId;
       const assignCreator = await this.creator.assignCreatorToEmployee(creatorsId, employeeId);
-      res.status(200).json({ data: 'creators added to employees' });
+      res.status(200).json({ message: 'creators added to employees', data: assignCreator });
     } catch (error) {
       next(error);
     }

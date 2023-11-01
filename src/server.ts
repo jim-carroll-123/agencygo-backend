@@ -13,6 +13,7 @@ import { InvoicingRoute } from './routes/invoicing.route';
 import { PayrollRoute } from './routes/payroll.routes';
 import { smartTagsRoute } from './routes/smarttags.route';
 // import { PayrollRoute } from './routes/payroll.routes';
+import { ChatRoute } from './routes/chat.route';
 ValidateEnv();
 
 const app = new App([
@@ -29,6 +30,7 @@ const app = new App([
   new EmailRoute(),
   new RoleRoute(),
   new ShiftRoute(),
+  new ChatRoute(),
 ]);
 
 app.listen();

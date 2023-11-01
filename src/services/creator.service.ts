@@ -230,8 +230,7 @@ export class CreatorService {
 
   public async searchCreator(getData: any) {
     const filter: any = {};
-
-    console.log(typeof getData.status);
+    console.log(getData)
     if (getData.creator) {
       filter.creatorName = new RegExp(getData.creator, 'i');
     }

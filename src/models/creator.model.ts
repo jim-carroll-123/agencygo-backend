@@ -55,4 +55,4 @@ const CreatorSchema: Schema<Creator> = new Schema({
   },
 });
 
-export const CreatorModel = model<Creator & Document>('Creator', CreatorSchema);
+export const CreatorModel = model<Creator & Document>('Creator', CreatorSchema); 

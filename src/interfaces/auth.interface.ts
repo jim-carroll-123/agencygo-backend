@@ -15,11 +15,11 @@ export interface RequestWithUser extends Request {
 }
 
 export interface RequestSignUp {
-  email: string;
-  agencyName: string;
-  numberOfCreators: number;
-  agencyWebsite: string;
   agencyMediaSocial: string;
+  agencyName: string;
+  agencyWebsite: string;
+  email: string;
+  numberOfCreators: number;
   password: string;
   agencyLogo: string;
 }
