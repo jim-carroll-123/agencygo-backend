@@ -26,6 +26,18 @@ const AgencySchema: Schema<Agency> = new Schema({
   agencyLogo: {
     type: String,
   },
+  primaryColor: {
+    type: String,
+  },
+  secondaryColor: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
 });
 
 export const AgencyModel = model<Agency & Document>('Agency', AgencySchema);
