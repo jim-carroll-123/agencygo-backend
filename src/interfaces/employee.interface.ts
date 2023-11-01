@@ -36,5 +36,4 @@ export interface EmployeeUpdate {
   password:string,
   status:Status,
   creator:string[],
-  is
 }

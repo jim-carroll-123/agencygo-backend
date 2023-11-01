@@ -23,7 +23,8 @@ export class EmployeeController {
     try {
       const agencyId = req.params.agencyId;
       const employees = await this.employee.getAgencyEmployees(agencyId);
-      res.status(200).json({ data: employees, message: 'Employees fetched successfully' });
+      if(employees.length === 0) return res.status(400).json({ data: employees, message: 'Employees not found' });
+      return res.status(200).json({ data: employees, message: 'Employees fetched successfully' });
     } catch (error) {
       next(error);
     }
@@ -77,6 +78,7 @@ export class EmployeeController {
   public searchEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queryData = req.query;
+      console.log('*******',req.query)
       const employee = await this.employee.getEmployees(queryData);
       res.status(200).json({ data: employee, message: 'Employee fetched successfully' });
     } catch (error) {
@@ -88,8 +90,8 @@ export class EmployeeController {
   public updateBatchEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { employeeId } = req.body;
-      const employeeRole = req.query.role || '';
-      const agencyId = req.query.agencyId || '';
+      const employeeRole: string = req.query.role as string || '';
+      const agencyId : string = req.query.agencyId as string || '';
       const updatedEmployee = await this.employee.updateBatchEmployee(employeeId, employeeRole, agencyId);
       res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
     } catch (error) {
