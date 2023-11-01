@@ -7,7 +7,7 @@ export enum Gender {
 export interface Creator {
   _id?: mongoose.Types.ObjectId;
   creatorName: string;
-  agencyId: mongoose.Types.ObjectId | null; 
+  agencyId: mongoose.Types.ObjectId | null;
   gender: Gender;
   internalNotes: string;
   assignEmployee: mongoose.Types.ObjectId | null; // The employee assigned to this creator
@@ -15,4 +15,8 @@ export interface Creator {
   proxy: mongoose.Types.ObjectId | null;
   status: boolean;
   plateform: boolean;
+  ofcreds: {
+    email: string,
+    password: string
+  }
 }

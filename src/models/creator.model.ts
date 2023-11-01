@@ -2,9 +2,8 @@ import { Creator, Gender } from '@/interfaces/creator.interface';
 import { Schema, model, Document } from 'mongoose';
 
 const CreatorSchema: Schema<Creator> = new Schema({
-  agencyId:{
-    type:Schema.Types.ObjectId,
-    ref:"Agency"
+  creatorImage: {
+    type: String,
   },
   creatorName: {
     type: String,
@@ -37,9 +36,15 @@ const CreatorSchema: Schema<Creator> = new Schema({
     type: Boolean,
     default: true,
   },
-  plateform: {
-    type: Boolean,
-    default: false,
+  ofcreds: {
+    email: {
+      type: String,
+      default: null,
+    },
+    password: {
+      type: String,
+      default: null,
+    },
   },
 });
 
