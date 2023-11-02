@@ -33,4 +33,8 @@ const app = new App([
   new ChatRoute(),
 ]);
 
-app.listen();
+try {
+  app.listen();
+} catch (err) {
+  console.log(err);
+}
