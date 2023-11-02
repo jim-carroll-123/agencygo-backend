@@ -29,7 +29,7 @@ export class App {
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
-    this.initializeSwagger();
+    // this.initializeSwagger();
     this.initializeErrorHandling();
   }
 
@@ -79,6 +79,12 @@ export class App {
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
       this.app.use('/', route.router);
+    });
+    this.app.use('/health', (req, res) => {
+      res.send({
+        state: 'ready',
+        version: '0.1',
+      });
     });
   }
 
