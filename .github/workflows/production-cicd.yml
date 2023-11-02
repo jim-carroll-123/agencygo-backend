@@ -1,0 +1,78 @@
+name: ProductionDeployment
+
+on:
+  push:
+    branches: [ production ]
+
+jobs:
+  build-and-deploy:
+    runs-on: [ ubuntu-latest ]
+    environment: production
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Create env file
+        run: |
+          touch .env
+          echo NODE_ENV=production >> .env
+          echo PORT=3000 >> .env
+          echo ORIGIN=* >> .env
+          echo CREDENTIALS=true >> .env
+          echo DUMMY_ENV=my-var >> .env
+          echo DBCONN_STR="${{ secrets.DB_URI }}" >> .env
+          echo LOG_FORMAT=dev >> .env
+          echo LOG_DIR=../logs >> .env
+          echo SECRET_KEY=${{secrets.JWT_SECRET}} >> .env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY }} >> .env
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+          echo AWS_REGION=us-east-2 >> .env
+          echo BUCKET_PUBLIC=agencygo-public >> .env
+          echo BUCKET_PRIVATE=agencygo-private >> .env
+          echo PROXY_API_KEY=${{secrets.PROXY_API_KEY}} >> .env
+          echo PROXY_URL=https://proxy.webshare.io/api/v2/proxy/list/ >> .env
+          echo SENDGRID_API_KEY=${{secrets.SENDGRID_API_KEY}} >> .env
+          echo SENDER=admin@agencygo.ai >> .env
+          ls -al
+          pwd
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-2'
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          REPOSITORY: agencygo-server
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $REPOSITORY:$IMAGE_TAG .
+          docker tag $REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: agencygo-server-task-definition.json
+          container-name: agencygo-server
+          image: ${{ steps.build-image.outputs.image }}
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: agencygo-server-service
+          cluster: ProdEnvironmentMainServer
+          # Experimental
+          wait-for-service-stability: false

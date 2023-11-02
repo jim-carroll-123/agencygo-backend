@@ -1,5 +1,14 @@
 import { config } from 'dotenv';
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+import path from 'path';
+import fs from 'fs';
+
+const envFilePath = path.join(__dirname, '../..', `.env.${process.env.NODE_ENV || 'development'}.local`);
+if (fs.existsSync(envFilePath)) {
+  config({ path: envFilePath });
+} else {
+  console.info('[Info] env file is missing! It will be used default .env, if exist.');
+  config();
+}
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
 export const { NODE_ENV, PORT, SECRET_KEY, LOG_FORMAT, LOG_DIR, ORIGIN } = process.env;

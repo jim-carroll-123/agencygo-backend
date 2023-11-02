@@ -10,6 +10,7 @@ import { EmailRoute } from '@routes/common.route';
 import { RoleRoute } from './routes/roles.route';
 import { ShiftRoute } from './routes/shift.route';
 import { InvoicingRoute } from './routes/invoicing.route';
+import { PayrollRoute } from './routes/payroll.routes';
 import { smartTagsRoute } from './routes/smarttags.route';
 // import { PayrollRoute } from './routes/payroll.routes';
 import { ChatRoute } from './routes/chat.route';
@@ -20,6 +21,7 @@ const app = new App([
   new AuthRoute(),
   new AgencyRoute(),
   new InvoicingRoute(),
+  new PayrollRoute(),
   // new PayrollRoute(),
   new EmployeeRoute(),
   new CreatorRoute(),
@@ -31,4 +33,8 @@ const app = new App([
   new ChatRoute(),
 ]);
 
-app.listen();
+try {
+  app.listen();
+} catch (err) {
+  console.log(err);
+}

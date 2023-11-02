@@ -29,18 +29,21 @@ export class App {
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
-    this.initializeSwagger();
     this.initializeErrorHandling();
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
-      logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
-      logRoutes(this.app);
-    });
+    try {
+      this.app.listen(this.port, () => {
+        logger.info(`=================================`);
+        logger.info(`======= ENV: ${this.env} =======`);
+        logger.info(`🚀 App listening on the port ${this.port}`);
+        logger.info(`=================================`);
+        logRoutes(this.app);
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   public getServer() {
@@ -80,22 +83,12 @@ export class App {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
-  }
-
-  private initializeSwagger() {
-    const options = {
-      swaggerDefinition: {
-        info: {
-          title: 'Onlymanage ',
-          version: '1.0.0',
-          description: 'Onlymanage docs',
-        },
-      },
-      apis: ['swagger.yaml'],
-    };
-
-    const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    this.app.use('/health', (req, res) => {
+      res.send({
+        state: 'ready',
+        version: '0.1',
+      });
+    });
   }
 
   private initializeErrorHandling() {

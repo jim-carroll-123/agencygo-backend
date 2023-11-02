@@ -1,3 +1,5 @@
+import { hash } from 'bcrypt';
+import * as crypto from 'crypto';
 import { HttpException } from '@/exceptions/httpException';
 import { Creator } from '@/interfaces/creator.interface';
 import { IProxy } from '@interfaces/proxy.interface';
@@ -42,8 +44,23 @@ export class CreatorService {
   public async createCreator(creatorData: Creator) {
     //TODO: Check if employee assigned exist
     try {
-      const createdCreator = new CreatorModel(creatorData);
-      return await createdCreator.save();
+      // const hashedPassword = await hash(creatorData.ofcreds.password, 10);
+      const createdCreator: Creator = await CreatorModel.create({
+        agencyId: creatorData.agencyId,
+        creatorName: creatorData.creatorName,
+        gender: creatorData.gender,
+        internalNotes: creatorData.internalNotes,
+        autoRelink: creatorData.autoRelink,
+        status: creatorData.status,
+        ofcreds: {
+          email: creatorData.ofcreds.email,
+          password: creatorData.ofcreds.password
+        }
+      });
+      return createdCreator;
+      // const createdCreator = new CreatorModel(creatorData);
+
+      // return await createdCreator.save();
     } catch (error) {
       if (error.name === 'ValidationError') {
         throw new HttpException(400, error.message);

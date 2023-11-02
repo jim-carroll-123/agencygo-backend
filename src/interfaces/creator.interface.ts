@@ -11,6 +11,7 @@ export interface Creator {
   creatorImage: string;
 
   creatorName: string;
+  agencyId: mongoose.Types.ObjectId | null;
   gender: Gender;
   internalNotes: string;
   assignEmployee: mongoose.Types.ObjectId | null;
@@ -18,8 +19,9 @@ export interface Creator {
   proxy: object | null;
   sessionBucket: object | null;
   status: boolean;
+  plateform: boolean;
   ofcreds: {
-    email: string | null;
-    password: string | null;
+    email: string;
+    password: string;
   };
 }
