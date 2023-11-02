@@ -115,31 +115,37 @@ export class ChatController {
   };
 
   public getConversations = async (req: Request, res: Response) => {
+    const limit = Number(req.query.limit) || 20;
     const arr = [];
     client.conversations.v1.conversations
-      .list({ limit: 20 })
+      .list({limit: limit })
       .then(conversations => {
         conversations.forEach(c => {
           arr.push(c);
         });
         return res.status(200).json({
-          data: arr,
+          total: arr.length,
+          messages: arr,
         });
       })
       .catch(error => console.error(error));
   };
 
   public getallMessages = async (req: Request, res: Response) => {
+    const limit = Number(req.query.limit) || 20;
     const arr = [];
-    client.conversations.v1
-      .conversations(req.params.id)
-      .messages.list({ limit: 20 })
+
+    client.conversations.v1.conversations(req.params.id)
+      .messages
+      .list({ limit: limit})
       .then(messages => {
-        messages.forEach(m => {
-          arr.push(m);
-        });
+        messages.forEach(m => arr.push(m));
+
         return res.status(200).json({
-          data: arr,
+          data: {
+            total: arr.length,
+            messages: arr,
+          },
         });
       })
       .catch(error => console.error(error));

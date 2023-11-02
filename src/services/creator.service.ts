@@ -33,6 +33,9 @@ export class CreatorService {
           internalNotes: 1,
           autoRelink: 1,
           proxy: 1,
+          agencyId:1,
+          email:1,
+          password:1
         },
       },
     ]);
@@ -254,7 +257,9 @@ export class CreatorService {
           internalNotes: 1,
           autoRelink: 1,
           proxy: 1,
-          agencyId:1
+          agencyId:1,
+          email:1,
+          password:1
         },
       },
     ]);
