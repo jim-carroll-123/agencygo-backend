@@ -35,9 +35,9 @@ export class CreatorService {
           internalNotes: 1,
           autoRelink: 1,
           proxy: 1,
-          agencyId:1,
-          email:1,
-          password:1
+          agencyId: 1,
+          email: 1,
+          password: 1,
         },
       },
     ]);
@@ -57,8 +57,8 @@ export class CreatorService {
         status: creatorData.status,
         ofcreds: {
           email: creatorData.ofcreds.email,
-          password: creatorData.ofcreds.password
-        }
+          password: creatorData.ofcreds.password,
+        },
       });
       return createdCreator;
       // const createdCreator = new CreatorModel(creatorData);
@@ -233,7 +233,6 @@ export class CreatorService {
 
   public async searchCreator(getData: any) {
     const filter: any = {};
-    console.log(getData)
     if (getData.creator) {
       filter.creatorName = new RegExp(getData.creator, 'i');
     }
@@ -252,6 +251,12 @@ export class CreatorService {
       const employeId = new mongoose.Types.ObjectId(getData.employeeId);
       filter.assignEmployee = { $in: [employeId] };
     }
+
+    if (getData.agencyId) {
+      const agencyId = new mongoose.Types.ObjectId(getData.agencyId);
+      filter.agencyId = { $in: [agencyId] };
+    }
+
     const creator = await CreatorModel.aggregate([
       { $match: filter },
       {
@@ -274,20 +279,12 @@ export class CreatorService {
           internalNotes: 1,
           autoRelink: 1,
           proxy: 1,
-          agencyId:1,
+          agencyId: 1,
           email: {
-            $cond: [
-              { $eq: ['$ofcreds.email', null] },
-              null,
-              '$ofcreds.email',
-            ],
+            $cond: [{ $eq: ['$ofcreds.email', null] }, null, '$ofcreds.email'],
           },
           password: {
-            $cond: [
-              { $eq: ['$ofcreds.password', null] },
-              null,
-              '$ofcreds.password',
-            ],
+            $cond: [{ $eq: ['$ofcreds.password', null] }, null, '$ofcreds.password'],
           },
         },
       },
