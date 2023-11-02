@@ -87,4 +87,4 @@ jobs:
           service: agencygo-server-service
           cluster: ProdEnvironmentMainServer
           # Experimental
-          wait-for-service-stability: false
+          wait-for-service-stability: true
