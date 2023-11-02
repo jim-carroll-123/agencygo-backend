@@ -275,8 +275,20 @@ export class CreatorService {
           autoRelink: 1,
           proxy: 1,
           agencyId:1,
-          email:1,
-          password:1
+          email: {
+            $cond: [
+              { $eq: ['$ofcreds.email', null] },
+              null,
+              '$ofcreds.email',
+            ],
+          },
+          password: {
+            $cond: [
+              { $eq: ['$ofcreds.password', null] },
+              null,
+              '$ofcreds.password',
+            ],
+          },
         },
       },
     ]);

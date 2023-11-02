@@ -118,14 +118,13 @@ export class ChatController {
     const limit = Number(req.query.limit) || 20;
     const arr = [];
     client.conversations.v1.conversations
-      .list({limit: limit })
+      .list({ limit: limit })
       .then(conversations => {
         conversations.forEach(c => {
           arr.push(c);
         });
         return res.status(200).json({
-          total: arr.length,
-          messages: arr,
+          arr,
         });
       })
       .catch(error => console.error(error));
@@ -137,7 +136,7 @@ export class ChatController {
 
     client.conversations.v1.conversations(req.params.id)
       .messages
-      .list({ limit: limit})
+      .list({ limit: limit })
       .then(messages => {
         messages.forEach(m => arr.push(m));
 
