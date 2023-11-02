@@ -11,42 +11,6 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
-      - name: Create env file
-        run: |
-          touch .env
-          echo NODE_ENV=production >> .env
-          echo PORT=3000 >> .env
-          echo ORIGIN=* >> .env
-          echo CREDENTIALS=true >> .env
-          echo DUMMY_ENV=my-var >> .env
-          # Append environment variables to .env file
-          echo "DBCONN_STR=mongodb+srv://dev:E8bhHjIr5xmvPgRT@agencygodevcluster.q83fyoe.mongodb.net/development" >> .env
-          echo "SECRET_KEY=secretKey" >> .env
-          echo "LOG_FORMAT=dev" >> .env
-          echo "LOG_DIR=../logs" >> .env
-          echo "ORIGIN=*" >> .env
-          echo "CREDENTIALS=true" >> .env
-          echo "AWS_ACCESS_KEY_ID=AKIAVMBOR2DK5VLGS4HH" >> .env
-          echo "AWS_SECRET_ACCESS_KEY=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" >> .env
-          echo "BUCKET_PUBLIC=agencygo-public" >> .env
-          echo "BUCKET_PRIVATE=agencygo-private" >> .env
-          echo "AWS_REGION=us-east-2" >> .env
-          echo "PROXY_API_KEY=fjnexovjf6grzc3rjgkvmswucslkrpapf6gqjevi" >> .env
-          echo "PROXY_URL=https://proxy.webshare.io/api/v2/proxy/list/" >> .env
-          echo "SENDGRID_API_KEY=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" >> .env
-          echo "SENDER=admin@agencygo.ai" >> .env
-          echo "URL=http://localhost:3000" >> .env
-          echo "TWILIO_ACCOUNT_SID=ACe47ebf69a56ca0f08eff780d5aea290f" >> .env
-          echo "TWILIO_API_KEY=SK0e27be68d7f13597ca02f6ed2af5fea0" >> .env
-          echo "TWILIO_CHAT_SERVICE_SID=ISa065bca11a834edf9f6c683982733d3c" >> .env
-          echo "TWILIO_NOTIFICATION_SERVICE_SID=IS8a1d23d9584f41c18639bb58c9f7e1cf" >> .env
-          echo "TWILIO_SYNC_SERVICE_SID=ISb03e5014e4064cd59e1af17e53a7ca50" >> .env
-          echo "TWILIO_PHONE_NUMBER=+18447315468" >> .env
-          echo "TWILIO_SECRET_KEY=ZoPS4WKYi1dLPNxStrJLY6qZnOIYMRDl" >> .env
-          echo "TWILIO_AUTH_TOKEN=47a84dff387e9317fceb5a38ebbd7b71" >> .env
-          ls -al
-          pwd
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -86,5 +50,7 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: agencygo-server-service
           cluster: ProdEnvironmentMainServer
-          # Experimental
           wait-for-service-stability: true
+
+          # docker run -p 80:80 369464824021.dkr.ecr.us-east-2.amazonaws.com/agencygo-server:bb3b15706ae49cbac99b32041f4ba123f66ecc4b
+
