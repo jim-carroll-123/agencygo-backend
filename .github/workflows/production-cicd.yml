@@ -11,30 +11,6 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
-      - name: Create env file
-        run: |
-          touch .env
-          echo NODE_ENV=production >> .env
-          echo PORT=3000 >> .env
-          echo ORIGIN=* >> .env
-          echo CREDENTIALS=true >> .env
-          echo DUMMY_ENV=my-var >> .env
-          echo DBCONN_STR="${{ secrets.DB_URI }}" >> .env
-          echo LOG_FORMAT=dev >> .env
-          echo LOG_DIR=../logs >> .env
-          echo SECRET_KEY=${{secrets.JWT_SECRET}} >> .env
-          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY }} >> .env
-          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
-          echo AWS_REGION=us-east-2 >> .env
-          echo BUCKET_PUBLIC=agencygo-public >> .env
-          echo BUCKET_PRIVATE=agencygo-private >> .env
-          echo PROXY_API_KEY=${{secrets.PROXY_API_KEY}} >> .env
-          echo PROXY_URL=https://proxy.webshare.io/api/v2/proxy/list/ >> .env
-          echo SENDGRID_API_KEY=${{secrets.SENDGRID_API_KEY}} >> .env
-          echo SENDER=admin@agencygo.ai >> .env
-          ls -al
-          pwd
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -74,5 +50,7 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: agencygo-server-service
           cluster: ProdEnvironmentMainServer
-          # Experimental
-          wait-for-service-stability: false
+          wait-for-service-stability: true
+
+          # docker run -p 80:80 369464824021.dkr.ecr.us-east-2.amazonaws.com/agencygo-server:bb3b15706ae49cbac99b32041f4ba123f66ecc4b
+
