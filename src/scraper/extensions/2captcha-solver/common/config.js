@@ -38,9 +38,9 @@ var Config = {
     repeatOnErrorTimes: 5,
     repeatOnErrorDelay: 5,
     buttonPosition: "inner",
-    useProxy: false,
-    proxytype: "HTTP",
-    proxy: "",
+    useProxy: true,
+    proxytype: "HTTPS",
+    proxy: "ZODHCa:ZODHCa_country-us@geo.iproyal.com:12321",
     blackListDomain: "example.com\n2captcha.com/auth\nrucaptcha.com/auth",
     normalSources: [],
     autoSubmitRules: [
