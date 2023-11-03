@@ -11,16 +11,16 @@ const proxy = {
 };
 
 const main = async () => {
-  // puppeteer.use(
-  //   pluginProxy({
-  //     address: proxy.hostname,
-  //     port: proxy.port,
-  //     credentials: {
-  //       username: proxy.username,
-  //       password: proxy.password,
-  //     },
-  //   }),
-  // );
+  puppeteer.use(
+    pluginProxy({
+      address: proxy.hostname,
+      port: proxy.port,
+      credentials: {
+        username: proxy.username,
+        password: proxy.password,
+      },
+    }),
+  );
 
   const browser = await puppeteer.launch({
     headless: false,
@@ -30,7 +30,8 @@ const main = async () => {
   });
 
   const page = await browser.newPage();
-  // await page.goto('https://iproyal.com/ip-lookup/');
+  await page.goto('https://iproyal.com/ip-lookup/');
+  return;
   await page.goto('https://onlyfans.com');
 
   await page.waitForSelector('input[at-attr="input"][name="email"]');
