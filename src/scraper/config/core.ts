@@ -26,7 +26,7 @@ export const getBrowserInstance = async (
   );
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
-    headless: true,
+    headless: false,
     args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`, '--no-sandbox'],
     executablePath: executablePath(),
   };
