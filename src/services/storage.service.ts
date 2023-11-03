@@ -22,10 +22,12 @@ export class StorageService {
             if (err) {
               reject(err);
             }
+
             resolve(data);
           },
         );
       });
+     
       return result;
     } catch (error) {
       console.log(error);

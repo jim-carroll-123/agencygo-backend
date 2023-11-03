@@ -6,10 +6,7 @@ export enum Gender {
 }
 export interface Creator {
   _id?: mongoose.Types.ObjectId;
-  agencyId:mongoose.Types.ObjectId | null,
-
   creatorImage: string;
-
   creatorName: string;
   agencyId: mongoose.Types.ObjectId | null;
   gender: Gender;
@@ -19,7 +16,7 @@ export interface Creator {
   proxy: object | null;
   sessionBucket: object | null;
   status: boolean;
-  plateform: boolean;
+  isLinkOnlyFans: boolean;
   ofcreds: {
     email: string;
     password: string;

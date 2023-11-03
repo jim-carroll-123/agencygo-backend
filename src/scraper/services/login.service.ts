@@ -43,7 +43,7 @@ export class LoginBotService {
       );
       return;
     } catch (error) {
-      console.log(error);
+      console.log(error); 
       throw error;
     }
   }
@@ -180,6 +180,7 @@ export class LoginBotService {
     const folderToZip = path.join(__dirname, `../temp/${id}`);
     const outputZipFilePath = path.join(__dirname, `../uploads/${id}.zip`);
     const outputZipStream = fs.createWriteStream(outputZipFilePath);
+
     const archive = archiver('zip');
     archive.pipe(outputZipStream);
     archive.directory(folderToZip, false);
@@ -190,6 +191,7 @@ export class LoginBotService {
     const cloudFile = await this.storage.uploadFile(file, `server-${id}.zip`, false);
     // fs.unlinkSync(outputZipFilePath);
     // fs.unlinkSync(folderToZip);
+    
     return cloudFile;
   }
 
