@@ -30,7 +30,6 @@ export class CreatorService {
           status: 1,
           'assignEmployee.name': 1,
           'assignEmployee._id': 1,
-          plateform: 1,
           gender: 1,
           internalNotes: 1,
           autoRelink: 1,
@@ -38,6 +37,8 @@ export class CreatorService {
           agencyId: 1,
           email: 1,
           password: 1,
+          sessionBucket: 1,
+          ofcreds: 1,
         },
       },
     ]);
