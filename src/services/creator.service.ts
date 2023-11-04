@@ -38,6 +38,8 @@ export class CreatorService {
           agencyId: 1,
           email: 1,
           password: 1,
+          sessionBucket: 1,
+          ofcreds: 1,
         },
       },
     ]);
