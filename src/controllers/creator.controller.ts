@@ -10,6 +10,7 @@ import path from 'path';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import { uploadToS3 } from '@/utils/fileUpload';
+import { CreatorModel } from '@/models/creator.model';
 
 export class CreatorController {
   public creator = Container.get(CreatorService);
@@ -135,26 +136,20 @@ export class CreatorController {
   };
 
   public scrapeCreatorFinananceReports = async (req: Request, res: Response, next: NextFunction) => {
-    const proxy = {
-      proxy_user: { username: 'agusr33', user_pass: 'agusr33' },
-      proxy: {
-        username: 'agusr33',
-        hostname: 'geo.iproyal.com',
-        port: 12321,
-        password: 'agusr33_country-us',
-        protocol: 'http|https',
-      },
-    };
+    const creatorId = req.query.creatorId;
 
-    const sessionBucket = {
-      ServerSideEncryption: 'AES256',
-      Location: 'https://agencygo-public.s3.us-east-2.amazonaws.com/server-agusr33.zip',
-      Bucket: 'agencygo-public',
-      Key: 'server-agusr33.zip',
-      ETag: '"48c14c3f493960b1547b421dd40c644d-3"',
-    };
+    const creator: any = (await CreatorModel.findOne({ _id: creatorId })).toObject();
 
-    const usrDataDir = path.join(__dirname, `../scraper/temp/${proxy.proxy_user.username}`);
+    const proxy = creator.proxy;
+
+    const sessionBucket = creator.sessionBucket;
+
+    console.log({
+      proxy,
+      sessionBucket,
+    });
+
+    const usrDataDir = path.join(__dirname, `../scraper/temp/${proxy.proxyUser.username}`);
 
     function directoryHasFiles(directoryPath: string) {
       try {
@@ -176,11 +171,13 @@ export class CreatorController {
 
     try {
       if (!directoryHasFiles(usrDataDir)) {
+        console.log('Downloading session data');
         const file = await this.storage.getFile(sessionBucket.Key, sessionBucket.Bucket);
+        console.log('Unpacking session data');
         await unzipBuffer(file.Body as any);
       }
 
-      const { browser, page } = await getBrowserInstance(proxy.proxy, usrDataDir);
+      const { browser, page } = await getBrowserInstance(proxy.creds, usrDataDir);
 
       function logToFile(logMessage, logFilePath) {
         const logLine = `${logMessage}\n`;
