@@ -88,7 +88,6 @@ export class CreatorController {
         password: req.body.password,
         creatorId,
       });
-
       res.status(200).json({ data: {}, message: 'creator logged in, session valid' });
     } catch (error) {
       next(error);

@@ -37,7 +37,7 @@
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env"],
   "exclude": ["node_modules", "src/http", "src/logs"],
-  "ts-node": {
-    "swc": true
-  },
+  // "ts-node": {
+  //   "swc": true
+  // },
 }
