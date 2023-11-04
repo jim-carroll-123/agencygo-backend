@@ -43,7 +43,7 @@ const CreatorSchema: Schema<Creator> = new Schema({
     type: Boolean,
     default: true,
   },
-  plateform: {
+  isLinkOnlyFans: {
     type: Boolean,
     default: false,
   },
