@@ -1,5 +1,11 @@
+import { String } from 'aws-sdk/clients/cloudsearchdomain';
 import { Request, Response } from 'express';
 const dotenv = require('dotenv');
+
+import { Server as HttpServer } from 'http';
+import { Server as Socket } from 'socket.io';
+
+let io: Socket;
 
 dotenv.config();
 
@@ -10,7 +16,37 @@ const apiKeySid = process.env.TWILIO_API_KEY;
 
 const client = require('twilio')(accountSid, authToken);
 
+export const initializeWebSocket = (httpServer: HttpServer) => {
+  io = new Socket(httpServer, {
+    cors: {
+      origin: "*",
+    },
+  });
+
+  io.on('connect', (socket) => {
+    console.log(11)
+    global.chatSocket = socket;
+    var clientIp = socket.request.connection.remoteAddress;
+    console.log('clientIp', clientIp);
+    console.log('Client connected');
+
+    socket.on('join', (conversationId) => {
+      socket.join(conversationId);
+      console.log(`Socket ${socket.id} joined room ${conversationId}`);
+    });
+  })
+
+};
+
+export const getSocketIO = () => {
+  if (!io) {
+    throw new Error('Socket.IO not initialized');
+  }
+  return io;
+};
+
 export class ChatController {
+
   public generateToken = async (req: Request, res: Response) => {
     try {
       const AccessToken = require('twilio').jwt.AccessToken;
@@ -103,16 +139,20 @@ export class ChatController {
   };
 
   public sendMessage = async (req: Request, res: Response) => {
+    const { email, msg } = req.body;
     client.conversations.v1
       .conversations(req.params.id)
-      .messages.create({ author: req.body.email, body: req.body.msg })
+      .messages.create({ author: email, body: msg })
       .then(message => {
+        const conversationId = req.params.id;
+        io.to(conversationId).emit('message', message);
+
         return res.status(200).json({
           data: message,
         });
       })
-      .catch(error => console.error(error));
-  };
+      .catch(error => console.error(error))
+  }
 
   public getConversations = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 20;
@@ -138,8 +178,10 @@ export class ChatController {
       .messages
       .list({ limit: limit })
       .then(messages => {
-        messages.forEach(m => arr.push(m));
-
+        messages.forEach(m => {
+          arr.push(m)
+        });
+        //  io.emit('message', arr);
         return res.status(200).json({
           data: {
             total: arr.length,
