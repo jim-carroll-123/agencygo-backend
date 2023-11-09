@@ -1,76 +1,36 @@
-FROM --platform=linux/amd64 node:18-slim
+# Stage 1: Build Dependencies
+FROM --platform=linux/amd64 node:slim as builder
 
-# We don't need the standalone Chromium
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
-# Update the package list and install required packages
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    ca-certificates \
-    fonts-liberation \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libc6 \
-    libcairo2 \
-    libcups2 \
-    libdbus-1-3 \
-    libexpat1 \
-    libfontconfig1 \
-    libgbm1 \
-    libgcc1 \
-    libglib2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libstdc++6 \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxext6 \
-    libxfixes3 \
-    libxi6 \
-    libxrandr2 \
-    libxrender1 \
-    libxss1 \
-    libxtst6 \
-    lsb-release \
-    wget \
-    xdg-utils && \
-    apt-get clean
-
-# Your Dockerfile can continue with additional setup or configurations as needed
-
-
-# Install Google Chrome Stable and fonts
-# Note: this installs the necessary libs to make the browser work with Puppeteer.
-RUN apt-get update && apt-get install curl gnupg -y \
-  && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-  && apt-get update \
-  && apt-get install google-chrome-stable -y --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
-
-# Copy Dir
-COPY package*.json .
-# Install Node Package
-RUN npm install --legacy-peer-deps
-
-COPY . ./app
-
-# Work to Dir
+# Set working directory
 WORKDIR /app
 
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
+# Install Node.js dependencies
+RUN npm ci
+
+# Copy the rest of your application code
+COPY . .
+
+# Build the application
 RUN npm run build
 
+# Stage 2: Runtime Image
+FROM --platform=linux/amd64 node:slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the built application and the runtime dependencies
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules/
+COPY --from=builder /app/package*.json /app
+RUN rm -rf /app/dist/scraper/temp && mkdir -p /app/dist/scraper/temp
+RUN rm -rf /app/dist/scraper/uploads && mkdir -p /app/dist/scraper/uploads
+
 # Set environment variables
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ENV PORT=3000
 ENV DBCONN_STR=mongodb+srv://dev:E8bhHjIr5xmvPgRT@agencygodevcluster.q83fyoe.mongodb.net/development
 ENV SECRET_KEY=secretKey
@@ -96,8 +56,18 @@ ENV TWILIO_SYNC_SERVICE_SID=ISb03e5014e4064cd59e1af17e53a7ca50
 ENV TWILIO_PHONE_NUMBER=+18447315468
 ENV TWILIO_SECRET_KEY=ZoPS4WKYi1dLPNxStrJLY6qZnOIYMRDl
 ENV TWILIO_AUTH_TOKEN=47a84dff387e9317fceb5a38ebbd7b71
+ENV PUPPETEER_SKIP_DOWNLOAD true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV DBUS_SESSION_BUS_ADDRESS=autolaunch
 
+RUN apt-get update && apt-get install -y gnupg wget
+RUN wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+RUN apt-get update && apt-get install -y google-chrome-stable --no-install-recommends
+RUN rm -rf /var/lib/apt/lists/*
+
+# Expose port
 EXPOSE 3000
 
-# Cmd script
+# Command to start your application
 CMD ["npm", "start"]

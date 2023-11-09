@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer-extra';
-import { executablePath } from 'puppeteer';
 import path from 'path';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import pluginProxy from 'puppeteer-extra-plugin-proxy';
 import fs from 'fs';
+import chromePath from 'locate-chrome';
 
 // Define the path to the config.js file
 const modifyProxySettingsInExtension = proxyUrl => {
@@ -49,14 +49,22 @@ export const getBrowserInstance = async (
       },
     }),
   );
+  const chromeExecPath = await chromePath();
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
-    headless: false,
-    args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`, '--no-sandbox'],
-    executablePath: executablePath(),
+    headless: 'new',
+    args: [
+      `--disable-extensions-except=${pathToExtension}`,
+      `--load-extension=${pathToExtension}`,
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+    ],
+    executablePath: chromeExecPath,
   };
 
-  console.log(executablePath());
+  console.log('Puppeteer chrome path', chromeExecPath);
 
   if (userDataDir) {
     config = {
