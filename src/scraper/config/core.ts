@@ -1,5 +1,4 @@
 import puppeteer from 'puppeteer-extra';
-import { executablePath } from 'puppeteer';
 import path from 'path';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import pluginProxy from 'puppeteer-extra-plugin-proxy';
@@ -50,17 +49,22 @@ export const getBrowserInstance = async (
       },
     }),
   );
+  const chromeExecPath = await chromePath();
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
-    headless: false,
-    args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`, '--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: '/usr/bin/google-chrome',
+    headless: true,
+    args: [
+      `--disable-extensions-except=${pathToExtension}`,
+      `--load-extension=${pathToExtension}`,
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+    ],
+    executablePath: chromeExecPath,
   };
 
-  console.log('Puppeteer chrome path', executablePath());
-
-  const pk = await chromePath();
-  console.log('Pkg chrome path', pk);
+  console.log('Puppeteer chrome path', chromeExecPath);
 
   if (userDataDir) {
     config = {

@@ -52,5 +52,4 @@ jobs:
           cluster: ProdEnvironmentMainServer
           wait-for-service-stability: true
 
-          # docker run -p 3000:3000 ag
 
