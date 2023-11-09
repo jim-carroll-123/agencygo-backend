@@ -16,3 +16,13 @@ export const { DBCONN_STR } = process.env;
 export const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, BUCKET_PUBLIC, BUCKET_PRIVATE } = process.env;
 export const { PROXY_API_KEY, PROXY_URL } = process.env;
 export const { SENDGRID_API_KEY, SENDER, URL } = process.env;
+export const {
+  TWILIO_ACCOUNT_SID,
+  TWILIO_API_KEY,
+  TWILIO_CHAT_SERVICE_SID,
+  TWILIO_NOTIFICATION_SERVICE_SID,
+  TWILIO_SYNC_SERVICE_SID,
+  TWILIO_PHONE_NUMBER,
+  TWILIO_SECRET_KEY,
+  TWILIO_AUTH_TOKEN,
+} = process.env;

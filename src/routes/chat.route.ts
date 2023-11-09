@@ -16,6 +16,7 @@ export class ChatRoute implements Routes {
     this.router.post(`${this.path}/user`, this.chat.createUser);
     this.router.post(`${this.path}/conversation`, this.chat.createConversation);
     this.router.post(`${this.path}/sendmsg/:id`, this.chat.sendMessage);
+    this.router.post(`${this.path}/addparticipant/:id`, this.chat.addParticipant);
 
     this.router.get(`${this.path}/getallconversation`, this.chat.getConversations);
     this.router.get(`${this.path}/getallmsg/:id`, this.chat.getallMessages);

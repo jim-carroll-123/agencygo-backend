@@ -61,7 +61,6 @@ export class AuthService {
     if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
 
     const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
-    console.log(isPasswordMatching)
     if (!isPasswordMatching) throw new HttpException(409, 'Invalid Credentials'); // should not let user know which field is wrong
 
     const tokenData = createToken(findUser);
@@ -90,7 +89,6 @@ export class AuthService {
       } = {
         agency,
       };
-      console.log(userData, agency);
       if (userData?.isEmployee) {
         const employee = await EmployeeModel.findOne({ userId: userData._id });
         if (!employee) {
