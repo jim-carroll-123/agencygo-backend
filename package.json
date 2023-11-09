@@ -18,6 +18,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.438.0",
     "@sendgrid/mail": "^7.7.0",
+    "@types/socket.io": "^3.0.2",
     "adm-zip": "^0.5.10",
     "archiver": "^6.0.1",
     "aws-sdk": "^2.1483.0",
@@ -51,6 +52,7 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "puppeteer-recaptcha-solver": "^1.0.1",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^4.7.2",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.5.0",
     "twilio": "^4.19.0",

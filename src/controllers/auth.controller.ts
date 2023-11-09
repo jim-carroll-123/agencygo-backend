@@ -4,9 +4,9 @@ import { RequestSignUp, RequestWithUser, DataStoredInToken } from '@interfaces/a
 import { User } from '@interfaces/users.interface';
 import { AuthService } from '@services/auth.service';
 import { Container } from 'typedi';
-
+import { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_SECRET_KEY, TWILIO_API_KEY, SECRET_KEY } from '@config';
 import { sign } from 'jsonwebtoken';
-import { SECRET_KEY } from '@config';
+import twilio from 'twilio';
 
 const createToken = (user: User): any => {
   const dataStoredInToken: DataStoredInToken = { _id: user._id };
@@ -92,40 +92,47 @@ export class AuthController {
 
   public generatetwiliotoken = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const AccessToken = require('twilio').jwt.AccessToken;
-      const VideoGrant = AccessToken.VideoGrant;
+      const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+      const AccessToken = twilio.jwt.AccessToken;
+      const ChatGrant = AccessToken.ChatGrant;
 
-      // Your Twilio Account SID and API Key SID/Secret
-      const accountSid = process.env.TWILIO_ACCOUNT_SID;
-      const apiKeySid = process.env.TWILIO_API_KEY;
-      const apiKeySecret = process.env.TWILIO_SECRET_KEY;
+      // const accountSid = process.env.TWILIO_ACCOUNT_SID;
+      // const apiKeySid = process.env.TWILIO_API_KEY;
 
-      const userData: User = req.body;
+      // const userData = req.body;
       // const { tokenData } = await this.auth.generatetoken(userData);
 
       const identity = req.body.email;
       // Create an access token
-      const accessToken = new AccessToken(accountSid, apiKeySid, apiKeySecret, {
+      const accessToken = new AccessToken(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_SECRET_KEY, {
         identity: identity,
       });
-      // Add a Video grant to the token
-      const videoGrant = new VideoGrant();
-      accessToken.addGrant(videoGrant);
+      // Add a Chat grant to the token
+      const chatGrant = new ChatGrant();
+      accessToken.addGrant(chatGrant);
 
       // Serialize the token to a JWT
       const token = accessToken.toJwt();
-      const tokenData = createToken(accessToken);
+      // const tokenData = createToken(accessToken);
       res.status(200).json({
         // data: { tokenData, accessToken: token },
-        data: token ,
+        data: token,
         message: 'token get',
       });
+    } catch (error) {
+      next(error);
     }
-    catch (error) {
-      console.log(error)
-      res.status(400).json({
-        error,
-      });
+  };
+
+  public getTwilioToken = async (req: Response, res: Response, next: NextFunction) => {
+    try {
+      if (req.header['token']) {
+        res.send({ token: req.header['token'], username: req.header['username'] });
+      } else {
+        next({ status: 404, message: 'Token not set' });
+      }
+    } catch (error) {
+      next(error);
     }
-  }
+  };
 }

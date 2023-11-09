@@ -16,31 +16,39 @@ import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import logRoutes from './utils/routes-logger';
 
+import { Server as HttpServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { initializeWebSocket } from '../src/controllers/chat.controller';
+
 export class App {
   public app: express.Express;
   public env: string;
   public port: string | number;
 
+  private server: HttpServer;
+  public io: SocketIOServer;
+
   constructor(routes: Routes[]) {
     this.app = express();
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
+    this.io = new SocketIOServer(this.server);
 
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
   }
-
   public listen() {
     try {
-      this.app.listen(this.port, () => {
+      this.server = this.app.listen(this.port, () => {
         logger.info(`=================================`);
         logger.info(`======= ENV: ${this.env} =======`);
         logger.info(`🚀 App listening on the port ${this.port}`);
         logger.info(`=================================`);
         logRoutes(this.app);
       });
+      initializeWebSocket(this.server);
     } catch (err) {
       console.log(err);
     }
@@ -49,6 +57,23 @@ export class App {
   public getServer() {
     return this.app;
   }
+
+  // private initializeSocketIO() {
+  //   console.log(1)
+  //   const options = {
+  //     cors: {
+  //       origin: "*",
+  //     },
+  //   };
+  //   this.io = new SocketIOServer(this.server, options);
+
+  //   this.io = new SocketIOServer(this.server);
+
+  //   this.io.on('connection', (socket) => {
+  //     console.log('Client connected');
+  //     console.log('socket',socket)
+  //   });
+  // }
 
   private async connectToDatabase() {
     if (this.env !== 'production') {
