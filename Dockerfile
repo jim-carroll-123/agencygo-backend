@@ -26,6 +26,8 @@ WORKDIR /app
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/node_modules /app/node_modules/
 COPY --from=builder /app/package*.json /app
+RUN rm -rf /app/dist/scraper/temp && mkdir -p /app/dist/scraper/temp
+RUN rm -rf /app/dist/scraper/uploads && mkdir -p /app/dist/scraper/uploads
 
 # Set environment variables
 ENV NODE_ENV=production

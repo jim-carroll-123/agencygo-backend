@@ -52,7 +52,7 @@ export const getBrowserInstance = async (
   const chromeExecPath = await chromePath();
   const pathToExtension = path.join(__dirname, '../extensions/2captcha-solver');
   let config: any = {
-    headless: true,
+    headless: 'new',
     args: [
       `--disable-extensions-except=${pathToExtension}`,
       `--load-extension=${pathToExtension}`,
