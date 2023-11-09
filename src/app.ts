@@ -32,8 +32,6 @@ export class App {
     this.app = express();
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
-
-    console.log(this.server)
     this.io = new SocketIOServer(this.server);
 
     this.connectToDatabase();
@@ -59,7 +57,6 @@ export class App {
   public getServer() {
     return this.app;
   }
-
 
   // private initializeSocketIO() {
   //   console.log(1)
