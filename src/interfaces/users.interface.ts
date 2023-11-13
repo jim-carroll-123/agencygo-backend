@@ -18,4 +18,5 @@ export interface User {
   isAgency: boolean;
   isEmployee: boolean;
   password: string;
+  twilioUserId: string;
 }

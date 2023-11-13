@@ -2,16 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { EmployeeService } from '@/services/employee.service';
 import { Employee, EmployeeCreate, EmployeeUpdate } from '@/interfaces/employee.interface';
+import { ChatController } from '@/controllers/chat.controller';
 
 export class EmployeeController {
   public employee = Container.get(EmployeeService);
+  public chat = Container.get(ChatController);
   // create employee
   public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employeeData: EmployeeCreate = req.body;
       const agencyId = req.params.id;
       const createEmployeeData: Employee = await this.employee.createEmployee(employeeData, agencyId);
-
       res.status(201).json({ data: createEmployeeData, message: 'Employee created successfully' });
     } catch (error) {
       next(error);
@@ -23,7 +24,7 @@ export class EmployeeController {
     try {
       const agencyId = req.params.agencyId;
       const employees = await this.employee.getAgencyEmployees(agencyId);
-      if(employees.length === 0) return res.status(400).json({ data: employees, message: 'Employees not found' });
+      if (employees.length === 0) return res.status(400).json({ data: employees, message: 'Employees not found' });
       return res.status(200).json({ data: employees, message: 'Employees fetched successfully' });
     } catch (error) {
       next(error);
@@ -47,7 +48,7 @@ export class EmployeeController {
       const employeeId = req.params.employeeId;
       const employeeData: EmployeeUpdate = req.body;
       const updatedEmployee = await this.employee.updateEmployee(employeeId, employeeData);
-      if(!updatedEmployee) return res.status(404).json({ data: updatedEmployee, message: 'Employee not found' });
+      if (!updatedEmployee) return res.status(404).json({ data: updatedEmployee, message: 'Employee not found' });
       else return res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
     } catch (error) {
       next(error);
@@ -79,7 +80,7 @@ export class EmployeeController {
   public searchEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queryData = req.query;
-      console.log('*******',req.query)
+      console.log('*******', req.query);
       const employee = await this.employee.getEmployees(queryData);
       res.status(200).json({ data: employee, message: 'Employee fetched successfully' });
     } catch (error) {
@@ -91,8 +92,8 @@ export class EmployeeController {
   public updateBatchEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { employeeId } = req.body;
-      const employeeRole: string = req.query.role as string || '';
-      const agencyId : string = req.query.agencyId as string || '';
+      const employeeRole: string = (req.query.role as string) || '';
+      const agencyId: string = (req.query.agencyId as string) || '';
       const updatedEmployee = await this.employee.updateBatchEmployee(employeeId, employeeRole, agencyId);
       res.status(200).json({ data: updatedEmployee, message: 'Employee updated successfully' });
     } catch (error) {

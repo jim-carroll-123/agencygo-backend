@@ -18,6 +18,7 @@ export class EmployeeService {
   public async createEmployee(employeeData: EmployeeCreate, agencyId: string): Promise<Employee> {
     try {
       const agency = await AgencyModel.findOne({ _id: agencyId });
+      console.log(agency);
       if (!agency) {
         throw new HttpException(404, 'Agency not found');
       }
@@ -129,9 +130,9 @@ export class EmployeeService {
       if (employeeData.password) {
         hashedPassword = await hash(employeeData.password, 10);
       }
-      console.log(employeeId)
+      console.log(employeeId);
       const employee = await EmployeeModel.findOneAndUpdate(
-        { _id: employeeId},
+        { _id: employeeId },
         {
           $set: {
             name: employeeData.name,
@@ -214,9 +215,9 @@ export class EmployeeService {
     try {
       let filter = {};
       if (getData.creator) {
-        const employeesId: Creator = await CreatorModel.findOne({ _id: getData.creator }) as Creator;
+        const employeesId: Creator = (await CreatorModel.findOne({ _id: getData.creator })) as Creator;
         filter = { _id: { $in: employeesId.assignEmployee } };
-        console.log('--------', employeesId)
+        console.log('--------', employeesId);
       }
       if (getData.name) {
         filter = {

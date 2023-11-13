@@ -47,6 +47,9 @@ const UserSchema: Schema<User> = new Schema({
     type: String,
     enum: ['admin', 'chatter', 'manager'],
   },
+  twilioUserId: {
+    type: String,
+  },
 });
 
 export const UserModel = model<User & Document>('User', UserSchema);

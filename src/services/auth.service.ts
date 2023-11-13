@@ -79,7 +79,8 @@ export class AuthService {
 
   public async verify(userData: User) {
     try {
-      const agency = await AgencyModel.findOne({ userId: userData._id });
+      console.log(userData);
+      const agency = await AgencyModel.findOne({ _id: userData.agencyId });
       if (!agency) {
         throw new HttpException(404, `Agency not found`);
       }
