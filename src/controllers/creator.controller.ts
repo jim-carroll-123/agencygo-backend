@@ -81,7 +81,6 @@ export class CreatorController {
   public loginOnlyfans = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorId = req.query.creatorId as string;
-      console.log(creatorId);
 
       await this.login.execute({
         email: req.body.email,

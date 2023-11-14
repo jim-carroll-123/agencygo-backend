@@ -1,2 +1,2 @@
 export const URL_BASE = 'https://onlyfans.com/';
-export const TIMEOUT_BASE = 1000 * 10;
+export const TIMEOUT_BASE = 3000 * 10;

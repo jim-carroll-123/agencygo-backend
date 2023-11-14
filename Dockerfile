@@ -32,7 +32,7 @@ RUN rm -rf /app/dist/scraper/uploads && mkdir -p /app/dist/scraper/uploads
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV DBCONN_STR=mongodb+srv://dev:E8bhHjIr5xmvPgRT@agencygodevcluster.q83fyoe.mongodb.net/development
+ENV DBCONN_STR=mongodb+srv://dev:E8bhHjIr5xmvPgRT@agencygodevcluster.q83fyoe.mongodb.net/build_od_532
 ENV SECRET_KEY=secretKey
 ENV LOG_FORMAT=dev
 ENV LOG_DIR=../logs

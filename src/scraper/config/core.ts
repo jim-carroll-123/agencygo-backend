@@ -4,6 +4,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import pluginProxy from 'puppeteer-extra-plugin-proxy';
 import fs from 'fs';
 import chromePath from 'locate-chrome';
+import UserAgent from 'user-agents';
 
 // Define the path to the config.js file
 const modifyProxySettingsInExtension = proxyUrl => {
@@ -18,9 +19,7 @@ const modifyProxySettingsInExtension = proxyUrl => {
       // Write the updated content back to the file
       fs.writeFile(configFilePath, updatedContent, err => {
         if (err) {
-          console.error('Error writing config file:', err);
-        } else {
-          console.log('Proxy variable updated successfully.');
+          console.error('Error writing proxy config file:', err);
         }
       });
     }
@@ -60,11 +59,10 @@ export const getBrowserInstance = async (
       '--disable-setuid-sandbox',
       '--disable-gpu',
       '--disable-dev-shm-usage',
+      '--start-maximized',
     ],
     executablePath: chromeExecPath,
   };
-
-  console.log('Puppeteer chrome path', chromeExecPath);
 
   if (userDataDir) {
     config = {
@@ -72,7 +70,11 @@ export const getBrowserInstance = async (
       userDataDir,
     };
   }
+  const ua = new UserAgent({
+    deviceCategory: 'desktop',
+  });
   const browser = await puppeteer.launch(config);
   const page = await browser.newPage();
+  await page.setUserAgent(ua.random().data.userAgent);
   return { page, browser };
 };
