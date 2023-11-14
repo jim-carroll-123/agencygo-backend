@@ -18,14 +18,14 @@ export interface Employee {
   role: Role;
   userId: Types.ObjectId;
   status: Status;
-  password:string;
+  password: string;
 }
 
 export interface EmployeeCreate {
   name: string;
   email: string;
   role: Role;
-  creator:Types.ObjectId
+  creator: Types.ObjectId;
 }
 
 export interface EmployeeUpdate {
@@ -33,7 +33,8 @@ export interface EmployeeUpdate {
   email: string;
   role: Role;
   agencyId: Types.ObjectId;
-  password:string,
-  status:Status,
-  creator:string[],
+  password: string;
+  status: Status;
+  creator: string[];
+  assignCreator: string[] | string;
 }
