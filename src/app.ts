@@ -48,6 +48,8 @@ export class App {
         logger.info(`=================================`);
         logRoutes(this.app);
       });
+      /* Socket will never close */
+      this.server.timeout = 0;
       initializeWebSocket(this.server);
     } catch (err) {
       console.log(err);
