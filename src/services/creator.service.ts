@@ -246,7 +246,7 @@ export class CreatorService {
 
     if (getData.plateformlink) {
       getData.plateformlink = Boolean(getData.plateformlink === 'true' ? true : false);
-      filter.plateform = getData.plateformlink;
+      filter.autoRelink = getData.plateformlink;
     }
 
     if (getData.employeeId) {
@@ -258,7 +258,6 @@ export class CreatorService {
       const agencyId = new mongoose.Types.ObjectId(getData.agencyId);
       filter.agencyId = { $in: [agencyId] };
     }
-
     const creator = await CreatorModel.aggregate([
       { $match: filter },
       {

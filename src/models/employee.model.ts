@@ -33,6 +33,18 @@ const EmployeeSchema: Schema<Employee> = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users',
   },
+  payRate: {
+    type: Number,
+  },
+  payInterval: {
+    type: String,
+  },
+  commission: {
+    type: Number,
+  },
+  shiftSchedular: {
+    type: String,
+  },
   status: {
     type: String,
     enum: ['active', 'inactive'],

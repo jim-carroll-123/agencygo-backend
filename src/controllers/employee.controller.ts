@@ -80,7 +80,6 @@ export class EmployeeController {
   public searchEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queryData = req.query;
-      console.log('*******', req.query);
       const employee = await this.employee.getEmployees(queryData);
       res.status(200).json({ data: employee, message: 'Employee fetched successfully' });
     } catch (error) {
