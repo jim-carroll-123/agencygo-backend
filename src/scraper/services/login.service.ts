@@ -43,6 +43,8 @@ export class LoginBotService {
       );
       return;
     } catch (error) {
+      const partitionDataFolder = path.join(__dirname, `../temp/${props.creatorId}/SingletonLock`);
+      fs.unlinkSync(partitionDataFolder);
       console.log(error);
       throw error;
     }
@@ -189,6 +191,7 @@ export class LoginBotService {
     const file = fs.createReadStream(outputZipFilePath);
     console.log('uploading session');
     const cloudFile = await this.storage.uploadFile(file, `server-${id}.zip`, false);
+    console.log('session uploaded');
     // fs.unlinkSync(outputZipFilePath);
     // fs.unlinkSync(folderToZip);
 
