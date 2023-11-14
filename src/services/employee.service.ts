@@ -145,20 +145,31 @@ export class EmployeeService {
         },
         { returnDocument: 'after' },
       );
-      if (employeeData.creator) {
-        const updatedEmployees = await Promise.all(
-          employeeData.creator.map(async id => {
-            const data = await CreatorModel.findOneAndUpdate(
-              { _id: new mongoose.Types.ObjectId(id) },
-              { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
-              { returnDocument: 'after' },
-            );
-            if (!data) {
-              throw new HttpException(404, `Employee with ID ${id} not found`);
-            }
-            return data;
-          }),
-        );
+      if (employeeData.assignCreator) {
+        if (typeof employeeData.assignCreator === 'string') {
+          const data = await CreatorModel.findOneAndUpdate(
+            { _id: new mongoose.Types.ObjectId(employeeData.assignCreator) },
+            { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+            { returnDocument: 'after' },
+          );
+          if (!data) {
+            throw new HttpException(404, `Creator with ID ${employeeData.assignCreator} not found`);
+          }
+        } else if (typeof employeeData.assignCreator === 'object') {
+          const updatedEmployees = await Promise.all(
+            employeeData.creator.map(async id => {
+              const data = await CreatorModel.findOneAndUpdate(
+                { _id: new mongoose.Types.ObjectId(id) },
+                { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+                { returnDocument: 'after' },
+              );
+              if (!data) {
+                throw new HttpException(404, `Creator with ID ${id} not found`);
+              }
+              return data;
+            }),
+          );
+        }
       }
       return employee;
     } catch (error) {
