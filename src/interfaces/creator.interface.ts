@@ -11,7 +11,7 @@ export interface Creator {
   agencyId: mongoose.Types.ObjectId | null;
   gender: Gender;
   internalNotes: string;
-  assignEmployee: mongoose.Types.ObjectId | null;
+  assignEmployee: mongoose.Types.ObjectId[] | null;
   autoRelink: boolean;
   proxy: object | null;
   sessionBucket: object | null;
