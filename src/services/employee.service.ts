@@ -49,11 +49,28 @@ export class EmployeeService {
         userId: user._id,
         status: 'inactive',
       });
-      if (employeeData.creator) {
+      if (typeof employeeData.assignCreator === 'string') {
         const data = await CreatorModel.findOneAndUpdate(
-          { _id: new mongoose.Types.ObjectId(employeeData.creator) },
-          { $push: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+          { _id: new mongoose.Types.ObjectId(employeeData.assignCreator) },
+          { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
           { returnDocument: 'after' },
+        );
+        if (!data) {
+          throw new HttpException(404, `Creator with ID ${employeeData.assignCreator} not found`);
+        }
+      } else if (typeof employeeData.assignCreator === 'object') {
+        const updatedEmployees = await Promise.all(
+          employeeData.assignCreator.map(async id => {
+            const data = await CreatorModel.findOneAndUpdate(
+              { _id: new mongoose.Types.ObjectId(id) },
+              { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+              { returnDocument: 'after' },
+            );
+            if (!data) {
+              throw new HttpException(404, `Creator with ID ${id} not found`);
+            }
+            return data;
+          }),
         );
       }
       const template = generateEmailTemplateForActivation(employee, agency.agencyName);
@@ -97,7 +114,16 @@ export class EmployeeService {
             status: 1,
             userId: 1,
             agencyId: 1,
-            assignedCreators: '$creatorName.creatorName',
+            assignedCreators: {
+              $map: {
+                input: '$creatorName',
+                as: 'creator',
+                in: {
+                  id: '$$creator._id',
+                  name: '$$creator.creatorName',
+                },
+              },
+            },
           },
         },
       ]);
@@ -157,7 +183,7 @@ export class EmployeeService {
           }
         } else if (typeof employeeData.assignCreator === 'object') {
           const updatedEmployees = await Promise.all(
-            employeeData.creator.map(async id => {
+            employeeData.assignCreator.map(async id => {
               const data = await CreatorModel.findOneAndUpdate(
                 { _id: new mongoose.Types.ObjectId(id) },
                 { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
