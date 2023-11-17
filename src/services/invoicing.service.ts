@@ -1,34 +1,43 @@
 import { Invoicing } from '@/interfaces/invoicing.interface';
 import { Service } from 'typedi';
-import { UserModel } from '@models/users.model';
 import { HttpException } from '@/exceptions/httpException';
 import { InvoicingModel } from '@/models/invoicing.model';
+import * as fs from 'fs';
+import * as path from 'path';
+const puppeteer = require('puppeteer');
 
 @Service()
 export class InvoicingService {
   public async createInvoicing(invoicingData: Invoicing): Promise<Invoicing> {
     try {
-      const newInvoicing = new InvoicingModel({
+      const invoiceNumber = this.generateInvoiceNumber();
+
+      const newInvoicingData: Invoicing = {
         ...invoicingData,
-      });
-      // Save the Invoicing
+        invoiceNo: invoiceNumber,
+      };
+
+      const newInvoicing = new InvoicingModel(newInvoicingData);
       const createdInvoicing = await newInvoicing.save();
+
       return createdInvoicing;
     } catch (error) {
       throw error;
     }
   }
 
-  public async getAllInvoicing(page: number, limit: number): Promise<{ data: Invoicing[]; total: number }> {
+  public async getInvoicesByUserId(userId: string): Promise<Invoicing[]> {
     try {
-      const skip = (page - 1) * limit;
-      const total = await InvoicingModel.countDocuments();
-      const invoicings: Invoicing[] = await InvoicingModel.find().skip(skip).limit(limit);
-
-      return { data: invoicings, total };
+      const userInvoices: Invoicing[] = await InvoicingModel.find({ userId });
+      return userInvoices;
     } catch (error) {
       throw error;
     }
+  }
+
+  public async getAllInvoicing(): Promise<Invoicing[]> {
+    const invoicings: Invoicing[] = await InvoicingModel.find();
+    return invoicings;
   }
 
   public async getsingleInvoicing(invoicingId: string): Promise<Invoicing> {
@@ -39,6 +48,7 @@ export class InvoicingService {
       throw error;
     }
   }
+
 
   public async deleteInvoicing(invoicingId: string): Promise<Invoicing> {
     try {
@@ -66,5 +76,65 @@ export class InvoicingService {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async prepareInvoiceHTML(invoicingData: Invoicing, templateName = 'template1'): Promise<string> {
+    try {
+      const invoiceNumber = this.generateInvoiceNumber();
+      const templatePath = path.join(__dirname, '..', 'pdftemplate', `${templateName}.html`);
+
+      const html = fs.readFileSync(templatePath, 'utf8');
+      const preparedHTML = html
+        .replace('${userName}', invoicingData.userName)
+        .replace('${companyName}', invoicingData.companyName)
+        .replace('${companyAddress}', invoicingData.companyAddress)
+        .replace('${companyContact}', invoicingData.companyContact)
+        .replace('${userId}', invoicingData.userId.toString())
+        .replace('${employeeId}', invoicingData.employeeId.toString())
+        .replace('${amount}', invoicingData.amount.toString())
+        .replace('${status}', invoicingData.status.toString())
+        .replace('${date}', invoicingData.date.toString())
+        .replace('${address}', invoicingData.address)
+        .replace('${addresss}', invoicingData.addresss)
+        .replace('${contactDetails}', invoicingData.contactDetails)
+        .replace('${invoiceNo}', invoiceNumber)
+        .replace('${paymentTerms}', invoicingData.paymentTerms)
+        .replace('${contactName}', invoicingData.contactName)
+        .replace('${nameDept}', invoicingData.nameDept)
+        .replace('${clientCompanyName}', invoicingData.clientCompanyName)
+        .replace('${addressShipTo}', invoicingData.addressShipTo)
+        .replace('${phone}', invoicingData.phone)
+        .replace('${email}', invoicingData.email)
+        .replace('${description}', invoicingData.description)
+        .replace('${invoiceTitle}', invoicingData.invoiceTitle)
+        .replace('${qty}', invoicingData.qty.toString())
+        .replace('${unitPrice}', invoicingData.unitPrice.toString())
+        .replace('${total}', invoicingData.total.toString())
+        .replace('${paymentInstructions}', invoicingData.paymentInstructions)
+        .replace('${subtotal}', invoicingData.subtotal.toString())
+        .replace('${discount}', invoicingData.discount.toString())
+        .replace('${subtotalLessDiscount}', invoicingData.subtotalLessDiscount.toString())
+        .replace('${taxRate}', invoicingData.taxRate)
+        .replace('${totalTax}', invoicingData.totalTax.toString())
+        .replace('${shippingHandling}', invoicingData.shippingHandling.toString())
+        .replace('${balanceDue}', invoicingData.balanceDue)
+        .replace('${addressShipTo}', invoicingData.addressShipTo)
+        .replace('${phoneShipTo}', invoicingData.phoneShipTo);
+
+      return preparedHTML;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private generateInvoiceNumber(): string {
+    const length = 8;
+    const characters = '0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return result;
   }
 }

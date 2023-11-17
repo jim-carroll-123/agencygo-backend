@@ -14,10 +14,27 @@ const UserSchema: Schema<User> = new Schema({
     type: String,
     default: '',
   },
+  amount: {
+    type: String,
+  },
+  status: {
+    type: Boolean,
+    default: false,
+  },
+  date: {
+    tyoe: String,
+  },
   email: {
     type: String,
     required: true,
     unique: true,
+  },
+  agencyPer:{
+    type:String,
+  },
+  currentModalBalance:{
+    type:Number,
+    required:true,
   },
   isVerified: {
     type: Boolean,

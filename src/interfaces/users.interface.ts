@@ -13,6 +13,11 @@ export interface User {
   isAdmin: boolean;
   firstName: string;
   lastName: string;
+  amount: string;
+  status: boolean;
+  agencyPer:string;
+  date: Date;
+  currentModalBalance:number;
   email: string;
   isVerified: boolean;
   isAgency: boolean;

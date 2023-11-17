@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsNumber } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsNumber, IsBoolean, IsDateString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -7,7 +7,25 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
+  public amount: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  public status: Boolean;
+
+  @IsString()
+  @IsNotEmpty()
   public agencyName: string;
+
+  @IsNumber()
+  public currentModalBalance : Number
+
+  @IsString()
+  public agencyPer: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  public date: Date;
 
   @IsNumber()
   @IsNotEmpty()

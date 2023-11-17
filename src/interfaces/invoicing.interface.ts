@@ -1,10 +1,40 @@
 import { Types } from 'mongoose';
 
 export interface Invoicing {
+  userName: any;
+  id: any;
   userId: Types.ObjectId;
   employeeId: Types.ObjectId;
+  companyName: string;
+  companyAddress: string;
+  companyContact: string;
   amount: number;
-  status: boolean;
-  description: string;
+  delivery:Boolean;
+  status: Boolean;
   date: Date;
+  address: string;
+  contactDetails: string;
+  invoiceNo: string;
+  paymentTerms: string;
+  contactName: string;
+  nameDept: string;
+  clientCompanyName: string;
+  addresss: string;
+  phone: string;
+  email: string;
+  description: string;
+  qty: number;
+  invoiceTitle: string;
+  unitPrice: number;
+  total: number;
+  paymentInstructions: string;
+  subtotal: number;
+  discount: number;
+  subtotalLessDiscount: number;
+  taxRate: string;
+  totalTax: number;
+  shippingHandling: number;
+  balanceDue: string;
+  addressShipTo: string;
+  phoneShipTo: string;
 }
