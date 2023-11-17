@@ -42,9 +42,9 @@ export class AgencyService {
     }
   }
 
-  public updateAgency = async (id: string, data: Agency) => {
+  public updateAgency = async (id: string, data: Group) => {
     try {
-      const newAgency: Agency = await AgencyModel.findByIdAndUpdate(
+      const newAgency: Agency = await GroupModel.findByIdAndUpdate(
         {
           _id: id,
         },

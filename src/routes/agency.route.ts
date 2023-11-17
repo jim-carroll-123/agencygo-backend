@@ -36,7 +36,7 @@ export class AgencyRoute implements Routes {
     );
     this.router.post(`${this.path}/addgroup/:parentAgencyId`, this.agency.addSubGroup);
     this.router.get(`${this.path}/showgroup/:agencyId`, this.agency.showSubGroup);
-    this.router.get(`${this.path}/updategroup/:agencyId`, this.agency.updateGroup);
-    this.router.get(`${this.path}/deletegroup/:agencyId`, this.agency.deleteGroup);
+    this.router.patch(`${this.path}/updategroup/:groupId`, this.agency.updateGroup);
+    this.router.delete(`${this.path}/deletegroup/:agencyId`, this.agency.deleteGroup);
   }
 }

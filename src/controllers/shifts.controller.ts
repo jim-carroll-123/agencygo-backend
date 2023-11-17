@@ -58,4 +58,13 @@ export class ShiftsController {
       next(error);
     }
   };
+  public getEmployeeShift = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const employeeId = req.params.employeeId;
+      const employeeShift = await this.shift.getEmployeeShift(employeeId);
+      res.status(200).json({ data: employeeShift });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

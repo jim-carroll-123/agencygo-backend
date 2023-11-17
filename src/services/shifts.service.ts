@@ -5,6 +5,7 @@ import { Shifts } from '@interfaces/shifts.interface';
 import { EmployeeModel } from '@/models/employee.model';
 import { Employee } from '@/interfaces/employee.interface';
 import { CreatorModel } from '@/models/creator.model';
+import mongoose, { Types } from 'mongoose';
 
 @Service()
 export class ShiftServices {
@@ -95,5 +96,34 @@ export class ShiftServices {
     if (!allEmployees) throw new HttpException(409, 'Employees not found');
 
     return allEmployees;
+  }
+  public async getEmployeeShift(employeeId: string) {
+    const objectId = new mongoose.Types.ObjectId(employeeId);
+    // const allShift: Shifts[] = await ShiftModel.find({ employeeId: employeeId });
+    const allShift: Shifts[] = await ShiftModel.aggregate([
+      { $match: { employeeId: objectId } },
+      {
+        $lookup: {
+          from: 'creators',
+          localField: 'creatorId',
+          foreignField: '_id',
+          as: 'creatorDetails',
+        },
+      },
+      {
+        $project: {
+          'creatorDetails.creatorName': 1,
+          startTime: 1,
+          endTime: 1,
+          startDate: 1,
+          endDate: 1,
+          frequency: 1,
+          repeat: 1,
+          status: 1,
+        },
+      },
+    ]);
+    if (!allShift) throw new HttpException(404, ' shifts not found');
+    return allShift;
   }
 }

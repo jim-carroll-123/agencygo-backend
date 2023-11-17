@@ -87,9 +87,9 @@ export class AgencyController {
   public updateGroup = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const groupId = req.params.groupId;
-      const groupData: Agency = req.body;
+      const groupData: Group = req.body;
       const updatedGroup = await this.agency.updateAgency(groupId, groupData);
-      res.status(200).json({ data: updatedGroup, message: 'Agency updated successfully' });
+      res.status(200).json({ data: updatedGroup, message: 'Group updated successfully' });
     } catch (error) {
       next(error);
     }
