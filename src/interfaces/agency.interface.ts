@@ -12,4 +12,6 @@ export interface Agency {
   secondaryColor: string;
   email: string;
   phone: string;
+  groups: mongoose.Types.ObjectId | mongoose.Types.ObjectId[];
+  isSubGroup: boolean;
 }

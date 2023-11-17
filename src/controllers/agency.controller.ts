@@ -1,4 +1,5 @@
 import { Agency } from '@/interfaces/agency.interface';
+import { Group } from '@/interfaces/group.interface';
 import { AgencyService } from '@/services/agency.service';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
@@ -59,6 +60,46 @@ export class AgencyController {
       const agencyId = req.params.agencyId;
       const deleteAgencyData: Agency = await this.agency.deleteAgency(agencyId);
       res.status(200).json({ data: deleteAgencyData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public addSubGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const parentAgencyId = req.params.parentAgencyId;
+      const { agencyId, name } = req.body;
+      const addSubGroup: Group = await this.agency.addSubGroup(agencyId, name, parentAgencyId);
+      res.status(200).json({ data: addSubGroup, message: 'group added' });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public showSubGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const agencyId = req.params.agencyId;
+      const showgroup = await this.agency.showGroup(agencyId);
+      res.status(200).json({ data: showgroup });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public updateGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const groupId = req.params.groupId;
+      const groupData: Agency = req.body;
+      const updatedGroup = await this.agency.updateAgency(groupId, groupData);
+      res.status(200).json({ data: updatedGroup, message: 'Agency updated successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const agencyId = req.params.agencyId;
+      const deleteGroupData: Group = await this.agency.deleteGroup(agencyId);
+      res.status(200).json({ data: deleteGroupData, message: 'deleted' });
     } catch (error) {
       next(error);
     }

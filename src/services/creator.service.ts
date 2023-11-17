@@ -2,8 +2,6 @@ import { hash } from 'bcrypt';
 import * as crypto from 'crypto';
 import { HttpException } from '@/exceptions/httpException';
 import { Creator } from '@/interfaces/creator.interface';
-import { IProxy } from '@interfaces/proxy.interface';
-import { ProxyModel } from '@/models/proxy.model';
 import { CreatorModel } from '@/models/creator.model';
 import { Service } from 'typedi';
 
@@ -96,99 +94,6 @@ export class CreatorService {
     return findCreator;
   }
 
-  private async fetchProxyListFromApi() {
-    try {
-      const axiosConfig = {
-        method: 'get',
-        url: PROXY_URL,
-        params: {
-          mode: 'direct',
-          page: '1',
-          page_size: '25',
-        },
-        headers: {
-          Authorization: `Token ${PROXY_API_KEY}`,
-        },
-      };
-      const response = await axios(axiosConfig);
-      return response.data.results;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to fetch proxy list');
-    }
-  }
-
-  public async createProxy(creatorId: string): Promise<IProxy> {
-    try {
-      let proxy = await this.findUnassignedProxy();
-
-      if (!proxy) {
-        const newProxies = await this.fetchProxyListFromApi();
-
-        const uniqueNewProxies = await this.filterUniqueProxies(newProxies);
-
-        await this.addToProxyPool(uniqueNewProxies);
-        proxy = await this.findUnassignedProxy();
-
-        if (!proxy) {
-          throw new HttpException(404, 'No proxies available');
-        }
-      }
-      proxy.creator = creatorId;
-      proxy.save();
-
-      const creator = await CreatorModel.findById(creatorId);
-      if (creator) {
-        creator.proxy = proxy._id;
-        await creator.save();
-      } else {
-        throw new HttpException(404, 'Creator not found');
-      }
-
-      return proxy;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      console.error(error);
-      throw new HttpException(500, 'Failed to create proxy');
-    }
-  }
-
-  private async filterUniqueProxies(newProxies: any[]) {
-    const existingProxies = await ProxyModel.find({}, 'proxy_id');
-    const existingProxyIds = existingProxies.map(proxy => proxy.proxy_id);
-
-    return newProxies.filter(proxy => !existingProxyIds.includes(proxy.id));
-  }
-
-  private async findUnassignedProxy() {
-    return await ProxyModel.findOne({ creator: null });
-  }
-
-  private async addToProxyPool(newProxies: any[]) {
-    for (const proxyData of newProxies) {
-      await ProxyModel.create({
-        proxy_id: proxyData.id,
-        proxyAddress: proxyData.proxy_address,
-        username: proxyData.username,
-        password: proxyData.password,
-        port: proxyData.port,
-        valid: proxyData.valid,
-        country: proxyData.country,
-        city: proxyData.city,
-        createdAt: proxyData.created_at,
-        creator: null,
-      });
-    }
-  }
-
-  public async getProxy(creatorId: string): Promise<IProxy> {
-    const getProxy = await ProxyModel.findOne({ creator: creatorId });
-    if (!getProxy) throw new HttpException(404, "Proxy doesn't exist");
-    return getProxy;
-  }
-
   // update a creator by id
   public async updateCreator(creatorId: string, creatorData: Creator): Promise<Creator> {
     const updateCreatorById: Creator = await CreatorModel.findByIdAndUpdate(
@@ -218,7 +123,7 @@ export class CreatorService {
           throw new Error(`Creator with ID ${creatorId} not found.`);
         }
 
-        if (creator.assignEmployee.includes(employeeId)) {
+        if (creator.assignEmployee?.includes(employeeId)) {
           throw new Error(`Employee with ID ${employeeId} is already assigned to Creator with ID ${creatorId}.`);
         }
 

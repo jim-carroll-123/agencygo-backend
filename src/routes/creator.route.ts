@@ -27,8 +27,6 @@ export class CreatorRoute implements Routes {
     );
     this.router.put(`${this.path}/:id`, ValidationMiddleware(CreatorDTO, true), this.creator.updateCreator);
     this.router.get(`${this.path}/getCreatorByAdmin/:creatorId`, AuthMiddleware, isAdminMiddleware, this.creator.getCreatorByAdmin);
-    this.router.post(`${this.path}/assign-proxy/:creatorId`, this.creator.generateProxy);
-    this.router.get(`${this.path}/get-proxy/:creatorId`, this.creator.getProxyByCreator);
     this.router.delete(`${this.path}/:id`, this.creator._deleteCreator);
     this.router.post(`${this.path}/assignCreatorToEmployee`, this.creator.assignCreatorToEmployee);
     this.router.get(`${this.path}/search`, this.creator.searchFilter);
