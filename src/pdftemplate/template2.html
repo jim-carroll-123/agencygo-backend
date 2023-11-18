@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice</title>
+</head>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  .main_box {
+    padding: 0px 100px 100px 100px;
+    width: 100%;
+    margin: 0px auto;
+  }
+  .main_top_box {
+    width: 100%;
+    height: 250px;
+    border-bottom: 10px gray solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+  }
+  .logo_Comapnyname {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+  .logo {
+    /* width: 80px;
+    height: 80px; */
+    color: aliceblue;
+    font-weight: bold;
+    padding: 36px 20px;
+    border-radius: 10px;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .companyName {
+    padding: 0px 10px;
+    line-height: 13px;
+  }
+  .bill-to-ship {
+    width: 100%;
+    height: 250px;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+  }
+  .bill-to-ship-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  .bill {
+    padding: 4px 0px;
+  }
+  .bill p{
+      font-size: 23px;
+  }
+  .bill h3 {
+    color: #16167a;
+  }
+  .bill hr {
+    width: 692px;
+  }
+  .bill-top-right{
+      justify-content: end;
+  display: flex;
+  align-items: end;
+  width: 100%;
+  }
+  .companyName h3{
+    background-color: aliceblue;
+    padding: 8px;
+  }
+  .companyName p{
+    background-color: aliceblue;
+    padding: 8px;
+  }
+  .Business-name{
+    background-color: aliceblue;
+    font-size: 20px;
+    padding: 3px;
+    margin-top: 20px;
+  }
+  .Business-p p{
+    background-color: aliceblue;
+    padding: 5px;
+    margin-top: 5px;
+  }
+  .billing-div-main{
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .sub-billing-div-main{
+    width: 33.33% !important;
+  }
+  .d-flex{
+   display: flex;
+   flex-wrap: wrap;
+   width: 100%;
+   margin-top: 20px;
+   border-top: 3px solid #8080805c;
+  }
+  .th-1{
+    width: 40% !important;
+    text-align: left;
+    padding: 20px 0px;
+  }
+  .th-2{
+    width: 20% !important;
+    text-align: left;
+    padding: 20px 0px;
+  }
+  .th-3{
+    width: 20% !important;
+    text-align: left;
+    padding: 20px 0px;
+  }
+  .th-4{
+    width: 20% !important;
+    text-align: left;
+    padding: 20px 0px;
+  }
+</style>
+<body>
+
+<div class="main_box">
+
+  <!-- 1st box -->
+  <div class="main_top_box">
+    <div class="logo_Comapnyname">
+      <div class="logo">${Your Company Logo}</div>
+      <div class="companyName">
+        <h3 style="margin: 2px 0px;">${companyName}</h3>
+        <p style="margin: 2px 0px;">${companyAddress}</p>
+        <p style="margin: 2px 0px;">${companyContact}</p>
+      </div>
+    </div>
+    <div class="invoice">
+      <div class="companyName">
+        <h3 style="margin: 2px 0px; width: 230px;">Invoice#${invoiceNo}</h3>
+        <p style="margin: 2px 0px; width: 230px;">Issue Date:${date}</p>
+        <p style="margin: 2px 0px; width: 230px;">MM/DD/YYYY</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="Business-name">
+      <h1>${companyName}</h1>
+    </div>
+    <div class="Business-p">
+      <p>${companyAddress}</p>
+    </div>
+  </div>
+
+  <div class="billing-div-main">
+    <div class="sub-billing-div-main">
+      <p style="padding: 50px 0px 0px 0px; margin-left: 10px; border-top: 3px solid #8080805c;">BILL TO</p>
+      <div class="companyName">
+        <p style="margin: 1px 0px;">${contactName}</p>
+        <p style="margin: 1px 0px;">${companyAddress}</p>
+        <p style="margin: 1px 0px;">${phone}</p>
+        <p style="margin: 1px 0px;">${addresss}</p>
+        <p style="margin: 1px 0px;">${addresss}</p>
+      </div>
+    </div>
+    <div class="sub-billing-div-main">
+      <p style="padding: 50px 0px 0px 0px; margin-left: 10px; border-top: 3px solid #8080805c;">DETAILS</p>
+      <div class="companyName">
+        <p style="margin: 1px 0px;">${companyName}</p>
+        <p style="margin: 1px 0px;">${companyAddress}</p>
+        <p style="margin: 1px 0px;">${phone}</p>
+      </div>
+    </div>
+    <div class="sub-billing-div-main">
+      <p style="padding: 50px 0px 0px 0px; margin-left: 10px; border-top: 3px solid #8080805c;">PAYMENT</p>
+      <div class="companyName">
+        <p style="margin: 1px 0px;">${Payment Company Name}</p>
+        <p style="margin: 1px 0px;">${Payment Address}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2nd box (Itemized List) -->
+  <table style="width: 100%;">
+    <tr class="d-flex">
+      <th class="th-1">ITEM</th>
+      <th class="th-2">QTY</th>
+      <th class="th-3">PRICE</th>
+      <th class="th-4">AMOUNT</th>
+    </tr>
+    <tr class="d-flex">
+      <td class="th-1">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 200px;">${Item Name}</p>
+          <p style="margin: 1px 0px; width: 200px;">${description}</p>
+        </div>
+      </td>
+      <td class="th-2">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${qty}</p>
+        </div>
+      </td>
+      <td class="th-3">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${unitPrice}</p>
+        </div>
+      </td>
+      <td class="th-4">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${total}</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Repeat the item rows as needed -->
+    <tr class="d-flex">
+      <td class="th-1">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 200px;">${Item Name}</p>
+          <p style="margin: 1px 0px; width: 200px;">${description}</p>
+        </div>
+      </td>
+      <td class="th-2">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Quantity}</p>
+        </div>
+      </td>
+      <td class="th-3">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Unit Price}</p>
+        </div>
+      </td>
+      <td class="th-4">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Amount}</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Repeat the item rows as needed -->
+    <tr class="d-flex">
+      <td class="th-1">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 200px;">${Item Name}</p>
+          <p style="margin: 1px 0px; width: 200px;">${Item Description}</p>
+        </div>
+      </td>
+      <td class="th-2">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Quantity}</p>
+        </div>
+      </td>
+      <td class "th-3">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Unit Price}</p>
+        </div>
+      </td>
+      <td class="th-4">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Amount}</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Repeat the item rows as needed -->
+    <!-- Add a row for the total -->
+    <tr class="d-flex" style="padding: 40px 0px;">
+      <td class="th-1">
+        <div class="companyName">
+          <p style="margin: 3px 0px; width: 200px;">Subtotal</p>
+          <p style="margin: 3px 0px; width: 200px;">Tax</p>
+        </div>
+      </td>
+      <td class="th-2">
+        <div>
+          <p></p>
+        </div>
+      </td>
+      <td class="th-3">
+        <div>
+          <p></p>
+        </div>
+      </td>
+      <td class="th-4">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Subtotal}</p>
+          <p style="margin: 1px 0px; width: 100px;"></p>
+        </div>
+      </td>
+    </tr>
+    <!-- Add a row for the total due -->
+    <tr class="d-flex" style="border-bottom: 3px solid #8080805c; border-top: none;">
+      <td class="th-1">
+        <p style="margin: 3px 0px; width: 200px; font-weight: bold;">Total Due</p>
+      </td>
+      <td class="th-2">
+        <div>
+          <p></p>
+        </div>
+      </td>
+      <td class="th-3">
+        <div>
+          <p></p>
+        </div>
+      </td>
+      <td class="th-4">
+        <div class="companyName">
+          <p style="margin: 1px 0px; width: 100px;">${Total Due}</p>
+    
+        </div></td>
+        <td class="th-2">
+          <div >
+                
+          
+          
+        </div>
+      </td>
+        <td class="th-2"><div   >
+                
+          
+          
+        </div></td>
+        <td class="th-2"><div class="companyName" >
+                
+          <p style="margin: 1px 0px; width: 100px;">$0.00</p>
+          
+    
+          
+        </div></td>
+    
+    
+      
+    
+    
+      </tr>
+    
+    
+    
+    
+    </table>
+    
+    
+          <div>
+            
+          </div>
+        </div>
+      </body>
+    </html>

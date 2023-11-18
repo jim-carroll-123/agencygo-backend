@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice</title>
+</head>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .main_box {
+    width: 100%;
+  }
+
+  .top-orange-line {
+    width: 100%;
+    height: 40px;
+    background-color: tomato;
+  }
+
+  .main_top_box {
+    width: 100%;
+    height: 250px;
+    background-color: rgb(218, 216, 216);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+  }
+
+  .logo_Comapnyname {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .companyName {
+    padding-left: 20px;
+    line-height: 13px;
+  }
+
+  .invoice h1 {
+    color: gray;
+  }
+
+  .invoice p {
+    color: #16167a;
+    font-weight: 800;
+  }
+
+  .bill-to-ship {
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+  }
+
+  .bill-to-ship-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .bill {
+    padding: 4px 0px;
+  }
+
+  .bill p {
+    font-size: 23px;
+  }
+
+  .bill h3 {
+    color: #16167a;
+  }
+
+  .bill hr {
+    width: 692px;
+  }
+
+  .bill-top-right {
+    justify-content: end;
+    float: right;
+    display: flex;
+    align-items: end;
+    width: 100%;
+  }
+
+  .bill-top-right p {
+    font-style: italic;
+  }
+
+  .data_details {
+    width: 100%;
+    height: 500px;
+    background-color: antiquewhite;
+  }
+
+  .data_orange_line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    background-color: tomato;
+  }
+
+  .h4a {
+    text-align: center;
+    width: 40%;
+  }
+
+  .h4b {
+    text-align: center;
+    width: 20%;
+  }
+
+  .h4c {
+    text-align: center;
+    width: 20%;
+  }
+
+  .h4d {
+    text-align: center;
+    width: 20%;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th {
+    font-size: 23px;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+    background-color: tomato;
+    color: white;
+    border: 1px solid gray;
+    padding: 8px;
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+    border: 1px solid gray;
+    padding: 8px;
+    text-align: center;
+  }
+
+  tr:nth-child(odd) td {
+    background-color: #79757521;
+  }
+
+  tr:nth-child(even) td {
+    background-color: white;
+  }
+
+  .total_box {
+    margin-bottom: 180px;
+    display: flex;
+    width: 100%;
+  }
+
+  .left {
+    text-align: center;
+    width: 40%;
+  }
+
+  .right {
+    width: 60%;
+  }
+
+  .right_child {
+    align-items: center;
+    justify-content: end;
+    display: flex;
+  }
+
+  .total_count h3 {
+    width: 170px;
+    border-bottom: 2px solid gray;
+  }
+
+  .right_child_a {
+    margin-right: 18px;
+  }
+
+  .last_total {
+    border-top: 3px solid;
+    display: flex;
+    justify-content: end;
+  }
+
+  .balance {
+    margin-right: 138px;
+  }
+
+  .total {
+    background-color: pink;
+    width: 170px;
+  }
+</style>
+<body>
+  <div class="main_box">
+    <div class="top-orange-line"></div>
+    <div class="main_top_box">
+      <div class="logo_Comapnyname">
+        <div class="logo">LOGO</div>
+        <div class="companyName">
+          <h3>${companyName}</h3>
+          <p>${companyAddress}</p>
+          <p>${companyContact}</p>
+        </div>
+      </div>
+      <div class="invoice">
+        <h1>INVOICE</h1>
+        <p>${date}</p>
+        <p>INVOICE No. ${invoiceNo}</p>
+      </div>
+    </div>
+
+    <!-- Second box -->
+    <div class="bill-to-ship">
+      <div class="bill-top-right">
+        <p>${paymentTerms}</p>
+      </div>
+      <div class="bill-to-ship-child">
+        <div class="bill">
+          <h3>Bill To</h3>
+          <hr />
+          <p>${contactName}</p>
+          <p>${nameDept}</p>
+          <p>${clientCompanyName}</p>
+          <p>${addresss}</p>
+          <p>${phone}</p>
+        </div>
+        <div>
+          <div class="bill">
+            <h3>Ship To</h3>
+            <hr />
+            <p>${addressShipTo}</p>
+            <p>${phoneShipTo}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Third box -->
+    <div>
+      <table>
+        <tr class="main_table_head">
+          <th>Description</th>
+          <th>QTY</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+        </tr>
+        <tr>
+          <td>${description}</td>
+          <td>${qty}</td>
+          <td>${unitPrice}</td>
+          <td>${total}</td>
+        </tr>
+        <!-- Add more rows as needed -->
+      </table>  
+    </div>
+
+    <!-- Total box -->
+    <div class="total_box">
+      <div class="left">
+        <h3>Remarks / Payment Instructions: ${paymentInstructions}</h3>
+      </div>
+      <div class="right">
+        <div class="right_child">
+          <div class="right_child_a">
+            <h3>SUBTOTAL</h3>
+            <h3>DISCOUNT</h3>
+            <h3>SUBTOTAL LESS DISCOUNT</h3>
+            <h3>TAX RATE</h3>
+            <h3>TOTAL TAX</h3>
+            <h3>SHIPPING/HANDLING</h3>
+          </div>
+          <div class="total_count">
+            <h3>${subtotal}</h3>
+            <h3>${discount}</h3>
+            <h3>${subtotalLessDiscount}</h3>
+            <h3>${taxRate}</h3>
+            <h3>${totalTax}</h3>
+            <h3>${shippingHandling}</h3>
+          </div>
+        </div>
+        <div class="last_total">
+          <div class="balance">
+            <h2>Balance Due</h2>
+          </div>
+          <div class="total">
+            <h2>${balanceDue}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="top-orange-line"></div>
+  </div>
+</body>
+</html>

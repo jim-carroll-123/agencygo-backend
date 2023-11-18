@@ -9,5 +9,5 @@
         "src/**/*.{spec,test}.ts",
         "**/extensions/2captcha-solver/common/config.js"
     ],
-    "exec": "bash ./pre-start-dev.sh &&  ts-node -r tsconfig-paths/register --transpile-only src/server.ts"
+    "exec": "ts-node -r tsconfig-paths/register --transpile-only src/server.ts"
 }
