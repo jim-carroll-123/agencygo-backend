@@ -30,7 +30,7 @@ export interface EmployeeCreate {
   email: string;
   role: Role;
   creator: Types.ObjectId;
-  assignCreator: string[] | string;
+  assignCreator: Types.ObjectId[] | Types.ObjectId;
 }
 
 export interface EmployeeUpdate {

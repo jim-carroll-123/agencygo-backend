@@ -29,12 +29,11 @@ const UserSchema: Schema<User> = new Schema({
     required: true,
     unique: true,
   },
-  agencyPer:{
-    type:String,
+  agencyPer: {
+    type: String,
   },
-  currentModalBalance:{
-    type:Number,
-    required:false,
+  currentModalBalance: {
+    type: Number,
   },
   isVerified: {
     type: Boolean,

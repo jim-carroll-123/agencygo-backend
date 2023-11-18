@@ -51,6 +51,7 @@ export class CreatorService {
       const createdCreator: Creator = await CreatorModel.create({
         agencyId: creatorData.agencyId,
         creatorName: creatorData.creatorName,
+        creatorImage: creatorData.creatorImage,
         gender: creatorData.gender,
         internalNotes: creatorData.internalNotes,
         autoRelink: creatorData.autoRelink,
