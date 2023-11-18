@@ -11,20 +11,20 @@ const ShiftSchema: Schema<Shifts> = new Schema({
     ref: 'Creator',
   },
   startTime: {
-    type: String,
-    default: '',
+    type: Date,
+    default: () => new Date(),
   },
   endTime: {
-    type: String,
-    default: '',
+    type: Date,
+    default: () => new Date(),
   },
   startDate: {
-    type: String,
-    default: '',
+    type: Date,
+    default: () => new Date(),
   },
   endDate: {
-    type: String,
-    default: '',
+    type: Date,
+    default: () => new Date(),
   },
   frequency: {
     type: String,

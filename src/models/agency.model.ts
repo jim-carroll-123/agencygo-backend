@@ -1,5 +1,5 @@
 import { Agency } from '@/interfaces/agency.interface';
-import { Schema, model, Document } from 'mongoose';
+import mongoose, { Schema, model, Document } from 'mongoose';
 
 const AgencySchema: Schema<Agency> = new Schema({
   userId: {
@@ -37,6 +37,13 @@ const AgencySchema: Schema<Agency> = new Schema({
   },
   phone: {
     type: String,
+  },
+  groups: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group',
+  },
+  isSubGroup: {
+    type: Boolean,
   },
 });
 

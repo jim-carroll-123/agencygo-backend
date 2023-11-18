@@ -24,7 +24,6 @@ export class EmployeeController {
     try {
       const agencyId = req.params.agencyId;
       const employees = await this.employee.getAgencyEmployees(agencyId);
-      if (employees.length === 0) return res.status(400).json({ data: employees, message: 'Employees not found' });
       return res.status(200).json({ data: employees, message: 'Employees fetched successfully' });
     } catch (error) {
       next(error);

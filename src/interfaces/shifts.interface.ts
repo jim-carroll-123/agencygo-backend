@@ -4,10 +4,10 @@ export interface Shifts {
   _id?: string;
   employeeId: ObjectId;
   creatorId: ObjectId;
-  startTime: string;
-  endTime: string;
-  startDate: string;
-  endDate: string;
+  startTime: Date;
+  endTime: Date;
+  startDate: Date;
+  endDate: Date;
   frequency: string;
   repeat: {
     sunday: boolean;
