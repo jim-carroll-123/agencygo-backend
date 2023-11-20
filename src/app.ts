@@ -35,9 +35,9 @@ export class App {
     this.port = PORT || 3000;
     this.io = new SocketIOServer(this.server);
 
-
-    const pdfDirectory = path.join(__dirname, 'assets', 'pdf');
-    this.app.use('/pdf', express.static(pdfDirectory));
+    const pdfDirectory = path.join('assets', 'pdf');
+    
+    this.app.use("/assets/pdf",express.static(pdfDirectory));
 
     this.connectToDatabase();
     this.initializeMiddlewares();

@@ -54,6 +54,8 @@ export class InvoicingController {
 //       }
 //   }
   
+
+  
 public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const invoicingData: Invoicing = req.body;
@@ -78,7 +80,7 @@ public create = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 }
-
+  
 
   public getInvoicesByUserId = async (req: Request, res: Response, next: NextFunction) => {
       try {
