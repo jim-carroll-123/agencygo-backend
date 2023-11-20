@@ -19,6 +19,7 @@ import logRoutes from './utils/routes-logger';
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { initializeWebSocket } from '../src/controllers/chat.controller';
+import path from 'path';
 
 export class App {
   public app: express.Express;
@@ -34,6 +35,10 @@ export class App {
     this.port = PORT || 3000;
     this.io = new SocketIOServer(this.server);
 
+
+    const pdfDirectory = path.join(__dirname, 'assets', 'pdf');
+    this.app.use('/pdf', express.static(pdfDirectory));
+
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -48,6 +53,10 @@ export class App {
         logger.info(`=================================`);
         logRoutes(this.app);
       });
+
+
+
+   
       /* Socket will never close */
       this.server.timeout = 0;
       initializeWebSocket(this.server);

@@ -31,30 +31,54 @@ export class InvoicingController {
       }
   };
 
-  public create = async (req: Request, res: Response, next: NextFunction) => {
-      try {
-          const invoicingData: Invoicing = req.body;
-          const templateName: string = req.query.templateName as string || 'template1'; 
-          const preparedHTML = await this.invoicingService.prepareInvoiceHTML(invoicingData, templateName);
+//   public create = async (req: Request, res: Response, next: NextFunction) => {
+//       try {
+//           const invoicingData: Invoicing = req.body;
+//           const templateName: string = req.query.templateName as string || 'template1'; 
+//           const preparedHTML = await this.invoicingService.prepareInvoiceHTML(invoicingData, templateName);
   
-          const pdfBuffer = await this.generatePDFFromHTML(preparedHTML);
+//           const pdfBuffer = await this.generatePDFFromHTML(preparedHTML);
   
-          const currentDate = new Date();
-          const formattedDate = currentDate.toISOString().replace(/[:.]/g, '-');
-          const uniqueFilename = `invoice_${formattedDate}.pdf`;
-          const pdfPath = path.join(process.cwd(), 'assets', 'pdf', uniqueFilename);
-          fs.writeFileSync(pdfPath, pdfBuffer);
+//           const currentDate = new Date();
+//           const formattedDate = currentDate.toISOString().replace(/[:.]/g, '-');
+//           const uniqueFilename = `invoice_${formattedDate}.pdf`;
+//           const pdfPath = path.join(process.cwd(), 'assets', 'pdf', uniqueFilename);
+//           fs.writeFileSync(pdfPath, pdfBuffer);
   
-          const baseUrl = 'http://localhost:3000';
-          const pdfUrl = `${baseUrl}/assets/pdf/${uniqueFilename}`;
+//           const baseUrl = 'http://localhost:3000';
+//           const pdfUrl = `${baseUrl}/assets/pdf/${uniqueFilename}`;
   
-          res.status(200).json({ data: pdfUrl, message: 'PDF created successfully' });
-      } catch (error) {
-          next(error);
-      }
-  }
+//           res.status(200).json({ data: pdfUrl, message: 'PDF created successfully' });
+//       } catch (error) {
+//           next(error);
+//       }
+//   }
   
-  
+public create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const invoicingData: Invoicing = req.body;
+        const templateName: string = req.query.templateName as string || 'template1'; 
+        const preparedHTML = await this.invoicingService.prepareInvoiceHTML(invoicingData, templateName);
+
+        const pdfBuffer = await this.generatePDFFromHTML(preparedHTML);
+
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().replace(/[:.]/g, '-');
+        const uniqueFilename = `invoice_${formattedDate}.pdf`;
+        const pdfPath = path.join(process.cwd(), 'assets', 'pdf', uniqueFilename);
+        fs.writeFileSync(pdfPath, pdfBuffer);
+
+        const baseUrl = 'http://localhost:3000';
+        const pdfUrl = `${baseUrl}/assets/pdf/${uniqueFilename}`;
+
+        const createdInvoicing = await this.invoicingService.createInvoicing(invoicingData);
+
+        res.status(200).json({ data: { pdfUrl, invoicing: createdInvoicing }, message: 'PDF and Invoicing data created successfully' });
+    } catch (error) {
+        next(error);
+    }
+}
+
 
   public getInvoicesByUserId = async (req: Request, res: Response, next: NextFunction) => {
       try {
