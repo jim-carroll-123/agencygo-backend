@@ -37,6 +37,7 @@ export interface Invoicing {
   shippingHandling: number;
   balanceDue: string;
   addressShipTo: string;
+  pdfUrl?:string;
   phoneShipTo: string;
   createdAt?: Date;
   updatedAt?: Date;

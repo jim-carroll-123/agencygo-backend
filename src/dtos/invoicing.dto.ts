@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsDateString, IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsMongoId, IsNumber, IsOptional, IsString ,IsUrl} from "class-validator";
 import { isEmpty } from "rxjs";
 
 export class CreateInvoicingDto {
@@ -93,6 +93,10 @@ export class CreateInvoicingDto {
 
     @IsString()
     public phoneShipTo: string;
+
+    @IsUrl()
+    @IsOptional()
+    public pdfUrl?: string;
 
     @IsOptional()
     public createdAt?: Date;
@@ -192,6 +196,10 @@ export class UpdateInvoicingDto {
 
     @IsString()
     public phoneShipTo: string;
+
+    @IsUrl()
+    @IsOptional()
+    public pdfUrl?: string;
 
     @IsOptional()
     public createdAt?: Date;

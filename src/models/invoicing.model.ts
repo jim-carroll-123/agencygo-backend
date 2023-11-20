@@ -124,6 +124,10 @@ const InvoicingSchema: Schema<Invoicing> = new Schema({
         type: String,
         required: true,
     },
+    pdfUrl:{
+        type:String,
+        required:false,
+    },
     createdAt: {
         type: Date,
         default: Date.now, 
