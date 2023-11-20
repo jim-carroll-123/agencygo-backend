@@ -38,4 +38,6 @@ export interface Invoicing {
   balanceDue: string;
   addressShipTo: string;
   phoneShipTo: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
