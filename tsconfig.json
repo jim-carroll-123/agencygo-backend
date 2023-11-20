@@ -35,7 +35,7 @@
       "@utils/*": ["utils/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.json", ".env"],
+  "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/pdftemplate/template1.js"],
   "exclude": ["node_modules", "src/http", "src/logs"],
   // "ts-node": {
   //   "swc": true

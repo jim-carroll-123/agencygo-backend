@@ -124,6 +124,16 @@ const InvoicingSchema: Schema<Invoicing> = new Schema({
         type: String,
         required: true,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now, 
+        required: false,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now, 
+        required: false,
+    },
 });
 
 export const InvoicingModel = model<Invoicing & Document>('Invoicing', InvoicingSchema);

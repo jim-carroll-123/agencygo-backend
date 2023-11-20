@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 
 export interface Invoicing {
+  _id: any;
   userName: any;
   id: any;
   userId: Types.ObjectId;
@@ -37,4 +38,6 @@ export interface Invoicing {
   balanceDue: string;
   addressShipTo: string;
   phoneShipTo: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
