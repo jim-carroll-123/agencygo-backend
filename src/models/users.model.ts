@@ -34,7 +34,7 @@ const UserSchema: Schema<User> = new Schema({
   },
   currentModalBalance:{
     type:Number,
-    required:true,
+    required:false,
   },
   isVerified: {
     type: Boolean,
