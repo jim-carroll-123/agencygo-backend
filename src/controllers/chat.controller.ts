@@ -37,6 +37,11 @@ export const initializeWebSocket = (httpServer: HttpServer) => {
   });
 };
 
+export const initializeChatUser = async (email: string): Promise<string> => {
+  const data = await client.conversations.v1.users.create({ identity: email });
+  return data.sid;
+};
+
 export const getSocketIO = () => {
   if (!io) {
     throw new Error('Socket.IO not initialized');
