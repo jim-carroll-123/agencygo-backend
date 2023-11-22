@@ -23,7 +23,7 @@ export class EmployeeService {
       }
       const employeeExist = await EmployeeModel.findOne({ email: employeeData.email, agencyId: agencyId });
       if (employeeExist) {
-        throw new HttpException(409, `User already registered`);
+        throw new HttpException(409, `Employee already registered`);
       }
       let user = await UserModel.findOne({ email: employeeData.email });
       if (!user) {
@@ -52,30 +52,19 @@ export class EmployeeService {
         commission: employeeData.commission,
         shiftSchedular: employeeData.shiftSchedular,
       });
-      if (typeof employeeData.assignCreator === 'string') {
-        const data = await CreatorModel.findOneAndUpdate(
-          { _id: new mongoose.Types.ObjectId(employeeData.assignCreator) },
-          { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
-          { returnDocument: 'after' },
-        );
-        if (!data) {
-          throw new HttpException(404, `Creator with ID ${employeeData.assignCreator} not found`);
-        }
-      } else if (typeof employeeData.assignCreator === 'object') {
-        const updatedEmployees = await Promise.all(
-          employeeData.assignCreator.map(async id => {
-            const data = await CreatorModel.findOneAndUpdate(
-              { _id: new mongoose.Types.ObjectId(id) },
-              { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
-              { returnDocument: 'after' },
-            );
-            if (!data) {
-              throw new HttpException(404, `Creator with ID ${id} not found`);
-            }
-            return data;
-          }),
-        );
-      }
+      await Promise.all(
+        employeeData.assignCreator.map(async creatorId => {
+          const updateResult = await CreatorModel.findOneAndUpdate(
+            { _id: new mongoose.Types.ObjectId(creatorId) },
+            { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+            { returnDocument: 'after' },
+          );
+
+          if (!updateResult) {
+            throw new HttpException(404, `Creator with ID ${creatorId} not found`);
+          }
+        }),
+      );
       const template = generateEmailTemplateForActivation(employee, agency.agencyName);
       const emailData: Email = {
         to: employee.email,
@@ -105,7 +94,7 @@ export class EmployeeService {
             from: 'creators',
             localField: '_id',
             foreignField: 'assignEmployee',
-            as: 'creatorName',
+            as: 'creatorDetail',
           },
         },
         {
@@ -117,16 +106,7 @@ export class EmployeeService {
             status: 1,
             userId: 1,
             agencyId: 1,
-            assignedCreators: {
-              $map: {
-                input: '$creatorName',
-                as: 'creator',
-                in: {
-                  id: '$$creator._id',
-                  name: '$$creator.creatorName',
-                },
-              },
-            },
+            'creatorDetail.creatorName': 1,
           },
         },
       ]);

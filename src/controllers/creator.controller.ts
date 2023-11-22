@@ -32,7 +32,7 @@ export class CreatorController {
       if (req.file) {
         const originalnameWithoutSpaces = req.file.originalname.replace(/\s/g, '');
         const result = await uploadToS3(req.file.buffer, originalnameWithoutSpaces + Date.now() + path.extname(req.file.originalname));
-        creatorData.creatorName = result.Location;
+        creatorData.creatorImage = result.Location;
       }
       const creatorDetails: Creator = await this.creator.createCreator(creatorData);
 

@@ -21,4 +21,7 @@ export interface Creator {
     email: string;
     password: string;
   };
+  agencyComission: Number;
+  creatorComission: Number;
+  modelData: Object;
 }
