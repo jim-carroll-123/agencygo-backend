@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { BUCKET_PUBLIC } from '@config';
-import { s3 } from '@config';
+import { S3 } from '../config/aws';
 
 export const uploadToS3 = async (fileData: Buffer, fileName: string): Promise<any> => {
   let contentType = '';
@@ -23,7 +23,7 @@ export const uploadToS3 = async (fileData: Buffer, fileName: string): Promise<an
   };
 
   try {
-    const result = await s3.upload(params).promise();
+    const result = await S3.upload(params).promise();
     return result;
   } catch (err) {
     console.log('here', err);

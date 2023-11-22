@@ -25,6 +25,7 @@ export class CreatorService {
       {
         $project: {
           creatorName: 1,
+          creatorImage: 1,
           status: 1,
           'assignEmployee.name': 1,
           'assignEmployee._id': 1,
@@ -48,6 +49,10 @@ export class CreatorService {
     //TODO: Check if employee assigned exist
     try {
       // const hashedPassword = await hash(creatorData.ofcreds.password, 10);
+      (creatorData.autoRelink = creatorData.autoRelink === 'true' ? true : false),
+        (creatorData.status = creatorData.status === 'true' ? true : false),
+        (creatorData.ofcreds = JSON.parse(creatorData.ofcreds));
+      creatorData.assignEmployee = JSON.parse(creatorData.assignEmployee);
       const createdCreator: Creator = await CreatorModel.create({
         agencyId: creatorData.agencyId,
         creatorName: creatorData.creatorName,
@@ -151,9 +156,9 @@ export class CreatorService {
       filter.status = getData.status;
     }
 
-    if (getData.plateformlink) {
-      getData.plateformlink = Boolean(getData.plateformlink === 'true' ? true : false);
-      filter.autoRelink = getData.plateformlink;
+    if (getData.isLinkOnlyFans) {
+      getData.isLinkOnlyFans = Boolean(getData.isLinkOnlyFans === 'true' ? true : false);
+      filter.isLinkOnlyFans = getData.isLinkOnlyFans;
     }
 
     if (getData.employeeId) {

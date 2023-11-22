@@ -57,8 +57,7 @@ export class AuthController {
     try {
       const userData: User = req.user;
       await this.auth.logout(userData);
-
-      res.setHeader('authorization', ['Authorization=; Max-age=0']);
+      res.setHeader('Authorization', '');
       res.status(200).json({ message: 'logout' });
     } catch (error) {
       next(error);
