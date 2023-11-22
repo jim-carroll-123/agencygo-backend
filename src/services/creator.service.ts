@@ -66,6 +66,8 @@ export class CreatorService {
           password: creatorData.ofcreds.password,
         },
         assignEmployee: creatorData.assignEmployee,
+        agencyComission: creatorData.agencyComission,
+        creatorComission: creatorData.creatorComission,
       });
       return createdCreator;
       // const createdCreator = new CreatorModel(creatorData);
