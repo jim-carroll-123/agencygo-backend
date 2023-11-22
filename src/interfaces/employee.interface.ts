@@ -19,6 +19,10 @@ export interface Employee {
   userId: Types.ObjectId;
   status: Status;
   password: string;
+  payRate: Number;
+  payInterval: String;
+  commission: Number;
+  shiftSchedular: String;
 }
 
 export interface EmployeeCreate {
