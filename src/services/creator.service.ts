@@ -1,12 +1,7 @@
-import { hash } from 'bcrypt';
-import * as crypto from 'crypto';
 import { HttpException } from '@/exceptions/httpException';
 import { Creator } from '@/interfaces/creator.interface';
 import { CreatorModel } from '@/models/creator.model';
 import { Service } from 'typedi';
-
-import axios from 'axios';
-import { PROXY_API_KEY, PROXY_URL } from '@config';
 import mongoose from 'mongoose';
 
 @Service()
@@ -105,6 +100,21 @@ export class CreatorService {
 
   // update a creator by id
   public async updateCreator(creatorId: string, creatorData: Creator): Promise<Creator> {
+    ['autoRelink', 'status'].forEach(field => {
+      if (typeof creatorData[field] === 'string') {
+        creatorData[field] = creatorData[field] === 'true';
+      }
+    });
+
+    ['ofcreds', 'assignEmployee'].forEach(field => {
+      if (typeof creatorData[field] === 'string') {
+        try {
+          creatorData[field] = JSON.parse(creatorData[field]);
+        } catch (e) {
+          throw new Error(`Invalid JSON for field ${field}`);
+        }
+      }
+    });
     const updateCreatorById: Creator = await CreatorModel.findByIdAndUpdate(
       {
         _id: creatorId,
@@ -130,6 +140,9 @@ export class CreatorService {
 
         if (!creator) {
           throw new Error(`Creator with ID ${creatorId} not found.`);
+        }
+        if (!Array.isArray(creator.assignEmployee)) {
+          creator.assignEmployee = [];
         }
 
         if (creator.assignEmployee?.includes(employeeId)) {

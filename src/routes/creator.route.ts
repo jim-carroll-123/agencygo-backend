@@ -25,7 +25,7 @@ export class CreatorRoute implements Routes {
       ValidationMiddleware(CreatorDTO),
       this.creator.createCreator,
     );
-    this.router.put(`${this.path}/:id`, ValidationMiddleware(CreatorDTO, true), this.creator.updateCreator);
+    this.router.put(`${this.path}/:id`, UploadMiddleware.single('creatorImage'), ValidationMiddleware(CreatorDTO, true), this.creator.updateCreator);
     this.router.get(`${this.path}/getCreatorByAdmin/:creatorId`, AuthMiddleware, isAdminMiddleware, this.creator.getCreatorByAdmin);
     this.router.delete(`${this.path}/:id`, this.creator._deleteCreator);
     this.router.post(`${this.path}/assignCreatorToEmployee`, this.creator.assignCreatorToEmployee);

@@ -106,6 +106,10 @@ export class EmployeeService {
             status: 1,
             userId: 1,
             agencyId: 1,
+            payRate: 1,
+            payInterval: 1,
+            commission: 1,
+            shiftSchedular: 1,
             'creatorDetail.creatorName': 1,
           },
         },
@@ -233,7 +237,11 @@ export class EmployeeService {
 
   public async getEmployees(getData: any) {
     try {
-      let filter = {};
+      let filter: any = {};
+      if (getData.agencyId) {
+        const agencyId = new mongoose.Types.ObjectId(getData.agencyId);
+        filter.agencyId = { $in: [agencyId] };
+      }
       if (getData.creator) {
         const employeesId: Creator = (await CreatorModel.findOne({ _id: getData.creator })) as Creator;
         filter = { _id: { $in: employeesId.assignEmployee } };
