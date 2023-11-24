@@ -16,7 +16,7 @@ export class CreatorRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, AuthMiddleware, this.creator.getCreators);
+    this.router.get(`${this.path}/:agencyId`, AuthMiddleware, this.creator.getCreators);
     this.router.post(
       `${this.path}`,
       AuthMiddleware,
@@ -25,11 +25,16 @@ export class CreatorRoute implements Routes {
       ValidationMiddleware(CreatorDTO),
       this.creator.createCreator,
     );
-    this.router.put(`${this.path}/:id`, UploadMiddleware.single('creatorImage'), ValidationMiddleware(CreatorDTO, true), this.creator.updateCreator);
+    this.router.patch(
+      `${this.path}/:id`,
+      UploadMiddleware.single('creatorImage'),
+      ValidationMiddleware(CreatorDTO, true),
+      this.creator.updateCreator,
+    );
     this.router.get(`${this.path}/getCreatorByAdmin/:creatorId`, AuthMiddleware, isAdminMiddleware, this.creator.getCreatorByAdmin);
     this.router.delete(`${this.path}/:id`, this.creator._deleteCreator);
     this.router.post(`${this.path}/assignCreatorToEmployee`, this.creator.assignCreatorToEmployee);
-    this.router.get(`${this.path}/search`, this.creator.searchFilter);
+    this.router.get(`${this.path}/search/data`, this.creator.searchFilter);
     // Experimental Route
     this.router.post(`${this.path}/login-onlyfans`, ValidationMiddleware(CreatorCredsDTO), this.creator.loginOnlyfans);
     this.router.post(`${this.path}/scrape-financial-reports`, this.creator.scrapeCreatorFinananceReports);

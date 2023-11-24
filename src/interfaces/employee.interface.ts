@@ -46,4 +46,8 @@ export interface EmployeeUpdate {
   status: Status;
   creator: string[];
   assignCreator: string[] | string;
+  payRate: number;
+  payInterval: string;
+  commission: number;
+  shiftSchedular: string;
 }
