@@ -25,3 +25,8 @@ export interface Creator extends Document {
   creatorComission: Number;
   modelData: Object;
 }
+export interface CreatorsResponse {
+  creators: Creator[];
+  totalDocument: number;
+  hasNextPage: boolean;
+}
