@@ -48,7 +48,6 @@ export class CreatorController {
     try {
       const id = req.params.id;
       const creatorData: Creator = req.body;
-      console.log(creatorData, '=============');
       if (req.file) {
         const originalnameWithoutSpaces = req.file.originalname.replace(/\s/g, '');
         const result = await uploadToS3(req.file.buffer, originalnameWithoutSpaces + Date.now() + path.extname(req.file.originalname));
