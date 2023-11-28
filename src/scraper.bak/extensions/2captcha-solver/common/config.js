@@ -1,8 +1,8 @@
 var Config = {
   default: {
     isPluginEnabled: true,
-    apiKey: "054855c660c6e582c36a3e209fbeace3",
-    valute: "USD",
+    apiKey: '054855c660c6e582c36a3e209fbeace3',
+    valute: 'USD',
     email: null,
     autoSubmitForms: false,
     submitFormsDelay: 0,
@@ -37,21 +37,21 @@ var Config = {
     autoSolveTurnstile: false,
     repeatOnErrorTimes: 5,
     repeatOnErrorDelay: 5,
-    buttonPosition: "inner",
+    buttonPosition: 'inner',
     useProxy: true,
-    proxytype: "HTTPS",
-    proxy: "xMIKOS:xMIKOS_country-us@geo.iproyal.com:12321",
-    blackListDomain: "example.com\n2captcha.com/auth\nrucaptcha.com/auth",
+    proxytype: 'HTTPS',
+    proxy: 'xMIKOS:xMIKOS_country-us@geo.iproyal.com:12321',
+    blackListDomain: 'example.com\n2captcha.com/auth\nrucaptcha.com/auth',
     normalSources: [],
     autoSubmitRules: [
       {
-        url_pattern: "(2|ru)captcha.com/demo",
+        url_pattern: '(2|ru)captcha.com/demo',
         code:
-          "" +
+          '' +
           '{"type":"source","value":"document"}' +
-          "\n" +
+          '\n' +
           '{"type":"method","value":"querySelector","args":["button[type=submit]"]}' +
-          "\n" +
+          '\n' +
           '{"type":"method","value":"click"}',
       },
     ],
@@ -64,7 +64,7 @@ var Config = {
 
   getAll: function () {
     return new Promise(function (resolve, reject) {
-      chrome.storage.local.get("config", function (result) {
+      chrome.storage.local.get('config', function (result) {
         resolve(Config.joinObjects(Config.default, result.config));
       });
     });
@@ -72,14 +72,14 @@ var Config = {
 
   set: function (newData) {
     return new Promise(function (resolve, reject) {
-      Config.getAll().then((data) => {
+      Config.getAll().then(data => {
         chrome.storage.local.set(
           {
             config: Config.joinObjects(data, newData),
           },
           function (config) {
             resolve(config);
-          }
+          },
         );
       });
     });

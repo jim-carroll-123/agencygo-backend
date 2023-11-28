@@ -1,163 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Invoice Template</title>
     <style>
-        * {
-            box-sizing: border-box !important;
-        }
+      * {
+        box-sizing: border-box !important;
+      }
 
-        .main-div {
-            display: flex;
-            flex-wrap: wrap;
-            width: 65%;
-            align-items: center;
-            margin: 0 auto;
-        }
+      .main-div {
+        display: flex;
+        flex-wrap: wrap;
+        width: 65%;
+        align-items: center;
+        margin: 0 auto;
+      }
 
-        .istbox {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .istbox {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .Juliana {
-            margin-left: 72px;
-            border-bottom-left-radius: 40%;
-            border-bottom-right-radius: 40%;
-            width: 250px;
-            height: 300px;
-            background-color: #ffe3fe;
-            justify-content: center;
-            align-items: center;
-            display: flex;
-        }
+      .Juliana {
+        margin-left: 72px;
+        border-bottom-left-radius: 40%;
+        border-bottom-right-radius: 40%;
+        width: 250px;
+        height: 300px;
+        background-color: #ffe3fe;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
 
-        .invoice {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      .invoice {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        .invoice_box {
-            width: 133px;
-            height: 36px;
-            background-color: #ffe3fe;
-        }
+      .invoice_box {
+        width: 133px;
+        height: 36px;
+        background-color: #ffe3fe;
+      }
 
-        .Juliana h1 {
-            font-size: 46px;
-            color: #df287b;
-        }
+      .Juliana h1 {
+        font-size: 46px;
+        color: #df287b;
+      }
 
-        .invoice h1 {
-            font-size: 46px;
-            color: #df287b;
-        }
+      .invoice h1 {
+        font-size: 46px;
+        color: #df287b;
+      }
 
-        .address {
-            line-height: 8px;
-        }
+      .address {
+        line-height: 8px;
+      }
 
-        .invoice_date_number {
-            line-height: 8px;
-        }
+      .invoice_date_number {
+        line-height: 8px;
+      }
 
-        .table_heading {
-            border-radius: 9px;
-            padding: 15px 41px;
-            height: 40px;
-            width: 75%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #df287b;
-        }
+      .table_heading {
+        border-radius: 9px;
+        padding: 15px 41px;
+        height: 40px;
+        width: 75%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #df287b;
+      }
 
-        .sndbox {
-            margin-top: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+      .sndbox {
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
 
-        .table_list {
-            border-radius: 9px;
-            padding: 15px 41px;
-            height: 40px;
-            width: 75%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px dashed wheat;
-        }
+      .table_list {
+        border-radius: 9px;
+        padding: 15px 41px;
+        height: 40px;
+        width: 75%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px dashed wheat;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div>
-        <div class="main-div">
-            <div class="istbox">
-                <div class="left">
-                    <div class="Juliana">
-                        <h1>${companyName}</h1>
-                    </div>
-                </div>
-                <div class="right">
-                    <div class="invoice">
-                        <h1>INVOICE</h1>
-                        <div class="invoice_box"></div>
-                    </div>
-                    <div class="invoice_date_number">
-                        <h5>Invoice Date : ${invoiceDate}</h5>
-                        <h5>Invoice Number : ${invoiceNumber}</h5>
-                    </div>
-                    <div>
-                        <h3>INVOICE TO:</h3>
-                    </div>
-                    <div>
-                        <h2>${customerName}</h2>
-                    </div>
-                    <div class="address">
-                        <p>${customerAddress}</p>
-                        <p>${customerZipCode}</p>
-                        <p>${customerPhone}</p>
-                    </div>
-                </div>
+      <div class="main-div">
+        <div class="istbox">
+          <div class="left">
+            <div class="Juliana">
+              <h1>${companyName}</h1>
             </div>
-            <div class="sndbox">
-                <div class="table_heading">
-                    <h2>SERVICE</h2>
-                    <h2>SERVICE</h2>
-                    <h2>SERVICE</h2>
-                </div>
-                <div class="table_list">
-                    <h3>${service1}</h3>
-                    <h3>${service1Price}</h3>
-                    <h3>${service1Total}</h3>
-                </div>
-                <div class="table_list">
-                    <h3>${service2}</h3>
-                    <h3>${service2Price}</h3>
-                    <h3>${service2Total}</h3>
-                </div>
-                <!-- Add more service rows as needed -->
-                <div class="table_list">
-                    <h3></h3>
-                    <h3>Total*</h3>
-                    <h3>${total}</h3>
-                </div>
-                <div class="table_list">
-                    <h3></h3>
-                    <h3>Total</h3>
-                    <h3>${total}</h3>
-                </div>
+          </div>
+          <div class="right">
+            <div class="invoice">
+              <h1>INVOICE</h1>
+              <div class="invoice_box"></div>
             </div>
+            <div class="invoice_date_number">
+              <h5>Invoice Date : ${invoiceDate}</h5>
+              <h5>Invoice Number : ${invoiceNumber}</h5>
+            </div>
+            <div>
+              <h3>INVOICE TO:</h3>
+            </div>
+            <div>
+              <h2>${customerName}</h2>
+            </div>
+            <div class="address">
+              <p>${customerAddress}</p>
+              <p>${customerZipCode}</p>
+              <p>${customerPhone}</p>
+            </div>
+          </div>
         </div>
+        <div class="sndbox">
+          <div class="table_heading">
+            <h2>SERVICE</h2>
+            <h2>SERVICE</h2>
+            <h2>SERVICE</h2>
+          </div>
+          <div class="table_list">
+            <h3>${service1}</h3>
+            <h3>${service1Price}</h3>
+            <h3>${service1Total}</h3>
+          </div>
+          <div class="table_list">
+            <h3>${service2}</h3>
+            <h3>${service2Price}</h3>
+            <h3>${service2Total}</h3>
+          </div>
+          <!-- Add more service rows as needed -->
+          <div class="table_list">
+            <h3></h3>
+            <h3>Total*</h3>
+            <h3>${total}</h3>
+          </div>
+          <div class="table_list">
+            <h3></h3>
+            <h3>Total</h3>
+            <h3>${total}</h3>
+          </div>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

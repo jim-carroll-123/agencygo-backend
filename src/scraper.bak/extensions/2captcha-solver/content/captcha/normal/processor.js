@@ -1,41 +1,41 @@
 CaptchaProcessors.register({
+  captchaType: 'normal',
 
-    captchaType: "normal",
+  canBeProcessed: function (widget, config) {
+    if (!config.enabledForNormal) return false;
 
-    canBeProcessed: function(widget, config) {
-        if (!config.enabledForNormal) return false;
+    return true;
+  },
 
-        return true;
-    },
+  attachButton: function (widget, config, button) {
+    $('#' + widget.inputId).after(button);
+    if (config.autoSolveNormal) button.click();
+  },
 
-    attachButton: function(widget, config, button) {
-        $("#" + widget.inputId).after(button);
-        if (config.autoSolveNormal) button.click();
-    },
+  getParams: function (widget, config) {
+    return {
+      body: widget.base64,
+    };
+  },
 
-    getParams: function(widget, config) {
-        return {
-            body: widget.base64,
-        };
-    },
+  onSolved: function (widget, answer) {
+    let input = document.getElementById(widget.inputId);
 
-    onSolved: function(widget, answer) {
-        let input = document.getElementById(widget.inputId);
+    input.value = answer;
 
-        input.value = answer;
+    input.dispatchEvent(
+      new Event('input', {
+        bubbles: true,
+        data: answer,
+      }),
+    );
+  },
 
-        input.dispatchEvent(new Event('input', {
-            bubbles: true,
-            data: answer,
-        }));
-    },
+  getForm: function (widget) {
+    return $('#' + widget.inputId).closest('form');
+  },
 
-    getForm: function(widget) {
-        return $("#" + widget.inputId).closest("form");
-    },
-
-    getCallback: function(widget) {
-        return null;
-    },
-
+  getCallback: function (widget) {
+    return null;
+  },
 });

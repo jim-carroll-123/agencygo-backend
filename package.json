@@ -25,6 +25,7 @@
     "axios": "^1.6.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.2",
+    "bullmq": "^4.14.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cli-table": "^0.3.11",

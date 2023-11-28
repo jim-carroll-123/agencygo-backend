@@ -1,12 +1,12 @@
 class TwoCaptcha {
   constructor(options) {
-    if (typeof options == "string") {
+    if (typeof options == 'string') {
       options = { apiKey: options };
     }
 
     let defaultOptions = {
-      apiKey: "054855c660c6e582c36a3e209fbeace3",
-      service: "2captcha.com",
+      apiKey: '054855c660c6e582c36a3e209fbeace3',
+      service: '2captcha.com',
       softId: 0,
       defaultTimeout: 120,
       recaptchaTimeout: 600,
@@ -14,78 +14,77 @@ class TwoCaptcha {
     };
 
     for (let key in defaultOptions) {
-      this[key] =
-        options[key] === undefined ? defaultOptions[key] : options[key];
+      this[key] = options[key] === undefined ? defaultOptions[key] : options[key];
     }
   }
 
   normal(captcha) {
-    captcha.method = "base64";
+    captcha.method = 'base64';
 
     return this.solve(captcha, { timeout: this.defaultTimeout });
   }
 
   recaptcha(captcha) {
-    captcha.method = "userrecaptcha";
+    captcha.method = 'userrecaptcha';
 
     return this.solve(captcha, { timeout: this.recaptchaTimeout });
   }
 
   geetest(captcha) {
-    captcha.method = "geetest";
+    captcha.method = 'geetest';
 
     return this.solve(captcha);
   }
 
   geetest_v4(captcha) {
-    captcha.method = "geetest_v4";
+    captcha.method = 'geetest_v4';
 
     return this.solve(captcha);
   }
 
   hcaptcha(captcha) {
-    captcha.method = "hcaptcha";
+    captcha.method = 'hcaptcha';
 
     return this.solve(captcha);
   }
 
   keycaptcha(captcha) {
-    captcha.method = "keycaptcha";
+    captcha.method = 'keycaptcha';
 
     return this.solve(captcha);
   }
 
   arkoselabs(captcha) {
-    captcha.method = "funcaptcha";
+    captcha.method = 'funcaptcha';
 
     return this.solve(captcha);
   }
 
   lemin(captcha) {
-    captcha.method = "lemin";
+    captcha.method = 'lemin';
 
     return this.solve(captcha);
   }
 
   yandex(captcha) {
-    captcha.method = "yandex";
+    captcha.method = 'yandex';
 
     return this.solve(captcha);
   }
 
   capy(captcha) {
-    captcha.method = "capy";
+    captcha.method = 'capy';
 
     return this.solve(captcha);
   }
 
   amazon_waf(captcha) {
-    captcha.method = "amazon_waf";
+    captcha.method = 'amazon_waf';
     return this.solve(captcha);
   }
 
   turnstile(captcha) {
-    captcha.method = "turnstile";
+    captcha.method = 'turnstile';
 
     return this.solve(captcha);
   }
@@ -121,20 +120,12 @@ class TwoCaptcha {
 
     let startedAt = this.getTime();
 
-    let timeout =
-      waitOptions.timeout === undefined
-        ? this.defaultTimeout
-        : waitOptions.timeout;
-    let pollingInterval =
-      waitOptions.pollingInterval === undefined
-        ? this.pollingInterval
-        : waitOptions.pollingInterval;
+    let timeout = waitOptions.timeout === undefined ? this.defaultTimeout : waitOptions.timeout;
+    let pollingInterval = waitOptions.pollingInterval === undefined ? this.pollingInterval : waitOptions.pollingInterval;
 
     while (true) {
       if (this.getTime() - startedAt < timeout) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, pollingInterval * 1000)
-        );
+        await new Promise(resolve => setTimeout(resolve, pollingInterval * 1000));
       } else {
         break;
       }
@@ -147,7 +138,7 @@ class TwoCaptcha {
       }
     }
 
-    throw new Error("Timeout " + timeout + " seconds reached");
+    throw new Error('Timeout ' + timeout + ' seconds reached');
   }
 
   getTime() {
@@ -157,11 +148,11 @@ class TwoCaptcha {
   async getResult(id) {
     try {
       return await this.res({
-        action: "get",
+        action: 'get',
         id: id,
       });
     } catch (e) {
-      if (e.message == "CAPCHA_NOT_READY") {
+      if (e.message == 'CAPCHA_NOT_READY') {
         return null;
       }
 
@@ -170,17 +161,17 @@ class TwoCaptcha {
   }
 
   async balance() {
-    let balance = await this.res({ action: "getbalance" });
+    let balance = await this.res({ action: 'getbalance' });
 
     return parseFloat(balance);
   }
 
   async userInfo() {
-    return await this.res({ action: "userinfo" });
+    return await this.res({ action: 'userinfo' });
   }
 
   async report(id, isCorrect) {
-    let action = isCorrect ? "reportgood" : "reportbad";
+    let action = isCorrect ? 'reportgood' : 'reportbad';
 
     return await this.res({ action, id });
   }
@@ -194,10 +185,10 @@ class TwoCaptcha {
   extractFiles(captcha) {
     let files = {};
 
-    let fileKeys = ["file", "hintImg"];
+    let fileKeys = ['file', 'hintImg'];
 
     for (let i = 1; i < 10; i++) {
-      fileKeys.push("file_" + i);
+      fileKeys.push('file_' + i);
     }
 
     fileKeys.forEach(function (key) {
@@ -231,35 +222,35 @@ class TwoCaptcha {
 
   getParamsMap(method) {
     let commonMap = {
-      base64: "body",
-      caseSensitive: "regsense",
-      minLen: "min_len",
-      maxLen: "max_len",
-      hintText: "textinstructions",
-      hintImg: "imginstructions",
-      url: "pageurl",
-      score: "min_score",
-      text: "textcaptcha",
-      rows: "recaptcharows",
-      cols: "recaptchacols",
-      previousId: "previousID",
-      canSkip: "can_no_answer",
-      apiServer: "api_server",
-      softId: "soft_id",
-      captchaId: "captcha_id",
-      divId: "div_id",
-      callback: "pingback",
+      base64: 'body',
+      caseSensitive: 'regsense',
+      minLen: 'min_len',
+      maxLen: 'max_len',
+      hintText: 'textinstructions',
+      hintImg: 'imginstructions',
+      url: 'pageurl',
+      score: 'min_score',
+      text: 'textcaptcha',
+      rows: 'recaptcharows',
+      cols: 'recaptchacols',
+      previousId: 'previousID',
+      canSkip: 'can_no_answer',
+      apiServer: 'api_server',
+      softId: 'soft_id',
+      captchaId: 'captcha_id',
+      divId: 'div_id',
+      callback: 'pingback',
     };
 
     let methodMap = {
       userrecaptcha: {
-        sitekey: "googlekey",
+        sitekey: 'googlekey',
       },
       funcaptcha: {
-        sitekey: "publickey",
+        sitekey: 'publickey',
       },
       capy: {
-        sitekey: "captchakey",
+        sitekey: 'captchakey',
       },
     };
 
@@ -275,11 +266,11 @@ class TwoCaptcha {
   async in(captcha, files) {
     // TODO: prepare files
 
-    return await this.request("POST", "/in.php", captcha, files);
+    return await this.request('POST', '/in.php', captcha, files);
   }
 
   async res(data) {
-    return await this.request("GET", "/res.php", data);
+    return await this.request('GET', '/res.php', data);
   }
 
   async request(method, path, data, files) {
@@ -287,27 +278,27 @@ class TwoCaptcha {
     data.header_acao = 1;
     data.json = 1;
 
-    let url = "https://" + this.service + path;
+    let url = 'https://' + this.service + path;
 
     let options = {
       method: method,
     };
 
-    if (method === "GET") {
+    if (method === 'GET') {
       let kv = [];
 
       for (let key in data) {
-        kv.push(key + "=" + encodeURIComponent(data[key]));
+        kv.push(key + '=' + encodeURIComponent(data[key]));
       }
 
-      url += "?" + kv.join("&");
+      url += '?' + kv.join('&');
     } else {
       let formData = new FormData();
 
       for (let key in data) {
-        if (typeof data[key] == "object") {
+        if (typeof data[key] == 'object') {
           for (let ok in data[key]) {
-            formData.append(key + "[" + ok + "]", data[key][ok]);
+            formData.append(key + '[' + ok + ']', data[key][ok]);
           }
         } else {
           formData.append(key, data[key]);
@@ -322,11 +313,11 @@ class TwoCaptcha {
     try {
       response = await fetch(url, options);
     } catch (e) {
-      throw new Error("API_CONNECTION_ERROR");
+      throw new Error('API_CONNECTION_ERROR');
     }
 
     if (!response.ok) {
-      throw new Error("API_HTTP_CODE_" + response.status);
+      throw new Error('API_HTTP_CODE_' + response.status);
     }
 
     let json;
@@ -334,7 +325,7 @@ class TwoCaptcha {
     try {
       json = await response.json();
     } catch (e) {
-      throw new Error("API_INCORRECT_RESPONSE");
+      throw new Error('API_INCORRECT_RESPONSE');
     }
 
     if (json.status === 0) {

@@ -1,49 +1,47 @@
 CaptchaProcessors.register({
+  captchaType: 'hcaptcha',
 
-    captchaType: "hcaptcha",
+  canBeProcessed: function (widget, config) {
+    if (!config.enabledForHCaptcha) return false;
 
-    canBeProcessed: function(widget, config) {
-        if (!config.enabledForHCaptcha) return false;
+    if (!$('#' + widget.containerId).length) return false;
 
-        if (!$("#" + widget.containerId).length) return false;
+    if (!widget.sitekey) return false;
 
-        if (!widget.sitekey) return false;
+    return true;
+  },
 
-        return true;
-    },
+  attachButton: function (widget, config, button) {
+    let container = $('#' + widget.containerId);
 
-    attachButton: function(widget, config, button) {
-        let container = $("#" + widget.containerId);
+    button.css({
+      width: container.find('iframe').outerWidth() + 'px',
+    });
 
-        button.css({
-            width: container.find('iframe').outerWidth() + "px"
-        });
+    container.append(button);
 
-        container.append(button);
+    if (config.autoSolveHCaptcha) button.click();
+  },
 
-        if (config.autoSolveHCaptcha) button.click();
-    },
+  getParams: function (widget, config) {
+    return {
+      url: location.href,
+      sitekey: widget.sitekey,
+    };
+  },
 
-    getParams: function(widget, config) {
-        return {
-            url: location.href,
-            sitekey: widget.sitekey,
-        };
-    },
+  onSolved: function (widget, answer) {
+    let container = $('#' + widget.containerId);
 
-    onSolved: function(widget, answer) {
-        let container = $("#" + widget.containerId);
+    container.find('textarea').val(answer);
+    container.find('iframe').attr('data-hcaptcha-response', answer);
+  },
 
-        container.find("textarea").val(answer);
-        container.find("iframe").attr("data-hcaptcha-response", answer);
-    },
+  getForm: function (widget) {
+    return $('#' + widget.containerId).closest('form');
+  },
 
-    getForm: function(widget) {
-        return $("#" + widget.containerId).closest("form");
-    },
-
-    getCallback: function(widget) {
-        return widget.callback;
-    },
-
+  getCallback: function (widget) {
+    return widget.callback;
+  },
 });

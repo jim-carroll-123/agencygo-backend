@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Scraper } from '@/scraper';
+// import { Scraper } from '@/scraper';
 import { RequestSignUp, RequestWithUser, DataStoredInToken } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import { AuthService } from '@services/auth.service';
@@ -16,7 +16,7 @@ const createToken = (user: User): any => {
 };
 export class AuthController {
   public auth = Container.get(AuthService);
-  public scraper = Container.get(Scraper);
+  // public scraper = Container.get(Scraper);
 
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -27,7 +27,7 @@ export class StorageService {
           },
         );
       });
-     
+
       return result;
     } catch (error) {
       console.log(error);

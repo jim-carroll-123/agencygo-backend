@@ -10,7 +10,7 @@ export interface Invoicing {
   companyAddress: string;
   companyContact: string;
   amount: number;
-  delivery:Boolean;
+  delivery: Boolean;
   status: Boolean;
   date: Date;
   address: string;
@@ -37,7 +37,7 @@ export interface Invoicing {
   shippingHandling: number;
   balanceDue: string;
   addressShipTo: string;
-  pdfUrl?:string;
+  pdfUrl?: string;
   phoneShipTo: string;
   createdAt?: Date;
   updatedAt?: Date;
