@@ -14,6 +14,7 @@ import { PayrollRoute } from './routes/payroll.routes';
 import { smartTagsRoute } from './routes/smarttags.route';
 // import { PayrollRoute } from './routes/payroll.routes';
 import { ChatRoute } from './routes/chat.route';
+import { AttendanceRoute } from './routes/attendence.route';
 ValidateEnv();
 
 const app = new App([
@@ -31,6 +32,7 @@ const app = new App([
   new RoleRoute(),
   new ShiftRoute(),
   new ChatRoute(),
+  new AttendanceRoute(),
 ]);
 
 try {
@@ -39,7 +41,6 @@ try {
   console.log(err);
 }
 
-
-process.on("uncaughtException",(err)=>{
-  console.log(err)
-})
+process.on('uncaughtException', err => {
+  console.log(err);
+});

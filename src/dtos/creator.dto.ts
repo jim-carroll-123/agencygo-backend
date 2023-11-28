@@ -16,9 +16,6 @@ export class CreatorDTO {
 
   @IsOptional()
   assignEmployee?: string[];
-
-  @IsBoolean()
-  autoRelink: boolean;
 }
 
 export class CreatorCredsDTO {

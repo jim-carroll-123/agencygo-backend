@@ -23,7 +23,9 @@ export class EmployeeController {
   public getEmployees = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const agencyId = req.params.agencyId;
-      const employees = await this.employee.getAgencyEmployees(agencyId);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const employees = await this.employee.getAgencyEmployees(agencyId, page, limit);
       return res.status(200).json({ data: employees, message: 'Employees fetched successfully' });
     } catch (error) {
       next(error);
@@ -79,8 +81,9 @@ export class EmployeeController {
   public searchEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queryData = req.query;
-      console.log('*******', req.query);
-      const employee = await this.employee.getEmployees(queryData);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const employee = await this.employee.getEmployees(queryData, page, limit);
       res.status(200).json({ data: employee, message: 'Employee fetched successfully' });
     } catch (error) {
       next(error);

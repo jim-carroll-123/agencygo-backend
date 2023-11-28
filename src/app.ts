@@ -7,8 +7,6 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import { connect, set, ConnectOptions } from 'mongoose';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { dbConnection } from './database/index';
 import { Routes } from '@interfaces/routes.interface';
@@ -19,6 +17,7 @@ import logRoutes from './utils/routes-logger';
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { initializeWebSocket } from '../src/controllers/chat.controller';
+import path from 'path';
 
 export class App {
   public app: express.Express;
@@ -34,6 +33,10 @@ export class App {
     this.port = PORT || 3000;
     this.io = new SocketIOServer(this.server);
 
+    const pdfDirectory = path.join('assets', 'pdf');
+
+    this.app.use('/assets/pdf', express.static(pdfDirectory));
+
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -48,6 +51,7 @@ export class App {
         logger.info(`=================================`);
         logRoutes(this.app);
       });
+
       /* Socket will never close */
       this.server.timeout = 0;
       initializeWebSocket(this.server);

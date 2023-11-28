@@ -11,15 +11,15 @@ export class InvoicingService {
   public async createInvoicing(invoicingData: Invoicing): Promise<Invoicing> {
     try {
       const invoiceNumber = this.generateInvoiceNumber();
-
+  
       const newInvoicingData: Invoicing = {
         ...invoicingData,
         invoiceNo: invoiceNumber,
       };
-
+  
       const newInvoicing = new InvoicingModel(newInvoicingData);
       const createdInvoicing = await newInvoicing.save();
-
+  
       return createdInvoicing;
     } catch (error) {
       throw error;
@@ -121,7 +121,7 @@ export class InvoicingService {
         .replace('${addressShipTo}', invoicingData.addressShipTo)
         .replace('${phoneShipTo}', invoicingData.phoneShipTo);
 
-      return preparedHTML;
+      return preparedHTML.replace('${invoiceNo}', invoiceNumber);;
     } catch (error) {
       throw error;
     }
@@ -136,5 +136,24 @@ export class InvoicingService {
       result += characters.charAt(randomIndex);
     }
     return result;
+  }
+
+
+  public async updatePdfUrl(invoicingId: string, pdfUrl: string): Promise<Invoicing> {
+    try {
+      const updatedInvoicing = await InvoicingModel.findByIdAndUpdate(
+        {
+          _id: invoicingId,
+        },
+        { pdfUrl },
+        {
+          new: true,
+        },
+      );
+      if (!updatedInvoicing) throw new HttpException(404, "Invoicing doesn't exist");
+      return updatedInvoicing;
+    } catch (error) {
+      throw error;
+    }
   }
 }

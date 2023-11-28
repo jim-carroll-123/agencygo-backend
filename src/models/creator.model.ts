@@ -2,12 +2,13 @@ import { Creator, Gender } from '@/interfaces/creator.interface';
 import { Schema, model, Document } from 'mongoose';
 
 const CreatorSchema: Schema<Creator> = new Schema({
-  agencyId:{
-    type:Schema.Types.ObjectId,
-    ref:"Agency"
+  agencyId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Agency',
   },
   creatorImage: {
     type: String,
+    default: null,
   },
   creatorName: {
     type: String,
@@ -57,6 +58,15 @@ const CreatorSchema: Schema<Creator> = new Schema({
       default: null,
     },
   },
+  agencyComission: {
+    type: Number,
+  },
+  creatorComission: {
+    type: Number,
+  },
+  modelData: {
+    type: Object,
+  },
 });
 
-export const CreatorModel = model<Creator & Document>('Creator', CreatorSchema); 
+export const CreatorModel = model<Creator & Document>('Creator', CreatorSchema);

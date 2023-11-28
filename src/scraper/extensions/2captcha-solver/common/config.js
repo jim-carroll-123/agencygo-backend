@@ -40,7 +40,7 @@ var Config = {
     buttonPosition: "inner",
     useProxy: true,
     proxytype: "HTTPS",
-    proxy: "BxxN7b:BxxN7b_country-us@geo.iproyal.com:12321",
+    proxy: "xMIKOS:xMIKOS_country-us@geo.iproyal.com:12321",
     blackListDomain: "example.com\n2captcha.com/auth\nrucaptcha.com/auth",
     normalSources: [],
     autoSubmitRules: [

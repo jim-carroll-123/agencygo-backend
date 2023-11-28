@@ -21,4 +21,6 @@ export class CreatePayrollDto {
 
   @IsNumber()
   public totalPayment
+
+  
 }
