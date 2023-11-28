@@ -52,26 +52,31 @@ export class EmployeeService {
         commission: employeeData.commission,
         shiftSchedular: employeeData.shiftSchedular,
       });
-      await Promise.all(
-        employeeData.assignCreator.map(async creatorId => {
-          const updateResult = await CreatorModel.findOneAndUpdate(
-            { _id: new mongoose.Types.ObjectId(creatorId) },
-            { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
-            { returnDocument: 'after' },
-          );
+      if (employeeData.assignCreator) {
+        await Promise.all(
+          employeeData.assignCreator.map(async creatorId => {
+            const updateResult = await CreatorModel.findOneAndUpdate(
+              { _id: new mongoose.Types.ObjectId(creatorId) },
+              { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
+              { returnDocument: 'after' },
+            );
 
-          if (!updateResult) {
-            throw new HttpException(404, `Creator with ID ${creatorId} not found`);
-          }
-        }),
-      );
+            if (!updateResult) {
+              console.log(`Creator with ID ${creatorId} not found`);
+              // Consider how you want to handle this case.
+              // Throwing an error here will stop processing the rest of the creators.
+            }
+          }),
+        );
+      }
+
       const template = generateEmailTemplateForActivation(employee, agency.agencyName);
       const emailData: Email = {
         to: employee.email,
         subject: 'Activate Employee Account',
         template: template,
       };
-      await new Emails().sendEmail(emailData);
+      // await new Emails().sendEmail(emailData);
       return employee;
     } catch (error) {
       if (error.status) {
@@ -83,9 +88,11 @@ export class EmployeeService {
   }
 
   // get all employees of a agency
-  public async getAgencyEmployees(agencyId: string) {
-    try {
-      const employees = await EmployeeModel.aggregate([
+  public async getAgencyEmployees(agencyId: string, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const [totalDocument, employees] = await Promise.all([
+      EmployeeModel.countDocuments({ agencyId: new mongoose.Types.ObjectId(agencyId) }),
+      EmployeeModel.aggregate([
         {
           $match: { agencyId: new mongoose.Types.ObjectId(agencyId) },
         },
@@ -111,16 +118,15 @@ export class EmployeeService {
             commission: 1,
             shiftSchedular: 1,
             'creatorDetail.creatorName': 1,
+            'creatorDetail._id': 1,
           },
         },
-      ]);
-      return employees;
-    } catch (error) {
-      if (error.status) {
-        throw error;
-      }
-      throw new HttpException(500, `${error.message}`);
-    }
+        { $skip: skip },
+        { $limit: limit },
+      ]),
+    ]);
+    const hasNextPage = page * limit < totalDocument;
+    return { employees, totalDocument, hasNextPage };
   }
 
   // get employee by employee id
@@ -143,7 +149,6 @@ export class EmployeeService {
       if (employeeData.password) {
         hashedPassword = await hash(employeeData.password, 10);
       }
-      console.log(employeeId);
       const employee = await EmployeeModel.findOneAndUpdate(
         { _id: employeeId },
         {
@@ -163,27 +168,14 @@ export class EmployeeService {
         { returnDocument: 'after' },
       );
       if (employeeData.assignCreator) {
-        if (typeof employeeData.assignCreator === 'string') {
-          const data = await CreatorModel.findOneAndUpdate(
-            { _id: new mongoose.Types.ObjectId(employeeData.assignCreator) },
-            { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
-            { returnDocument: 'after' },
-          );
-          if (!data) {
-            throw new HttpException(404, `Creator with ID ${employeeData.assignCreator} not found`);
-          }
-        } else if (typeof employeeData.assignCreator === 'object') {
-          const updatedEmployees = await Promise.all(
-            employeeData.assignCreator.map(async id => {
-              const data = await CreatorModel.findOneAndUpdate(
-                { _id: new mongoose.Types.ObjectId(id) },
-                { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
-                { returnDocument: 'after' },
-              );
-              if (!data) {
-                throw new HttpException(404, `Creator with ID ${id} not found`);
-              }
-              return data;
+        if (employeeData.assignCreator.length == 0) {
+          await CreatorModel.updateMany({ assignEmployee: { $in: [employeeId] } }, { $pull: { assignEmployee: employeeId } });
+        } else {
+          await Promise.all(
+            employeeData.assignCreator.map(async creatorId => {
+              await CreatorModel.updateMany({}, { $pull: { assignEmployee: employeeId } });
+              // const creator = await CreatorModel.findOne({ _id: creatorId, assignEmployee: { $in: [employeeId] } });
+              await CreatorModel.updateOne({ _id: creatorId }, { $push: { assignEmployee: employeeId } }, { new: true });
             }),
           );
         }
@@ -200,6 +192,7 @@ export class EmployeeService {
   // delete employees by employee id
   public async deleteEmployee(employeeId: string) {
     try {
+      await CreatorModel.updateMany({ assignEmployee: employeeId }, { $pull: { assignEmployee: employeeId } });
       const deleteEmployee = await EmployeeModel.findByIdAndDelete(employeeId);
       return deleteEmployee;
     } catch (error) {
@@ -239,56 +232,63 @@ export class EmployeeService {
     }
   }
 
-  public async getEmployees(getData: any) {
+  public async getEmployees(getData: any, page: number, limit: number) {
     try {
       let filter: any = {};
+      const skip = (page - 1) * limit;
       if (getData.agencyId) {
         const agencyId = new mongoose.Types.ObjectId(getData.agencyId);
-        filter.agencyId = { $in: [agencyId] };
+        filter.agencyId = agencyId;
       }
       if (getData.creator) {
         const employeesId: Creator = (await CreatorModel.findOne({ _id: getData.creator })) as Creator;
         filter = { _id: { $in: employeesId.assignEmployee } };
       }
       if (getData.name) {
-        filter = {
-          ...filter,
-          name: new RegExp(`${getData.name}`, 'i'),
-        };
+        filter.name = new RegExp(getData.name, 'i');
       }
       if (getData.status) {
-        filter = {
-          ...filter,
-          status: getData.status,
-        };
+        filter.status = getData.status;
       }
+      console.log(filter);
 
-      const employees = await EmployeeModel.aggregate([
-        {
-          $match: filter,
-        },
-        {
-          $lookup: {
-            from: 'creators',
-            localField: '_id',
-            foreignField: 'assignEmployee',
-            as: 'creatorName',
+      const [totalDocument, employees] = await Promise.all([
+        EmployeeModel.countDocuments(filter),
+        EmployeeModel.aggregate([
+          {
+            $match: filter,
           },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            email: 1,
-            role: 1,
-            status: 1,
-            userId: 1,
-            agencyId: 1,
-            assignedCreators: '$creatorName.creatorName',
+          {
+            $lookup: {
+              from: 'creators',
+              localField: '_id',
+              foreignField: 'assignEmployee',
+              as: 'creatorDetail',
+            },
           },
-        },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              email: 1,
+              role: 1,
+              status: 1,
+              userId: 1,
+              agencyId: 1,
+              payRate: 1,
+              payInterval: 1,
+              commission: 1,
+              shiftSchedular: 1,
+              'creatorDetail.creatorName': 1,
+              'creatorDetail._id': 1,
+            },
+          },
+          { $skip: skip },
+          { $limit: limit },
+        ]),
       ]);
-      return employees;
+      const hasNextPage = page * limit < totalDocument;
+      return { employees, totalDocument, hasNextPage };
     } catch (error) {
       if (error.status) {
         throw error;

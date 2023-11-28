@@ -18,10 +18,10 @@ export class EmployeeRoute implements Routes {
     this.router.post(`${this.path}/:id`, AuthMiddleware, ValidationMiddleware(CreateEmployeeDto), this.employee.createEmployee);
     this.router.get(`${this.path}s/:agencyId`, AuthMiddleware, this.employee.getEmployees);
     this.router.get(`${this.path}/getEmployeeById/:employeeId`, AuthMiddleware, isAdminMiddleware, this.employee.getEmployee);
-    this.router.put(
+    this.router.patch(
       `${this.path}/:employeeId`,
       AuthMiddleware,
-
+      isAdminMiddleware,
       ValidationMiddleware(UpdateEmployeeDto, true),
       this.employee.updateEmployee,
     );

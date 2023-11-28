@@ -3,7 +3,6 @@ import { Creator, CreatorsResponse } from '@/interfaces/creator.interface';
 import { CreatorModel } from '@/models/creator.model';
 import { Service } from 'typedi';
 import mongoose from 'mongoose';
-import { logger } from '@/utils/logger';
 
 @Service()
 export class CreatorService {
@@ -211,6 +210,7 @@ export class CreatorService {
           $project: {
             _id: 1,
             creatorName: 1,
+            creatorImage: 1,
             status: 1,
             'assignEmployee.name': 1,
             'assignEmployee._id': 1,
