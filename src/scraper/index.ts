@@ -28,6 +28,10 @@ export class Scraper {
       headless: false,
       userDataDir,
       args: ['--start-maximized', `--disable-extensions`],
+      defaultViewport: {
+        height: 700,
+        width: 1400,
+      },
     });
     this.page = await browser.newPage();
     this.page.on('response', this.handleResponse);
@@ -60,6 +64,10 @@ export class Scraper {
 
   async checkEarnings(): Promise<void> {
     await this.page.goto(`${this.entryUrl}/my/statements/earnings`);
+  }
+
+  async sendMessage(userId: number, message: string): Promise<void> {
+    console.log(userId, message);
   }
 
   async handleResponse(res: HTTPResponse): Promise<void> {

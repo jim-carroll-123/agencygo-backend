@@ -4,10 +4,10 @@ import 'reflect-metadata';
 // import pluginProxy from 'puppeteer-extra-plugin-proxy';
 // import Stealth from 'puppeteer-extra-plugin-stealth';
 // import path from 'path';
-import { Scraper } from '.';
+import { OnlyFansClient } from './external/onlyfans/onlyfans.client';
 import Container from 'typedi';
 import path from 'path';
 
-const scraper = Container.get(Scraper);
+const onlyfans = Container.get(OnlyFansClient);
 
-scraper.openClient(path.join(__dirname, './temp'));
+onlyfans.openClient(path.join(__dirname, './temp'));

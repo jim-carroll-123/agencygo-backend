@@ -32,7 +32,7 @@ const UserSchema: Schema<User> = new Schema({
   agencyPer: {
     type: String,
   },
-  currentModalBalance: {
+  currentModelBalance: {
     type: Number,
   },
   isVerified: {
