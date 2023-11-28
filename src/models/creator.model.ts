@@ -8,6 +8,7 @@ const CreatorSchema: Schema<Creator> = new Schema({
   },
   creatorImage: {
     type: String,
+    default: null,
   },
   creatorName: {
     type: String,

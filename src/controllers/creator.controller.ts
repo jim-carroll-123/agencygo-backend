@@ -1,4 +1,4 @@
-import { Creator } from '@/interfaces/creator.interface';
+import { Creator, CreatorsResponse } from '@/interfaces/creator.interface';
 import { LoginBotService } from '@/scraper/services/login.service';
 import { CreatorService } from '@/services/creator.service';
 import { NextFunction, Request, Response } from 'express';
@@ -18,8 +18,10 @@ export class CreatorController {
 
   public getCreators = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllCreatorsData: Creator[] = await this.creator.getCreators();
-
+      const agencyId = req.params.agencyId;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const findAllCreatorsData: CreatorsResponse = await this.creator.getCreators(agencyId, page, limit);
       res.status(200).json({ data: findAllCreatorsData, message: 'success' });
     } catch (error) {
       next(error);
@@ -46,6 +48,11 @@ export class CreatorController {
     try {
       const id = req.params.id;
       const creatorData: Creator = req.body;
+      if (req.file) {
+        const originalnameWithoutSpaces = req.file.originalname.replace(/\s/g, '');
+        const result = await uploadToS3(req.file.buffer, originalnameWithoutSpaces + Date.now() + path.extname(req.file.originalname));
+        creatorData.creatorImage = result.Location;
+      }
       const updateCreatorData: Creator = await this.creator.updateCreator(id, creatorData);
       res.status(201).json({ data: updateCreatorData, message: 'creator updated successfully' });
     } catch (error) {
@@ -104,7 +111,9 @@ export class CreatorController {
   public searchFilter = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queryData = req.query;
-      const creator = await this.creator.searchCreator(queryData);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const creator = await this.creator.searchCreator(queryData, page, limit);
       res.status(200).json({ data: creator, message: 'creator fetched successfully' });
     } catch (error) {
       next(error);

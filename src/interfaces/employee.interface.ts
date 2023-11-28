@@ -31,6 +31,10 @@ export interface EmployeeCreate {
   role: Role;
   creator: Types.ObjectId;
   assignCreator: Types.ObjectId[] | Types.ObjectId;
+  payRate: Number;
+  payInterval: Number;
+  commission: Number;
+  shiftSchedular: string;
 }
 
 export interface EmployeeUpdate {
@@ -42,4 +46,8 @@ export interface EmployeeUpdate {
   status: Status;
   creator: string[];
   assignCreator: string[] | string;
+  payRate: number;
+  payInterval: string;
+  commission: number;
+  shiftSchedular: string;
 }

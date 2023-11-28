@@ -1,48 +1,54 @@
-import { hash } from 'bcrypt';
-import * as crypto from 'crypto';
 import { HttpException } from '@/exceptions/httpException';
-import { Creator } from '@/interfaces/creator.interface';
+import { Creator, CreatorsResponse } from '@/interfaces/creator.interface';
 import { CreatorModel } from '@/models/creator.model';
 import { Service } from 'typedi';
-
-import axios from 'axios';
-import { PROXY_API_KEY, PROXY_URL } from '@config';
 import mongoose from 'mongoose';
 
 @Service()
 export class CreatorService {
   // get all creators
-  public async getCreators(): Promise<Creator[]> {
-    const creators: Creator[] = await CreatorModel.aggregate([
-      {
-        $lookup: {
-          from: 'employees',
-          localField: 'assignEmployee',
-          foreignField: '_id',
-          as: 'assignEmployee',
+  public async getCreators(agencyId: string, page: number, limit: number): Promise<CreatorsResponse> {
+    const skip = (page - 1) * limit;
+    const [totalDocument, creators] = await Promise.all([
+      CreatorModel.countDocuments({ agencyId: new mongoose.Types.ObjectId(agencyId) }),
+      CreatorModel.aggregate([
+        { $match: { agencyId: new mongoose.Types.ObjectId(agencyId) } },
+        {
+          $lookup: {
+            from: 'employees',
+            localField: 'assignEmployee',
+            foreignField: '_id',
+            as: 'assignEmployee',
+          },
         },
-      },
-      {
-        $project: {
-          creatorName: 1,
-          creatorImage: 1,
-          status: 1,
-          'assignEmployee.name': 1,
-          'assignEmployee._id': 1,
-          isLinkOnlyFans: 1,
-          gender: 1,
-          internalNotes: 1,
-          autoRelink: 1,
-          proxy: 1,
-          agencyId: 1,
-          email: 1,
-          password: 1,
-          sessionBucket: 1,
-          ofcreds: 1,
+        {
+          $project: {
+            creatorName: 1,
+            creatorImage: 1,
+            status: 1,
+            'assignEmployee.name': 1,
+            'assignEmployee._id': 1,
+            isLinkOnlyFans: 1,
+            gender: 1,
+            internalNotes: 1,
+            autoRelink: 1,
+            proxy: 1,
+            agencyId: 1,
+            email: 1,
+            password: 1,
+            sessionBucket: 1,
+            ofcreds: 1,
+            agencyComission: 1,
+            creatorComission: 1,
+            modelData: 1,
+          },
         },
-      },
+        { $skip: skip },
+        { $limit: limit },
+      ]),
     ]);
-    return creators;
+    const hasNextPage = page * limit < totalDocument;
+    return { creators, totalDocument, hasNextPage };
   }
 
   public async createCreator(creatorData: Creator) {
@@ -105,6 +111,20 @@ export class CreatorService {
 
   // update a creator by id
   public async updateCreator(creatorId: string, creatorData: Creator): Promise<Creator> {
+    console.log(creatorData);
+    if (typeof creatorData.status === 'string') {
+      creatorData.status = creatorData.status === 'true' ? true : false;
+    }
+    if (typeof creatorData.autoRelink === 'string') {
+      creatorData.autoRelink = creatorData.autoRelink === 'true' ? true : false;
+    }
+    if (typeof creatorData.ofcreds === 'string') {
+      creatorData.ofcreds = JSON.parse(creatorData.ofcreds);
+    }
+    if (typeof creatorData.assignEmployee === 'string') {
+      creatorData.assignEmployee = JSON.parse(creatorData.assignEmployee);
+    }
+    console.log(creatorData.status);
     const updateCreatorById: Creator = await CreatorModel.findByIdAndUpdate(
       {
         _id: creatorId,
@@ -131,6 +151,9 @@ export class CreatorService {
         if (!creator) {
           throw new Error(`Creator with ID ${creatorId} not found.`);
         }
+        if (!Array.isArray(creator.assignEmployee)) {
+          creator.assignEmployee = [];
+        }
 
         if (creator.assignEmployee?.includes(employeeId)) {
           throw new Error(`Employee with ID ${employeeId} is already assigned to Creator with ID ${creatorId}.`);
@@ -147,8 +170,13 @@ export class CreatorService {
     }
   }
 
-  public async searchCreator(getData: any) {
+  public async searchCreator(getData: any, page: number, limit: number) {
     const filter: any = {};
+    const skip = (page - 1) * limit;
+    if (getData.employeeId) {
+      const employeId = new mongoose.Types.ObjectId(getData.employeeId);
+      filter.assignEmployee = { $in: [employeId] };
+    }
     if (getData.creator) {
       filter.creatorName = new RegExp(getData.creator, 'i');
     }
@@ -162,49 +190,50 @@ export class CreatorService {
       getData.isLinkOnlyFans = Boolean(getData.isLinkOnlyFans === 'true' ? true : false);
       filter.isLinkOnlyFans = getData.isLinkOnlyFans;
     }
-
-    if (getData.employeeId) {
-      const employeId = new mongoose.Types.ObjectId(getData.employeeId);
-      filter.assignEmployee = { $in: [employeId] };
-    }
-
     if (getData.agencyId) {
       const agencyId = new mongoose.Types.ObjectId(getData.agencyId);
-      filter.agencyId = { $in: [agencyId] };
+      filter.agencyId = agencyId;
     }
-    const creator = await CreatorModel.aggregate([
-      { $match: filter },
-      {
-        $lookup: {
-          from: 'employees',
-          localField: 'assignEmployee',
-          foreignField: '_id',
-          as: 'assignEmployee',
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          creatorName: 1,
-          status: 1,
-          'assignEmployee.name': 1,
-          'assignEmployee._id': 1,
-          isLinkOnlyFans: 1,
-          gender: 1,
-          internalNotes: 1,
-          autoRelink: 1,
-          proxy: 1,
-          agencyId: 1,
-          email: {
-            $cond: [{ $eq: ['$ofcreds.email', null] }, null, '$ofcreds.email'],
-          },
-          password: {
-            $cond: [{ $eq: ['$ofcreds.password', null] }, null, '$ofcreds.password'],
+    const [totalDocument, creators] = await Promise.all([
+      CreatorModel.countDocuments(filter),
+      CreatorModel.aggregate([
+        { $match: filter },
+        {
+          $lookup: {
+            from: 'employees',
+            localField: 'assignEmployee',
+            foreignField: '_id',
+            as: 'assignEmployee',
           },
         },
-      },
+        {
+          $project: {
+            _id: 1,
+            creatorName: 1,
+            creatorImage: 1,
+            status: 1,
+            'assignEmployee.name': 1,
+            'assignEmployee._id': 1,
+            isLinkOnlyFans: 1,
+            gender: 1,
+            internalNotes: 1,
+            autoRelink: 1,
+            proxy: 1,
+            agencyId: 1,
+            email: {
+              $cond: [{ $eq: ['$ofcreds.email', null] }, null, '$ofcreds.email'],
+            },
+            password: {
+              $cond: [{ $eq: ['$ofcreds.password', null] }, null, '$ofcreds.password'],
+            },
+          },
+        },
+        { $skip: skip },
+        { $limit: limit },
+      ]),
     ]);
+    const hasNextPage = page * limit < totalDocument;
 
-    return creator;
+    return { creators, totalDocument, hasNextPage };
   }
 }

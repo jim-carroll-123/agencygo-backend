@@ -13,8 +13,8 @@ import { Employee } from '@/interfaces/employee.interface';
 import { Email } from '@/interfaces/common.interface';
 import { generateEmailTemplateForForgotPassword } from '../template/forgotPassword';
 import { Emails } from '@/utils/email';
-import twilio from "twilio";
-import {initializeChatUser} from "@controllers/chat.controller";
+import twilio from 'twilio';
+import { initializeChatUser } from '@controllers/chat.controller';
 
 const createToken = (user: User): any => {
   const dataStoredInToken: DataStoredInToken = { _id: user._id };
@@ -68,12 +68,11 @@ export class AuthService {
     if (!isPasswordMatching) throw new HttpException(409, 'Invalid Credentials'); // should not let user know which field is wrong
 
     const tokenData = createToken(findUser);
-    console.log(tokenData);
     // const cookie = createCookie(tokenData);
 
     if (!findUser.twilioUserId) {
-      const sid = await initializeChatUser(findUser.email)
-      await UserModel.updateOne({ email: findUser.email }, { $set: { twilioUserId: sid} });
+      const sid = await initializeChatUser(findUser.email);
+      await UserModel.updateOne({ email: findUser.email }, { $set: { twilioUserId: sid } });
     }
 
     return { findUser, tokenData };
