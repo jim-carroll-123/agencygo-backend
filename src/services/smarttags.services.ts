@@ -8,16 +8,14 @@ import { smartTagsModel } from '@/models/smarttags.model';
 export class SmartTagsService {
   public async createSmartTags(smartTagsData: smartTags): Promise<smartTags> {
     try {
-        const newSmartTags = new smartTagsModel({
-            ...smartTagsData,
-        });
-        // Save the SmartTags
-        const createdSmartTags = await newSmartTags.save();
-        return createdSmartTags;
+      const newSmartTags = new smartTagsModel({
+        ...smartTagsData,
+      });
+      // Save the SmartTags
+      const createdSmartTags = await newSmartTags.save();
+      return createdSmartTags;
     } catch (error) {
-        throw error;
+      throw error;
     }
-}
-
-
+  }
 }
