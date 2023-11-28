@@ -1,5 +1,11 @@
 import { ObjectId, Types } from 'mongoose';
 
+interface TimeLine {
+  startTime: Date;
+  type: 'working' | 'break';
+  endTime: Date | null;
+}
+
 export interface Attendance {
   _id?: string;
   employeeId: ObjectId;
@@ -9,4 +15,5 @@ export interface Attendance {
   notes: string[];
   totalHours: string;
   breakHours: string;
+  timeLine: any;
 }

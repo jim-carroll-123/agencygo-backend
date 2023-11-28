@@ -24,5 +24,8 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
   breakHours: {
     type: Schema.Types.String,
   },
+  timeLine: {
+    type: Schema.Types.Mixed,
+  },
 });
 export const AttendanceModal = model<Attendance & Document>('Attendance', AttendanceSchema);

@@ -3,28 +3,67 @@ import { HttpException } from '@exceptions/httpException';
 import mongoose, { Types } from 'mongoose';
 import { Attendance } from '@/interfaces/attendance.interface';
 import { AttendanceModal } from '@/models/attendance.model';
+import moment from 'moment';
 
 @Service()
 export class AttendanceServices {
-  public async createTimeLog(attData: Attendance) {
+  public async createTimeLog(attData: Attendance, user) {
     const attendance: Attendance = await AttendanceModal.create({
-      employeeId: attData.employeeId,
+      employeeId: user._id,
       startDateTime: attData.startDateTime,
-      endDateTime: attData.endDateTime,
       breakTime: attData.breakTime,
       notes: attData.notes,
       totalHours: attData.totalHours,
       breakHours: attData.breakHours,
+      timeLine: attData.timeLine,
     });
     return { success: true, data: attendance };
   }
 
-  public async getAttandanceByEmpId(employeeId: string): Promise<Attendance[]> {
-    const objectId = new mongoose.Types.ObjectId(employeeId);
-    const attendance: Attendance[] = await AttendanceModal.aggregate([{ $match: { employeeId: objectId } }]);
-    if (!attendance) throw new HttpException(409, 'attendance not found');
+  public async getAttendanceByEmpId(employeeId: string, startDate?: string, endDate?: string): Promise<Attendance[]> {
+    if (startDate && endDate) {
+      const startDateTime = moment(startDate).startOf('day').toDate();
+      const endDateTime = moment(endDate).endOf('day').toDate();
 
-    return attendance;
+      const attendance: Attendance[] = await AttendanceModal.aggregate([
+        {
+          $match: {
+            employeeId: employeeId,
+            startDateTime: {
+              $gte: startDateTime,
+              $lte: endDateTime,
+            },
+          },
+        },
+      ]);
+
+      // if (!attendance || attendance.length === 0) {
+      //   throw new HttpException(409, 'Attendance not found for the specified date range');
+      // }
+      if (!attendance || attendance.length === 0) {
+        return [];
+      }
+
+      return attendance;
+    } else {
+      const allAttendance: Attendance[] = await AttendanceModal.find({ employeeId: employeeId });
+
+      if (!allAttendance || allAttendance.length === 0) {
+        throw new HttpException(409, 'Attendance not found');
+      }
+
+      return allAttendance;
+    }
+  }
+
+  public async getTodaysTimsheets(): Promise<Attendance[]> {
+    const allAttendance: Attendance[] = await AttendanceModal.find({});
+
+    if (!allAttendance || allAttendance.length === 0) {
+      throw new HttpException(409, 'Attendance not found');
+    }
+
+    return allAttendance;
   }
 
   public async updateAttendaceByEmpId(attendanceId: string, attandanceData: Attendance) {
@@ -42,6 +81,7 @@ export class AttendanceServices {
             notes: attandanceData.notes,
             totalHours: attandanceData.totalHours,
             breakHours: attandanceData.breakHours,
+            timeLine: attandanceData.timeLine,
           },
         },
         { new: true },
@@ -52,7 +92,7 @@ export class AttendanceServices {
       if (error.status) {
         throw error;
       }
-      throw new HttpException(500, 'Something went wrong');
+      throw new HttpException(500, `Something went wrong:${error.message}`);
     }
   }
 }
