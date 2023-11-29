@@ -8,11 +8,9 @@ import AdmZip from 'adm-zip';
 import fs from 'fs';
 import { uploadToS3 } from '@/utils/fileUpload';
 import { CreatorModel } from '@/models/creator.model';
-import { BotManager } from '@/bot';
 
 export class CreatorController {
   public creator = Container.get(CreatorService);
-  private bot = Container.get(BotManager);
   private storage = Container.get(StorageService);
 
   public getCreators = async (req: Request, res: Response, next: NextFunction) => {

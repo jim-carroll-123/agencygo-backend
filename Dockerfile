@@ -32,7 +32,7 @@ RUN rm -rf /app/dist/scraper/uploads && mkdir -p /app/dist/scraper/uploads
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV DBCONN_STR=mongodb+srv://dev:E8bhHjIr5xmvPgRT@agencygodevcluster.q83fyoe.mongodb.net/build_od_532
+ENV DBCONN_STR=mongodb+srv://dev:E8bhHjIr5xmvPgRT@agencygodevcluster.q83fyoe.mongodb.net/development
 ENV SECRET_KEY=secretKey
 ENV LOG_FORMAT=dev
 ENV LOG_DIR=../logs
@@ -59,6 +59,8 @@ ENV TWILIO_AUTH_TOKEN=47a84dff387e9317fceb5a38ebbd7b71
 ENV PUPPETEER_SKIP_DOWNLOAD true
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV DBUS_SESSION_BUS_ADDRESS=autolaunch
+ENV DRAGONFLY_HOST=dragonfly
+ENV DRAGONFLY_PORT=
 
 RUN apt-get update && apt-get install -y gnupg wget
 RUN wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg

@@ -15,6 +15,7 @@ import { smartTagsRoute } from './routes/smarttags.route';
 // import { PayrollRoute } from './routes/payroll.routes';
 import { ChatRoute } from './routes/chat.route';
 import { AttendanceRoute } from './routes/attendence.route';
+import { EarningsRoute } from './routes/earnings.route';
 ValidateEnv();
 
 const app = new App([
@@ -33,6 +34,7 @@ const app = new App([
   new ShiftRoute(),
   new ChatRoute(),
   new AttendanceRoute(),
+  new EarningsRoute(),
 ]);
 
 try {

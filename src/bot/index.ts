@@ -1,10 +1,12 @@
-import { Job, Worker } from 'bullmq';
+import { Job, Queue, Worker } from 'bullmq';
 import { updateChats, updateMessages } from './handlers/chats.handlers';
 import { updateTransactions } from './handlers/transactions.handlers';
 import { Service } from 'typedi';
+import IORedis from 'ioredis';
 
 @Service()
 export class BotManager {
+  connection: IORedis;
   worker: Worker;
 
   constructor() {
@@ -13,6 +15,11 @@ export class BotManager {
         host: process.env.DRAGONFLY_HOST,
         port: parseInt(process.env.DRAGONFLY_PORT),
       },
+    });
+    // This is a shared connection to dispatch bot requested with.
+    this.connection = new IORedis({
+      host: process.env.DRAGONFLY_HOST,
+      port: parseInt(process.env.DRAGONFLY_PORT),
     });
   }
 
@@ -31,5 +38,10 @@ export class BotManager {
         break;
     }
     return { success: true };
+  }
+
+  async getLatestTransactions(creatorId: string) {
+    const queue = new Queue(`{onlyfans-actions-${creatorId}}`, { connection: this.connection });
+    queue.add('check-statements', {});
   }
 }

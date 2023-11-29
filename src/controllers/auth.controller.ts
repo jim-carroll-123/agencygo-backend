@@ -32,6 +32,7 @@ export class AuthController {
     try {
       const userData: User = req.body;
       const { findUser, tokenData } = await this.auth.login(userData);
+
       res.setHeader('authorization', tokenData.token);
       res.status(200).json({
         data: {
