@@ -14,5 +14,11 @@ export class ContentRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/upload`, AuthMiddleware, this.contentController.uploadContentToS3);
+    this.router.get(
+      `${this.path}/get-image-list-by-creator-and-folder/:createorId/:folderName`,
+      AuthMiddleware,
+      this.contentController.getImageListBycreatorAndFolder,
+    );
+    this.router.delete(`${this.path}/delete`, AuthMiddleware, this.contentController.deleteContent);
   }
 }
