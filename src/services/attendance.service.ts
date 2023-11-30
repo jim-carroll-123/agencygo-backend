@@ -35,24 +35,43 @@ export class AttendanceServices {
             },
           },
         },
+        {
+          $lookup: {
+            from: 'timelines',
+            localField: '_id',
+            foreignField: 'attendanceId',
+            as: 'timeline',
+          },
+        },
       ]);
 
-      // if (!attendance || attendance.length === 0) {
-      //   throw new HttpException(409, 'Attendance not found for the specified date range');
-      // }
       if (!attendance || attendance.length === 0) {
         return [];
       }
 
       return attendance;
     } else {
-      const allAttendance: Attendance[] = await AttendanceModal.find({ employeeId: employeeId });
+      const attendance: Attendance[] = await AttendanceModal.aggregate([
+        {
+          $match: {
+            employeeId: employeeId,
+          },
+        },
+        {
+          $lookup: {
+            from: 'timelines',
+            localField: '_id',
+            foreignField: 'attendanceId',
+            as: 'timeline',
+          },
+        },
+      ]);
 
-      if (!allAttendance || allAttendance.length === 0) {
+      if (!attendance || attendance.length === 0) {
         throw new HttpException(409, 'Attendance not found');
       }
 
-      return allAttendance;
+      return attendance;
     }
   }
 
