@@ -16,7 +16,7 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
     type: Schema.Types.Mixed,
   },
   notes: {
-    type: Schema.Types.Mixed,
+    type: Schema.Types.String,
   },
   totalHours: {
     type: Schema.Types.String,

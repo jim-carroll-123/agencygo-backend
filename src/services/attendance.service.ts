@@ -95,4 +95,27 @@ export class AttendanceServices {
       throw new HttpException(500, `Something went wrong:${error.message}`);
     }
   }
+
+  public async updateNotesById(attendanceId: string, attandanceData: Attendance) {
+    const objectId = new mongoose.Types.ObjectId(attendanceId);
+    try {
+      const attendance = await AttendanceModal.findByIdAndUpdate(
+        { _id: objectId },
+        {
+          $set: {
+            _id: objectId,
+            notes: attandanceData.notes,
+          },
+        },
+        { new: true },
+      );
+      if (!attendance) throw new HttpException(409, "User doesn't exist");
+      return attendance;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, `Something went wrong:${error.message}`);
+    }
+  }
 }

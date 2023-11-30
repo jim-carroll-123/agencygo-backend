@@ -16,5 +16,6 @@ export class AttendanceRoute implements Routes {
     this.router.get(`${this.path}/getAttendanceByEmpId/:startDate?/:endDate?`, AuthMiddleware, this.attendanceController.getAttandanceByEmpId);
     this.router.get(`${this.path}/getTodaysTimsheets`, AuthMiddleware, this.attendanceController.getTodaysTimsheets);
     this.router.put(`${this.path}/update/empAttendance/:attendanceId`, AuthMiddleware, this.attendanceController.updateAttendaceByEmpId);
+    this.router.patch(`${this.path}/update/notes/:attendanceId`, AuthMiddleware, this.attendanceController.updateNotesById);
   }
 }

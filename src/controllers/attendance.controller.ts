@@ -54,4 +54,14 @@ export class AttendanceController {
       next(error);
     }
   };
+
+  public updateNotesById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const attendanceId = req.params.attendanceId;
+      const updatedAttendanceData: Attendance = await this.attendance.updateNotesById(attendanceId, req.body);
+      res.status(200).json({ ack: 1, message: 'Notes updated successfully', data: updatedAttendanceData });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
