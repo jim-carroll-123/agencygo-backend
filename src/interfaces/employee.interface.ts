@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
-enum Role {
-  CHATTER = 'chatter',
+export enum Role {
+  EMPLOYEE = 'employee',
   ADMIN = 'admin',
   Manager = 'manager',
 }

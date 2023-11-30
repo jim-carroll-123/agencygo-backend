@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 enum Role {
-  CHATTER = 'chatter',
+  EMPLOYEE = 'employee',
   ADMIN = 'admin',
   Manager = 'manager',
 }
@@ -15,9 +15,9 @@ export interface User {
   lastName: string;
   amount: string;
   status: boolean;
-  agencyPer:string;
+  agencyPer: string;
   date: Date;
-  currentModalBalance:number;
+  currentModalBalance: number;
   email: string;
   isVerified: boolean;
   isAgency: boolean;

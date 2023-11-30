@@ -61,7 +61,7 @@ const UserSchema: Schema<User> = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'chatter', 'manager'],
+    enum: ['admin', 'employee', 'manager'],
   },
   twilioUserId: {
     type: String,

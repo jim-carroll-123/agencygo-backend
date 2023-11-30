@@ -18,7 +18,7 @@ export class CreateUserDto {
   public agencyName: string;
 
   @IsNumber()
-  public currentModalBalance : Number
+  public currentModalBalance: Number;
 
   @IsString()
   public agencyPer: string;
