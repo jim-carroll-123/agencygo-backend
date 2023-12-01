@@ -12,8 +12,9 @@ export interface Attendance {
   startDateTime: Date;
   endDateTime: Date;
   breakTime: string[];
-  notes: string[];
+  notes: string;
   totalHours: string;
   breakHours: string;
   timeLine: any;
+  isClockedOut: boolean;
 }

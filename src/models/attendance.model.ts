@@ -16,7 +16,7 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
     type: Schema.Types.Mixed,
   },
   notes: {
-    type: Schema.Types.Mixed,
+    type: Schema.Types.String,
   },
   totalHours: {
     type: Schema.Types.String,
@@ -26,6 +26,9 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
   },
   timeLine: {
     type: Schema.Types.Mixed,
+  },
+  isClockedOut: {
+    type: Schema.Types.Boolean,
   },
 });
 export const AttendanceModal = model<Attendance & Document>('Attendance', AttendanceSchema);
