@@ -20,17 +20,19 @@ export class AttendanceController {
     }
   };
 
-  public getAttandanceByEmpId = async (req: Request, res: Response, next: NextFunction) => {
+  public getAttendanceByFilter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { startDate, endDate } = req.params;
+      const filteredAttendance = await this.attendance.getAttendanceByFilter(req.query, req.user);
+      res.status(200).json({ ack: 1, message: 'Filtered Attendance', data: filteredAttendance });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-      if (startDate && endDate) {
-        const filteredAttendance = await this.attendance.getAttendanceByEmpId(req.user._id, startDate, endDate);
-        res.status(200).json({ ack: 1, message: 'Filtered Attendance', data: filteredAttendance });
-      } else {
-        const allAttendance = await this.attendance.getAttendanceByEmpId(req.user._id);
-        res.status(200).json({ ack: 1, message: 'All Attendance', data: allAttendance });
-      }
+  public getAttandanceAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const allAttendance = await this.attendance.getAttandanceAll();
+      res.status(200).json({ ack: 1, message: 'All Attendance', data: allAttendance });
     } catch (error) {
       next(error);
     }
@@ -60,6 +62,24 @@ export class AttendanceController {
       const attendanceId = req.params.attendanceId;
       const updatedAttendanceData: Attendance = await this.attendance.updateNotesById(attendanceId, req.body);
       res.status(200).json({ ack: 1, message: 'Notes updated successfully', data: updatedAttendanceData });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public updateTimesheetById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const attendanceId = req.params.attendanceId;
+      const updatedAttendanceData: Attendance = await this.attendance.updateTimesheetById(attendanceId, req.body);
+      res.status(200).json({ ack: 1, message: 'Notes updated successfully', data: updatedAttendanceData });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public deleteById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const attendanceId = req.params.attendanceId;
+      const response: Attendance = await this.attendance.deleteById(attendanceId);
+      res.status(200).json({ ack: 1, message: 'Notes updated successfully', data: response });
     } catch (error) {
       next(error);
     }

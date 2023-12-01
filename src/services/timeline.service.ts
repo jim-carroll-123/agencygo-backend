@@ -21,7 +21,6 @@ export class TimelineServices {
     });
     return { success: true, data: timeline };
   }
-
   public async getTimelineData(startDateTime?: string) {
     const startDate = moment(startDateTime).startOf('day').toDate();
     const result = await AttendanceModal.aggregate([
@@ -75,7 +74,6 @@ export class TimelineServices {
 
     return result;
   }
-
   public async deleteById(params: string) {
     const { timelineId } = params;
     console.log('timelineId', timelineId);

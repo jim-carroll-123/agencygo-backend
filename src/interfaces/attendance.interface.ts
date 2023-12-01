@@ -16,4 +16,5 @@ export interface Attendance {
   totalHours: string;
   breakHours: string;
   timeLine: any;
+  isClockedOut: boolean;
 }

@@ -31,4 +31,13 @@ export class ContentController {
       next(error);
     }
   };
+
+  public updatePresignedUrl = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data: { success: boolean; data: ContentHub } = await this.content.updatePresignedUrl(req.body);
+      res.status(200).json({ ack: 1, message: 'presigned updated Successfully', data: data });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

@@ -20,5 +20,6 @@ export class ContentRoute implements Routes {
       this.contentController.getImageListBycreatorAndFolder,
     );
     this.router.delete(`${this.path}/delete`, AuthMiddleware, this.contentController.deleteContent);
+    this.router.patch(`${this.path}/update/presignedurl`, AuthMiddleware, this.contentController.updatePresignedUrl);
   }
 }
