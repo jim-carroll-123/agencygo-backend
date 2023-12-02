@@ -21,7 +21,7 @@ const PayrollSchema: Schema<Payroll> = new Schema({
     required: true,
   },
   status: {
-    type: Boolean,
+    type: String,
     required: true,
   },
   totalHours: {
@@ -32,6 +32,10 @@ const PayrollSchema: Schema<Payroll> = new Schema({
     type: Number,
     required: true,
   },
-});
+  paidDate:{
+    type: String,
+    required: false,
+  }
+}, {timestamps: true});
 
 export const PayrollModel = model<Payroll & Document>('Payroll', PayrollSchema);
