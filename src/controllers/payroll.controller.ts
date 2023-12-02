@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { PayrollService } from '@/services/payroll.services';
-import { CreatePayrollDto } from '@/dtos/payroll.dto';  // Import the DTO
+import { CreatePayrollDto } from '@/dtos/payroll.dto'; // Import the DTO
 import { validate } from 'class-validator'; // Import the validate function
 
 export class PayrollController {

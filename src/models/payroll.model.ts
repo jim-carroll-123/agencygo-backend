@@ -1,6 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import { Payroll } from '@/interfaces/payroll.interface';
-import { CreatePayrollDto } from '@/dtos/payroll.dto'; 
+import { CreatePayrollDto } from '@/dtos/payroll.dto';
 
 const PayrollSchema: Schema<Payroll> = new Schema({
   employeeId: {

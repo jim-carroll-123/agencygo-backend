@@ -17,6 +17,7 @@ import { ChatRoute } from './routes/chat.route';
 import { AttendanceRoute } from './routes/attendence.route';
 import { ContentRoute } from './routes/content.route';
 import { TimelineRoute } from './routes/timeline.route';
+import { EarningsRoute } from './routes/earnings.route';
 ValidateEnv();
 
 const app = new App([
@@ -37,6 +38,7 @@ const app = new App([
   new AttendanceRoute(),
   new ContentRoute(),
   new TimelineRoute(),
+  new EarningsRoute(),
 ]);
 
 try {

@@ -1,5 +1,5 @@
 export interface Email {
-    to: string;
-    subject: string;
-    template:string;
+  to: string;
+  subject: string;
+  template: string;
 }

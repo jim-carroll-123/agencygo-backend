@@ -1,7 +1,7 @@
 import { Payroll } from '@/interfaces/payroll.interface';
 import { Service } from 'typedi';
 import { HttpException } from '@/exceptions/httpException';
-import { PayrollModel } from '@/models/payroll.model'; 
+import { PayrollModel } from '@/models/payroll.model';
 import { CreatePayrollDto } from '@/dtos/payroll.dto';
 
 @Service()
@@ -52,7 +52,7 @@ export class PayrollService {
         data,
         {
           new: true,
-        }
+        },
       );
       if (!updatedPayroll) throw new HttpException(404, "Payroll doesn't exist");
       return updatedPayroll;

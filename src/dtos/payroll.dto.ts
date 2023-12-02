@@ -1,26 +1,24 @@
-import { IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreatePayrollDto {
   @IsString()
-  public employeeId 
+  public employeeId;
 
   @IsString()
-  public hourlyPay
+  public hourlyPay;
 
   @IsString()
-  public commissionEarned
+  public commissionEarned;
 
   @IsString()
-  public bonus
+  public bonus;
 
   @IsString()
-  public status 
+  public status;
 
   @IsString()
-  public totalHours
+  public totalHours;
 
   @IsNumber()
-  public totalPayment
-
-  
+  public totalPayment;
 }

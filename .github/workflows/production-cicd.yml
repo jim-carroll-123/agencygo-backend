@@ -2,11 +2,11 @@ name: ProductionDeployment
 
 on:
   push:
-    branches: [ production ]
+    branches: [production]
 
 jobs:
   build-and-deploy:
-    runs-on: [ ubuntu-latest ]
+    runs-on: [ubuntu-latest]
     environment: production
     steps:
       - name: Checkout source
@@ -51,5 +51,3 @@ jobs:
           service: agencygo-server-service
           cluster: ProdEnvironmentMainServer
           wait-for-service-stability: true
-
-

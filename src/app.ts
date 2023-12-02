@@ -88,6 +88,7 @@ export class App {
     }
 
     try {
+      logger.info(dbConnection.url);
       await connect(dbConnection.url, dbConnection.options as ConnectOptions);
       logger.info('Connected to database');
     } catch (err) {

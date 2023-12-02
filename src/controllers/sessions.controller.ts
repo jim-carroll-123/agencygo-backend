@@ -1,5 +1,5 @@
 import { Session, SessionStatus, SessionType } from '@/interfaces/sessions.interface';
-import { LoginBotService } from '@/scraper/services/login.service';
+// import { LoginBotService } from '@/scraper/services/login.service';
 import { CreatorService } from '@/services/creator.service';
 import { SessionsService } from '@/services/sessions.service';
 import { NextFunction, Request, Response } from 'express';
@@ -8,7 +8,7 @@ import { StorageService } from '@/services/storage.service';
 
 @Service()
 export class SessionsController {
-  private login = Container.get(LoginBotService);
+  // private login = Container.get(LoginBotService);
   private creator = Container.get(CreatorService);
   private session = Container.get(SessionsService);
   private storage = Container.get(StorageService);
@@ -45,7 +45,7 @@ export class SessionsController {
         status: SessionStatus.Inactive,
       };
       const newSession = await this.session.createSession(payload);
-      this.login.execute({ email, password }, newSession._id);
+      // this.login.execute({ email, password }, newSession._id);
       res.status(200).json({ data: newSession, message: 'session created' });
     } catch (error) {
       next(error);
