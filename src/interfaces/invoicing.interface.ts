@@ -1,18 +1,33 @@
 import { Types } from 'mongoose';
 
+export enum InvoiceFrequency {
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Biweekly = 'Biweekly',
+  Monthly = 'Monthly',
+  Yearly = 'Yearly',
+}
 export interface Invoicing {
   _id: any;
+  companyName: string;
+  amount: number;
+  description: string;
+  employeeId: Types.ObjectId;
+  status: boolean;
+  userId: Types.ObjectId;
+  phone: string;
+  date: Date;
+  recurringInvoice: boolean;
+  recurringTimeline: boolean;
+  autoEmailNotification: boolean;
+  autoTextNotification: boolean;
+  triggerWidthdrawal: boolean;
+  frequency: InvoiceFrequency;
   userName: any;
   id: any;
-  userId: Types.ObjectId;
-  employeeId: Types.ObjectId;
-  companyName: string;
   companyAddress: string;
   companyContact: string;
-  amount: number;
   delivery: Boolean;
-  status: Boolean;
-  date: Date;
   address: string;
   contactDetails: string;
   invoiceNo: string;
@@ -21,9 +36,7 @@ export interface Invoicing {
   nameDept: string;
   clientCompanyName: string;
   addresss: string;
-  phone: string;
   email: string;
-  description: string;
   qty: number;
   invoiceTitle: string;
   unitPrice: number;
