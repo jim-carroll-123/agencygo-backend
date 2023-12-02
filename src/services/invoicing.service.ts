@@ -11,15 +11,15 @@ export class InvoicingService {
   public async createInvoicing(invoicingData: Invoicing): Promise<Invoicing> {
     try {
       const invoiceNumber = this.generateInvoiceNumber();
-  
+
       const newInvoicingData: Invoicing = {
         ...invoicingData,
         invoiceNo: invoiceNumber,
       };
-  
+
       const newInvoicing = new InvoicingModel(newInvoicingData);
       const createdInvoicing = await newInvoicing.save();
-  
+
       return createdInvoicing;
     } catch (error) {
       throw error;
@@ -48,7 +48,6 @@ export class InvoicingService {
       throw error;
     }
   }
-
 
   public async deleteInvoicing(invoicingId: string): Promise<Invoicing> {
     try {
@@ -121,7 +120,7 @@ export class InvoicingService {
         .replace('${addressShipTo}', invoicingData.addressShipTo)
         .replace('${phoneShipTo}', invoicingData.phoneShipTo);
 
-      return preparedHTML.replace('${invoiceNo}', invoiceNumber);;
+      return preparedHTML.replace('${invoiceNo}', invoiceNumber);
     } catch (error) {
       throw error;
     }
@@ -137,7 +136,6 @@ export class InvoicingService {
     }
     return result;
   }
-
 
   public async updatePdfUrl(invoicingId: string, pdfUrl: string): Promise<Invoicing> {
     try {

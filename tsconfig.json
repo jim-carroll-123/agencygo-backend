@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es2017",
-    "lib": ["es2017", "esnext.asynciterable","DOM"],
+    "lib": ["es2017", "esnext.asynciterable", "DOM"],
     "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
@@ -38,6 +38,7 @@
   "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/pdftemplate/template1.js"],
   "exclude": ["node_modules", "src/http", "src/logs"],
   // "ts-node": {
-  //   "swc": true
+  //   "swc": true,
+  //   "require": ["tsconfig-paths/register"],
   // },
 }

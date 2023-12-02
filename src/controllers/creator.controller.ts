@@ -1,8 +1,6 @@
 import { Creator, CreatorsResponse } from '@/interfaces/creator.interface';
-import { LoginBotService } from '@/scraper/services/login.service';
 import { CreatorService } from '@/services/creator.service';
 import { NextFunction, Request, Response } from 'express';
-import { getBrowserInstance } from '../scraper/config/core';
 import Container from 'typedi';
 import { StorageService } from '../services/storage.service';
 import path from 'path';
@@ -13,7 +11,6 @@ import { CreatorModel } from '@/models/creator.model';
 
 export class CreatorController {
   public creator = Container.get(CreatorService);
-  private login = Container.get(LoginBotService);
   private storage = Container.get(StorageService);
 
   public getCreators = async (req: Request, res: Response, next: NextFunction) => {
@@ -86,11 +83,11 @@ export class CreatorController {
     try {
       const creatorId = req.query.creatorId as string;
 
-      await this.login.execute({
-        email: req.body.email,
-        password: req.body.password,
-        creatorId,
-      });
+      // await this.login.execute({
+      //   email: req.body.email,
+      //   password: req.body.password,
+      //   creatorId,
+      // });
       res.status(200).json({ data: {}, message: 'creator logged in, session valid' });
     } catch (error) {
       next(error);
@@ -162,7 +159,7 @@ export class CreatorController {
         await unzipBuffer(file.Body as any);
       }
 
-      const { browser, page } = await getBrowserInstance(proxy.creds, usrDataDir);
+      // const { browser, page } = await getBrowserInstance(proxy.creds, usrDataDir);
 
       function logToFile(logMessage, logFilePath) {
         const logLine = `${logMessage}\n`;
@@ -176,17 +173,17 @@ export class CreatorController {
         });
       }
 
-      page.on('response', async pageReq => {
-        const url = pageReq.url();
-        if (url.includes('https://onlyfans.com/api2/v2/payouts/transactions')) {
-          const data = await pageReq.json();
-          res.send(data);
-        }
-      });
+      // page.on('response', async pageReq => {
+      //   const url = pageReq.url();
+      //   if (url.includes('https://onlyfans.com/api2/v2/payouts/transactions')) {
+      //     const data = await pageReq.json();
+      //     res.send(data);
+      //   }
+      // });
 
-      await page.goto('https://onlyfans.com/my/statistics/statements/earnings', {
-        waitUntil: ['load', 'domcontentloaded'],
-      });
+      // await page.goto('https://onlyfans.com/my/statistics/statements/earnings', {
+      //   waitUntil: ['load', 'domcontentloaded'],
+      // });
 
       // await page.waitForTimeout(40000);
 

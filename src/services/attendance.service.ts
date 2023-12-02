@@ -16,43 +16,100 @@ export class AttendanceServices {
       totalHours: attData.totalHours,
       breakHours: attData.breakHours,
       timeLine: attData.timeLine,
+      isClockedOut: false,
     });
     return { success: true, data: attendance };
   }
 
-  public async getAttendanceByEmpId(employeeId: string, startDate?: string, endDate?: string): Promise<Attendance[]> {
-    if (startDate && endDate) {
+  public async getAttendanceByFilter(query, user): Promise<Attendance[]> {
+    const { startDate, endDate, isEmp } = query;
+
+    let dateFilter = {};
+    let empFilter = {};
+
+    if (startDate && moment(startDate).isValid() && endDate && moment(endDate).isValid()) {
       const startDateTime = moment(startDate).startOf('day').toDate();
       const endDateTime = moment(endDate).endOf('day').toDate();
 
-      const attendance: Attendance[] = await AttendanceModal.aggregate([
-        {
-          $match: {
-            employeeId: employeeId,
-            startDateTime: {
-              $gte: startDateTime,
-              $lte: endDateTime,
-            },
-          },
+      dateFilter = {
+        startDateTime: {
+          $gte: startDateTime,
+          $lte: endDateTime,
         },
-      ]);
+      };
+    }
+    if (isEmp === 'true') {
+      empFilter = { employeeId: user._id };
+    }
 
-      // if (!attendance || attendance.length === 0) {
-      //   throw new HttpException(409, 'Attendance not found for the specified date range');
-      // }
-      if (!attendance || attendance.length === 0) {
-        return [];
-      }
+    const attendance: Attendance[] = await AttendanceModal.aggregate([
+      {
+        $match: {
+          ...empFilter,
+          ...dateFilter,
+          isClockedOut: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'timelines',
+          localField: '_id',
+          foreignField: 'attendanceId',
+          as: 'timeline',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'employeeId',
+          foreignField: '_id',
+          as: 'users',
+        },
+      },
+    ]).sort({ endDateTime: -1 });
 
-      return attendance;
+    if (!attendance || attendance.length === 0) {
+      return [];
+    }
+    return attendance;
+  }
+
+  public async getAttandanceAll(): Promise<Attendance[]> {
+    const models = [
+      {
+        $lookup: {
+          from: 'timelines',
+          localField: '_id',
+          foreignField: 'attendanceId',
+          as: 'timeline',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'employeeId',
+          foreignField: '_id',
+          as: 'users',
+        },
+      },
+    ];
+    const attendanceNotClockedOut: Attendance[] = await AttendanceModal.aggregate([
+      {
+        $match: { isClockedOut: false },
+      },
+      ...models,
+    ]).sort({ endDateTime: -1 });
+    const attendanceClockedOut: Attendance[] = await AttendanceModal.aggregate([
+      {
+        $match: { isClockedOut: true },
+      },
+      ...models,
+    ]).sort({ endDateTime: -1 });
+
+    if (attendanceNotClockedOut.length > 0 || attendanceClockedOut.length > 0) {
+      return [...attendanceNotClockedOut, ...attendanceClockedOut];
     } else {
-      const allAttendance: Attendance[] = await AttendanceModal.find({ employeeId: employeeId });
-
-      if (!allAttendance || allAttendance.length === 0) {
-        throw new HttpException(409, 'Attendance not found');
-      }
-
-      return allAttendance;
+      throw new HttpException(409, 'Attendance not found');
     }
   }
 
@@ -82,6 +139,7 @@ export class AttendanceServices {
             totalHours: attandanceData.totalHours,
             breakHours: attandanceData.breakHours,
             timeLine: attandanceData.timeLine,
+            isClockedOut: attandanceData.isClockedOut,
           },
         },
         { new: true },
@@ -93,6 +151,65 @@ export class AttendanceServices {
         throw error;
       }
       throw new HttpException(500, `Something went wrong:${error.message}`);
+    }
+  }
+
+  public async updateNotesById(attendanceId: string, attandanceData: Attendance) {
+    const objectId = new mongoose.Types.ObjectId(attendanceId);
+    try {
+      const attendance = await AttendanceModal.findByIdAndUpdate(
+        { _id: objectId },
+        {
+          $set: {
+            _id: objectId,
+            notes: attandanceData.notes,
+          },
+        },
+        { new: true },
+      );
+      if (!attendance) throw new HttpException(409, "User doesn't exist");
+      return attendance;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, `Something went wrong:${error.message}`);
+    }
+  }
+
+  public async updateTimesheetById(attendanceId: string, attandanceData: Attendance) {
+    const objectId = new mongoose.Types.ObjectId(attendanceId);
+    console.log('attandanceData', attandanceData);
+    try {
+      const attendance = await AttendanceModal.findByIdAndUpdate(
+        { _id: objectId },
+        {
+          $set: {
+            _id: objectId,
+            ...attandanceData,
+          },
+        },
+        { new: true },
+      );
+      if (!attendance) throw new HttpException(409, "User doesn't exist");
+      return attendance;
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new HttpException(500, `Something went wrong:${error.message}`);
+    }
+  }
+
+  public async deleteById(attId: string) {
+    try {
+      const objectId = new mongoose.Types.ObjectId(attId);
+      const result = await AttendanceModal.deleteOne({
+        _id: objectId,
+      });
+      return result;
+    } catch (error) {
+      throw new HttpException(500, 'Something Went Wrong');
     }
   }
 }

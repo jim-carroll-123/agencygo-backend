@@ -15,9 +15,9 @@ export interface User {
   lastName: string;
   amount: string;
   status: boolean;
-  agencyPer:string;
+  agencyPer: string;
   date: Date;
-  currentModalBalance:number;
+  currentModelBalance: number;
   email: string;
   isVerified: boolean;
   isAgency: boolean;

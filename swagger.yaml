@@ -31,7 +31,6 @@ securityDefinitions:
     name: Authorization
     in: header
 paths:
-
   /users:
     get:
       tags:
@@ -134,7 +133,7 @@ paths:
           description: 'Successful response'
         500:
           description: 'Server Error'
-          
+
     post:
       tags:
         - 'employees'
@@ -249,7 +248,7 @@ paths:
           description: 'OK'
         500:
           description: 'Server Error'
-  # [POST] create a new creator
+    # [POST] create a new creator
     post:
       tags:
         - creators
@@ -286,8 +285,8 @@ paths:
         404:
           description: 'Not Found - Creator Not Found'
         500:
-          description: 'Server Error'  
-  
+          description: 'Server Error'
+
   # [POST] sessions client
   /sessions/client/{creatorId}:
     post:
@@ -370,17 +369,17 @@ paths:
         500:
           description: 'Server Error'
 
-# [POST] creator/assign-proxy/{creatorId}
+  # [POST] creator/assign-proxy/{creatorId}
   /creators/assign-proxy/{creatorId}:
     post:
       tags:
         - proxy
       summary: Generate a Proxy for a Creator
       parameters:
-      - name: creatorId
-        in: path
-        description: Creator Id
-        required: true
+        - name: creatorId
+          in: path
+          description: Creator Id
+          required: true
       responses:
         '200':
           description: OK
@@ -389,17 +388,17 @@ paths:
         '500':
           description: Server Error
 
-# [GET] creator/get-proxy/{creatorId}
+  # [GET] creator/get-proxy/{creatorId}
   /creators/get-proxy/{creatorId}:
     get:
       tags:
-      - proxy
+        - proxy
       summary: Get Proxy Information by Creator ID
       parameters:
-      - name: creatorId
-        in: path
-        description: Creator ID
-        required: true
+        - name: creatorId
+          in: path
+          description: Creator ID
+          required: true
       responses:
         '200':
           description: OK
@@ -578,7 +577,6 @@ paths:
       500:
         description: 'Server Error'
 
-
 /payroll:
   get:
     tags:
@@ -667,9 +665,6 @@ paths:
       500:
         description: 'Server Error'
 
-
-
-         
 definitions:
   users:
     type: object
@@ -795,7 +790,6 @@ definitions:
       createdAt:
         type: string
         description: Creation Date
-        
 
   Agency:
     type: object
@@ -842,7 +836,7 @@ definitions:
       - amount
       - status
       - description
- 
+
 Payroll:
   type: 'object'
   required:
