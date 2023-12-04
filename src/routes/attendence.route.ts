@@ -15,7 +15,6 @@ export class AttendanceRoute implements Routes {
     this.router.post(`${this.path}/create`, AuthMiddleware, this.attendanceController.createTimeLog);
 
     this.router.get(`${this.path}/getAttendanceAll`, AuthMiddleware, this.attendanceController.getAttandanceAll);
-
     this.router.get(`${this.path}/getAttendanceByFilter`, AuthMiddleware, this.attendanceController.getAttendanceByFilter);
 
     this.router.get(`${this.path}/getTodaysTimsheets`, AuthMiddleware, this.attendanceController.getTodaysTimsheets);
@@ -23,5 +22,7 @@ export class AttendanceRoute implements Routes {
     this.router.patch(`${this.path}/update/notes/:attendanceId`, AuthMiddleware, this.attendanceController.updateNotesById);
     this.router.patch(`${this.path}/update/timesheet/:attendanceId`, AuthMiddleware, this.attendanceController.updateTimesheetById);
     this.router.delete(`${this.path}/delete/timesheet/:attendanceId`, AuthMiddleware, this.attendanceController.deleteById);
+
+    this.router.get(`${this.path}/getAttendance/:attendanceId`, AuthMiddleware, this.attendanceController.getAttendanceById);
   }
 }

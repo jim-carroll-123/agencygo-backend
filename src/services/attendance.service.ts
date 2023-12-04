@@ -74,6 +74,19 @@ export class AttendanceServices {
     return attendance;
   }
 
+  public async getAttendanceById(params) {
+    const objectId = new mongoose.Types.ObjectId(params.attendanceId);
+
+    const attendance: Attendance[] = await AttendanceModal.findById({ _id: objectId });
+
+    console.log('attendance', attendance);
+
+    if (!attendance || attendance.length === 0) {
+      return [];
+    }
+    return attendance;
+  }
+
   public async getAttandanceAll(): Promise<Attendance[]> {
     const models = [
       {
