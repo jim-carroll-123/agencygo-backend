@@ -1,4 +1,4 @@
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { Service } from 'typedi';
 import { HttpException } from '@exceptions/httpException';
 import { User } from '@interfaces/users.interface';
@@ -32,18 +32,36 @@ export class UserService {
     return createUserData;
   }
 
-  public async updateUser(userId: string, userData: User): Promise<User> {
+  public async updateUser(userId: string, userData): Promise<User> {
     if (userData.email) {
       const findUser: User = await UserModel.findOne({ email: userData.email });
       if (findUser && findUser._id != userId) throw new HttpException(409, `This email ${userData.email} already exists`);
     }
+    if (userData.oldPassword && userData.newPassword && userData.confirmNewPassword) {
+      if (userData.newPassword !== userData.confirmNewPassword) {
+        throw new HttpException(400, 'New passwords do not match');
+      }
+      const user: User = await UserModel.findById(userId);
+      if (!user) {
+        throw new HttpException(404, 'User not found');
+      }
 
-    if (userData.password) {
+      const isMatch = await compare(userData.oldPassword, user.password);
+      if (!isMatch) {
+        throw new HttpException(400, 'Old password is incorrect');
+      }
+
+      const hashedPassword = await hash(userData.newPassword, 10);
+      userData = { ...userData, password: hashedPassword };
+      delete userData.oldPassword;
+      delete userData.newPassword;
+      delete userData.confirmNewPassword;
+    } else if (userData.password) {
       const hashedPassword = await hash(userData.password, 10);
       userData = { ...userData, password: hashedPassword };
     }
 
-    const updateUserById: User = await UserModel.findByIdAndUpdate(userId, { userData });
+    const updateUserById: User = await UserModel.findByIdAndUpdate(userId, userData, { new: true });
     if (!updateUserById) throw new HttpException(409, "User doesn't exist");
 
     return updateUserById;

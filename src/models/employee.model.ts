@@ -27,7 +27,7 @@ const EmployeeSchema: Schema<Employee> = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'chatter', 'manager'],
+    enum: ['employee', 'manager', 'admin'],
   },
   userId: {
     type: Schema.Types.ObjectId,

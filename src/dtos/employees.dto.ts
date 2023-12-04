@@ -1,7 +1,7 @@
 import { IsString, IsEmail, IsEnum, IsOptional } from 'class-validator';
 
 enum Role {
-  CHATTER = 'chatter',
+  EMPLOYEE = 'employee',
   ADMIN = 'admin',
   MANAGER = 'manager',
 }

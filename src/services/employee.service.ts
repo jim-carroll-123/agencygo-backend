@@ -70,12 +70,12 @@ export class EmployeeService {
         );
       }
 
-      const template = generateEmailTemplateForActivation(employee, agency.agencyName);
-      const emailData: Email = {
-        to: employee.email,
-        subject: 'Activate Employee Account',
-        template: template,
-      };
+      // const template = generateEmailTemplateForActivation(employee, agency.agencyName);
+      // const emailData: Email = {
+      //   to: employee.email,
+      //   subject: 'Activate Employee Account',
+      //   template: template,
+      // };
       // await new Emails().sendEmail(emailData);
       return employee;
     } catch (error) {
@@ -171,10 +171,9 @@ export class EmployeeService {
         if (employeeData.assignCreator.length == 0) {
           await CreatorModel.updateMany({ assignEmployee: { $in: [employeeId] } }, { $pull: { assignEmployee: employeeId } });
         } else {
+          await CreatorModel.updateMany({ assignEmployee: { $in: [employeeId] } }, { $pull: { assignEmployee: employeeId } });
           await Promise.all(
             employeeData.assignCreator.map(async creatorId => {
-              await CreatorModel.updateMany({}, { $pull: { assignEmployee: employeeId } });
-              // const creator = await CreatorModel.findOne({ _id: creatorId, assignEmployee: { $in: [employeeId] } });
               await CreatorModel.updateOne({ _id: creatorId }, { $push: { assignEmployee: employeeId } }, { new: true });
             }),
           );
