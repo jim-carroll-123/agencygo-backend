@@ -77,7 +77,19 @@ export class AttendanceServices {
   public async getAttendanceById(params) {
     const objectId = new mongoose.Types.ObjectId(params.attendanceId);
 
-    const attendance: Attendance[] = await AttendanceModal.findById({ _id: objectId });
+    const attendance: Attendance[] = await AttendanceModal.aggregate([
+      {
+        $match: { _id: objectId },
+      },
+      {
+        $lookup: {
+          from: 'timelines',
+          localField: '_id',
+          foreignField: 'attendanceId',
+          as: 'timeline',
+        },
+      },
+    ]);
 
     console.log('attendance', attendance);
 
