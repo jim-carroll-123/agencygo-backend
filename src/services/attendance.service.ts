@@ -74,6 +74,31 @@ export class AttendanceServices {
     return attendance;
   }
 
+  public async getAttendanceById(params) {
+    const objectId = new mongoose.Types.ObjectId(params.attendanceId);
+
+    const attendance: Attendance[] = await AttendanceModal.aggregate([
+      {
+        $match: { _id: objectId },
+      },
+      {
+        $lookup: {
+          from: 'timelines',
+          localField: '_id',
+          foreignField: 'attendanceId',
+          as: 'timeline',
+        },
+      },
+    ]);
+
+    console.log('attendance', attendance);
+
+    if (!attendance || attendance.length === 0) {
+      return [];
+    }
+    return attendance;
+  }
+
   public async getAttandanceAll(): Promise<Attendance[]> {
     const models = [
       {

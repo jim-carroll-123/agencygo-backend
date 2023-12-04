@@ -29,6 +29,16 @@ export class AttendanceController {
     }
   };
 
+  public getAttendanceById = async (req: Request, res: Response, next: NextFunction) => {
+    console.log('req.query', req.query);
+    try {
+      const filteredAttendance = await this.attendance.getAttendanceById(req.params);
+      res.status(200).json({ ack: 1, message: 'Attendance Data', data: filteredAttendance });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getAttandanceAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const allAttendance = await this.attendance.getAttandanceAll();
