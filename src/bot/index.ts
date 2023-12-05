@@ -8,6 +8,7 @@ import IORedis from 'ioredis';
 export class BotManager {
   connection: IORedis;
   worker: Worker;
+  manager: Queue;
 
   constructor() {
     this.worker = new Worker(`{onlyfans-digest}`, this.processJob, {
@@ -20,6 +21,12 @@ export class BotManager {
     this.connection = new IORedis({
       host: process.env.DRAGONFLY_HOST,
       port: parseInt(process.env.DRAGONFLY_PORT),
+    });
+    this.manager = new Queue('{onlyfans-manager}', {
+      connection: {
+        host: process.env.DRAGONFLY_HOST,
+        port: parseInt(process.env.DRAGONFLY_PORT),
+      },
     });
   }
 
@@ -36,8 +43,19 @@ export class BotManager {
         break;
       case 'check-stats':
         break;
+      case 'bot-status':
+        break;
     }
     return { success: true };
+  }
+
+  async assignWorker(creatorId: string, email: string, password: string, proxy: string) {
+    this.manager.add('spawn', {
+      creatorId,
+      email,
+      password,
+      proxy,
+    });
   }
 
   async getLatestTransactions(creatorId: string) {
