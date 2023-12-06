@@ -105,8 +105,8 @@ export class ChatController {
   public createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userEmail = req.body.email;
-      const friendlyname = req.body.name;
-      const data = await client.conversations.v1.users.create({ identity: userEmail, friendlyName: friendlyname });
+      const friendlyName = req.body.name;
+      const data = await client.conversations.v1.users.create({ identity: userEmail, friendlyName: friendlyName });
       await UserModel.updateOne({ email: userEmail }, { $set: { twilioUserId: data.sid } });
       res.status(201).json({
         message: 'User created successfully',

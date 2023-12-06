@@ -70,13 +70,13 @@ export class EmployeeService {
         );
       }
 
-      // const template = generateEmailTemplateForActivation(employee, agency.agencyName);
-      // const emailData: Email = {
-      //   to: employee.email,
-      //   subject: 'Activate Employee Account',
-      //   template: template,
-      // };
-      // await new Emails().sendEmail(emailData);
+      const template = generateEmailTemplateForActivation(employee, agency.agencyName);
+      const emailData: Email = {
+        to: employee.email,
+        subject: 'Activate Employee Account',
+        template: template,
+      };
+      await new Emails().sendEmail(emailData);
       return employee;
     } catch (error) {
       if (error.status) {
