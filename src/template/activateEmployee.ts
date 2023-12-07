@@ -1,6 +1,5 @@
-// import { URL } from '../config/index';
+import { URL } from '../config/index';
 export const generateEmailTemplateForActivation = (body: any, agencyName: string) => {
-  const URL = `http://localhost:1212`;
   const { _id: id } = body;
   const activateAccountTemplate = `
 <!DOCTYPE html>
