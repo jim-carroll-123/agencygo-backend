@@ -66,7 +66,32 @@ export class AttendanceServices {
           as: 'users',
         },
       },
-    ]).sort({ endDateTime: -1 });
+    ]).sort({ startDateTime: -1 });
+
+    if (!attendance || attendance.length === 0) {
+      return [];
+    }
+    return attendance;
+  }
+
+  public async getAttendanceById(params) {
+    const objectId = new mongoose.Types.ObjectId(params.attendanceId);
+
+    const attendance: Attendance[] = await AttendanceModal.aggregate([
+      {
+        $match: { _id: objectId },
+      },
+      {
+        $lookup: {
+          from: 'timelines',
+          localField: '_id',
+          foreignField: 'attendanceId',
+          as: 'timeline',
+        },
+      },
+    ]);
+
+    console.log('attendance', attendance);
 
     if (!attendance || attendance.length === 0) {
       return [];
@@ -98,13 +123,13 @@ export class AttendanceServices {
         $match: { isClockedOut: false },
       },
       ...models,
-    ]).sort({ endDateTime: -1 });
+    ]).sort({ startDateTime: -1 });
     const attendanceClockedOut: Attendance[] = await AttendanceModal.aggregate([
       {
         $match: { isClockedOut: true },
       },
       ...models,
-    ]).sort({ endDateTime: -1 });
+    ]).sort({ startDateTime: -1 });
 
     if (attendanceNotClockedOut.length > 0 || attendanceClockedOut.length > 0) {
       return [...attendanceNotClockedOut, ...attendanceClockedOut];
