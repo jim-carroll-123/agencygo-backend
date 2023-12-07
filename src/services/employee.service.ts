@@ -28,12 +28,12 @@ export class EmployeeService {
       let user = await UserModel.findOne({ email: employeeData.email });
       if (!user) {
         // temp default password for development
-        const hashedPassword = await hash('development', 10);
+        // const hashedPassword = await hash('development', 10);
         const payload = {
           firstName: employeeData.name,
           lastName: '',
           email: employeeData.email,
-          password: hashedPassword,
+          //password: hashedPassword,
           isEmployee: true,
           role: employeeData.role,
           agencyId: agencyId,
@@ -76,6 +76,7 @@ export class EmployeeService {
         subject: 'Activate Employee Account',
         template: template,
       };
+      console.log(emailData);
       await new Emails().sendEmail(emailData);
       return employee;
     } catch (error) {

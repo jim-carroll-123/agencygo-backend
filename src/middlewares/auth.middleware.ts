@@ -41,6 +41,9 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
 };
 
 export const isAdminMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  if (req.body.newInvite) {
+    return next();
+  }
   try {
     if (req?.user?.isAdmin) {
       next();
