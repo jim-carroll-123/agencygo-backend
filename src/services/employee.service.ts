@@ -53,7 +53,8 @@ export class EmployeeService {
         commission: employeeData.commission,
         shiftSchedular: employeeData.shiftSchedular,
       });
-      if (employeeData.assignCreator) {
+
+      if (employeeData.assignCreator && !!employeeData.assignCreator[0]) {
         await Promise.all(
           employeeData.assignCreator.map(async creatorId => {
             const updateResult = await CreatorModel.findOneAndUpdate(
@@ -76,16 +77,15 @@ export class EmployeeService {
         subject: 'Activate Employee Account',
         template: template,
       };
-      console.log(emailData);
       await new Emails().sendEmail(emailData);
       return employee;
     } catch (error) {
       if (error.status) {
-        console.log('error');
+        console.log('error', error.status);
         throw error;
       }
       console.log(error?.message || error?.msg);
-      throw new HttpException(500, 'Something went wrong');
+      throw new HttpException(500, error?.message || error?.msg);
     }
   }
 
