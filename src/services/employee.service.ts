@@ -44,6 +44,7 @@ export class EmployeeService {
         name: employeeData.name,
         email: employeeData.email,
         agencyId: agencyId,
+        groupId: employeeData?.groupId,
         role: employeeData.role,
         userId: user._id,
         status: 'inactive',
@@ -60,7 +61,6 @@ export class EmployeeService {
               { $addToSet: { assignEmployee: new mongoose.Types.ObjectId(employee._id) } },
               { returnDocument: 'after' },
             );
-
             if (!updateResult) {
               console.log(`Creator with ID ${creatorId} not found`);
               // Consider how you want to handle this case.
@@ -81,6 +81,7 @@ export class EmployeeService {
       return employee;
     } catch (error) {
       if (error.status) {
+        console.log('error');
         throw error;
       }
       console.log(error?.message || error?.msg);

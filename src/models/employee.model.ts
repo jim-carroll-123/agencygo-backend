@@ -25,6 +25,10 @@ const EmployeeSchema: Schema<Employee> = new Schema({
     ref: 'agencies',
     required: true,
   },
+  groupId: {
+    type: Schema.Types.ObjectId || '' || undefined || null,
+    ref: 'groups',
+  },
   role: {
     type: String,
     enum: ['employee', 'manager', 'admin'],
@@ -49,7 +53,6 @@ const EmployeeSchema: Schema<Employee> = new Schema({
     type: String,
     enum: ['active', 'inactive'],
   },
-  
 });
 
 export const EmployeeModel = model<Employee & Document>('employee', EmployeeSchema);

@@ -19,7 +19,7 @@ const UserSchema: Schema<User> = new Schema({
   },
   status: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   date: {
     tyoe: String,
@@ -37,7 +37,7 @@ const UserSchema: Schema<User> = new Schema({
   },
   isVerified: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   agencyId: {
     type: Schema.Types.ObjectId,
@@ -49,7 +49,7 @@ const UserSchema: Schema<User> = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
     validate: {
       validator: (value: string) => value.length > 0,
       message: 'Password field is required',

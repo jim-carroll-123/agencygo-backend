@@ -15,10 +15,11 @@ export interface Employee {
   name: string;
   email: string;
   agencyId: Types.ObjectId;
+  groupId?: Types.ObjectId;
   role: Role;
   userId: Types.ObjectId;
   status: Status;
-  password: string;
+  password?: string;
   payRate: Number;
   payInterval: String;
   commission: Number;
@@ -31,6 +32,7 @@ export interface EmployeeCreate {
   role: Role;
   creator: Types.ObjectId;
   assignCreator: Types.ObjectId[] | Types.ObjectId;
+  groupId: Types.ObjectId;
   payRate: Number;
   payInterval: Number;
   commission: Number;
