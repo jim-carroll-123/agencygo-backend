@@ -115,6 +115,7 @@ export class EmployeeService {
             status: 1,
             userId: 1,
             agencyId: 1,
+            groupId: 1,
             payRate: 1,
             payInterval: 1,
             commission: 1,
