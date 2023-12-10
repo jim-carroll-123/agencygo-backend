@@ -1,0 +1,25 @@
+
+@baseURL = http://localhost:3000
+###
+GET {{ baseURL }}/tier
+###
+GET  {{ baseURL }}/tier/6575d52a18c3a60c6dda385c HTTP/1.1
+
+###
+POST  {{ baseURL }}/tier HTTP/1.1
+content-type: application/json
+
+{
+    "name":"$"
+}
+
+###
+PUT {{ baseURL }}/tier/6575d5a44b0f79b2c18557bf HTTP/1.1
+content-type: application/json
+
+{
+    "name":"$$"
+}
+
+###
+DELETE {{ baseURL }}/tier/6575d52a18c3a60c6dda385c HTTP/1.1

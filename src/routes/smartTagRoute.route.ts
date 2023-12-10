@@ -4,7 +4,7 @@ import { CreateSmartTagDto } from '@/dtos/smartTag.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
 
-export class smartTagRoute implements Routes {
+export class SmartTagRoute implements Routes {
   public path = '/smarttag';
   public router = Router();
   public smartTag = new SmartTagController();
