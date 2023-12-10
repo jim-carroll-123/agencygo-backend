@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-export class CreateTierDto {
+export class TierDto {
   @IsString()
   public name;
 }
