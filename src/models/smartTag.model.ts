@@ -1,32 +1,28 @@
 import { Schema, model, Document } from 'mongoose';
-import { SmartTag } from '@/interfaces/smarttags.interface';
+import { SmartTag } from '@/interfaces/smartTag.interface';
 
 const smartTagSchema: Schema<SmartTag> = new Schema({
-  userId: {
+  tagId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Tag',
     required: true,
   },
-  employeeId: {
+  agencyId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Agency',
     required: true,
   },
-  amount: {
+  creatorId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Creator',
+    required: true,
+  },
+  minimumAmount: {
     type: Number,
     required: true,
   },
-  //expired fan or not
-  status: {
-    type: Boolean,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
+  maximumAmount: {
+    type: Number,
     required: true,
   },
 });
