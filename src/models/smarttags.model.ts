@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
-import { smartTags } from '@/interfaces/smarttags.interface';
+import { SmartTag } from '@/interfaces/smarttags.interface';
 
-const smartTagsSchema: Schema<smartTags> = new Schema({
+const smartTagSchema: Schema<SmartTag> = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -16,6 +16,7 @@ const smartTagsSchema: Schema<smartTags> = new Schema({
     type: Number,
     required: true,
   },
+  //expired fan or not
   status: {
     type: Boolean,
     required: true,
@@ -29,4 +30,4 @@ const smartTagsSchema: Schema<smartTags> = new Schema({
     required: true,
   },
 });
-export const smartTagsModel = model<smartTags & Document>('smartTags', smartTagsSchema);
+export const smartTagModel = model<SmartTag & Document>('smartTags', smartTagSchema);

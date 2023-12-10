@@ -1,0 +1,27 @@
+@baseURL = http://localhost:3000
+###
+GET {{ baseURL }}/smarttags
+###
+POST {{ baseURL }}/smarttags HTTP/1.1
+content-type: application/json
+{
+    "userId": "656f45e4a461bb97c82116b9",
+    "employeeId": "656f4472a461bb97c8211688",
+    "amount":1234,
+    "status":"false",
+    "description":"smart helps creators promote their work",
+    "date":"2020-07-10 15:00:00.000"
+}
+###
+GET  {{ baseURL }}/smarttags/6573b66ba2af10fce951478e HTTP/1.1
+
+###
+PUT {{ baseURL }}/smarttags/6573b66ba2af10fce951478e HTTP/1.1
+content-type: application/json
+
+{
+    "amount":90000
+}
+
+###
+DELETE {{ baseURL }}/smarttags/6573b66ba2af10fce951478e HTTP/1.1

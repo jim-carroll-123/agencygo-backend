@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface smartTags {
+export interface SmartTag {
   id: any;
   _id?: string;
   userId: Types.ObjectId;
