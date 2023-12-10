@@ -37,5 +37,4 @@ const PromotionCampaignSchema = new Schema<PromotionCampaign>({
   },
 });
 
-// Create the Role model
-export const PromotionCampaignModel = model<PromotionCampaign & Document>('Promotions', PromotionCampaignSchema);
+export const promotionCampaignModel = model<PromotionCampaign & Document>('Promotions', PromotionCampaignSchema);
