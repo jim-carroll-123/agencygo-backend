@@ -11,7 +11,8 @@ import { RoleRoute } from './routes/roles.route';
 import { ShiftRoute } from './routes/shift.route';
 import { InvoicingRoute } from './routes/invoicing.route';
 import { PayrollRoute } from './routes/payroll.routes';
-import { smartTagsRoute } from './routes/smarttags.route';
+import { smartTagRoute } from './routes/smartTagRoute.route';
+
 // import { PayrollRoute } from './routes/payroll.routes';
 import { ChatRoute } from './routes/chat.route';
 import { AttendanceRoute } from './routes/attendence.route';
@@ -30,7 +31,7 @@ const app = new App([
   new EmployeeRoute(),
   new CreatorRoute(),
   new SessionsRoute(),
-  new smartTagsRoute(),
+  new smartTagRoute(),
   new EmailRoute(),
   new RoleRoute(),
   new ShiftRoute(),

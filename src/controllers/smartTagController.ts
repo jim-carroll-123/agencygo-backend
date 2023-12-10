@@ -1,27 +1,21 @@
-import { SmartTag } from '@/interfaces/smarttags.interface';
-import { SmartTagsService } from '@/services/smarttags.services';
+import { SmartTag } from '@/interfaces/smartTag.interface';
+import { SmartTagService } from '@/services/smartTagService.service';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-// import { uploadToS3 } from '@/utils/fileUpload';
-// import path from 'path';
-// import PDFDocument from 'pdfkit';
-// import { Readable } from 'stream';
-// import fs from 'fs';
 
 export class SmartTagController {
-  private readonly smartTagsService: SmartTagsService;
+  private readonly smartTagService: SmartTagService;
   constructor() {
-    this.smartTagsService = new SmartTagsService();
+    this.smartTagService = new SmartTagService();
   }
-  public smartTag = Container.get(SmartTagsService);
+  public smartTag = Container.get(SmartTagService);
 
   public createSmartTag = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const smartTagsData: SmartTag = req.body;
-      //const userId = req.params.id;
-      const createSmartTagsData: SmartTag = await this.smartTag.createSmartTags(smartTagsData);
+      const createSmartTagData: SmartTag = await this.smartTag.createSmartTag(smartTagsData);
 
-      res.status(201).json({ data: createSmartTagsData, message: 'SmartTags created Successfully' });
+      res.status(201).json({ data: createSmartTagData, message: 'SmartTags created Successfully' });
     } catch (error) {
       next(error);
     }

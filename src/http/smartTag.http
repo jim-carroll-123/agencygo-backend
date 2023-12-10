@@ -1,27 +1,29 @@
 @baseURL = http://localhost:3000
 ###
-GET {{ baseURL }}/smarttags
+GET {{ baseURL }}/smarttag
 ###
-POST {{ baseURL }}/smarttags HTTP/1.1
-content-type: application/json
-{
-    "userId": "656f45e4a461bb97c82116b9",
-    "employeeId": "656f4472a461bb97c8211688",
-    "amount":1234,
-    "status":"false",
-    "description":"smart helps creators promote their work",
-    "date":"2020-07-10 15:00:00.000"
-}
-###
-GET  {{ baseURL }}/smarttags/6573b66ba2af10fce951478e HTTP/1.1
+GET  {{ baseURL }}/smarttag/6575d52a18c3a60c6dda385c HTTP/1.1
 
 ###
-PUT {{ baseURL }}/smarttags/6573b66ba2af10fce951478e HTTP/1.1
+POST  {{ baseURL }}/smarttag HTTP/1.1
 content-type: application/json
 
 {
-    "amount":90000
+    "tagId":"6574bc0a33b0131a514f7085",
+    "agencyId":"656f4472a461bb97c821168a",
+    "creatorId":"656f4761d765ee2dda21078c",
+    "minimumAmount":5,
+    "maximumAmount":10
 }
 
 ###
-DELETE {{ baseURL }}/smarttags/6573b66ba2af10fce951478e HTTP/1.1
+PUT {{ baseURL }}/smarttag/6575d5a44b0f79b2c18557bf HTTP/1.1
+content-type: application/json
+
+{
+    "minimumAmount":15,
+    "maximumAmount":20
+}
+
+###
+DELETE {{ baseURL }}/smarttag/6575d52a18c3a60c6dda385c HTTP/1.1
