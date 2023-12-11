@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 import { SmartTag } from '@/interfaces/smartTag.interface';
 
 const smartTagSchema: Schema<SmartTag> = new Schema({
-  tagId: {
+  tierId: {
     type: Schema.Types.ObjectId,
     ref: 'Tag',
     required: true,

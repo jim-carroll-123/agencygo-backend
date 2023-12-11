@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CreateSmartTagDto {
   @IsString()
-  public tagId;
+  public tierId;
 
   @IsString()
   public agencyId;

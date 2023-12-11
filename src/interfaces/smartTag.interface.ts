@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 export interface SmartTag {
-  tagId: Types.ObjectId;
+  tierId: Types.ObjectId;
   creatorId: Types.ObjectId;
   agencyId: Types.ObjectId;
   minimumAmount: number;
