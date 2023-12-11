@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsBoolean } from 'class-validator';
 export class PromotionCampaignDto {
   @IsString()
   public agencyId;
@@ -7,15 +7,15 @@ export class PromotionCampaignDto {
   @IsString()
   public userType;
   @IsString()
-  @IsNumber()
   public activityType;
   @IsString()
-  @IsNumber()
   public offerLimit;
   @IsString()
-  @IsNumber()
   public offerExpiry;
   @IsString()
   @IsOptional()
   public message;
+  @IsBoolean()
+  @IsOptional()
+  public isExpired;
 }

@@ -15,11 +15,11 @@ const PromotionCampaignSchema = new Schema<PromotionCampaign>({
     required: true,
   },
   offerLimit: {
-    type: String || Number,
+    type: String,
     required: true,
   },
   offerExpiry: {
-    type: String || Number,
+    type: String,
     required: true,
   },
   message: {
