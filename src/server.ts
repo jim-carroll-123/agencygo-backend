@@ -12,6 +12,7 @@ import { ShiftRoute } from './routes/shift.route';
 import { InvoicingRoute } from './routes/invoicing.route';
 import { PayrollRoute } from './routes/payroll.routes';
 import { SmartTagRoute } from './routes/smartTagRoute.route';
+import { PromotionCampaignRoute } from './routes/promotionCampaign.route';
 import { TierRoute } from './routes/tier.route';
 // import { PayrollRoute } from './routes/payroll.routes';
 import { ChatRoute } from './routes/chat.route';
@@ -20,8 +21,9 @@ import { ContentRoute } from './routes/content.route';
 import { TimelineRoute } from './routes/timeline.route';
 import { EarningsRoute } from './routes/earnings.route';
 ValidateEnv();
-
 const app = new App([
+  new TierRoute(),
+  new PromotionCampaignRoute(),
   new UserRoute(),
   new AuthRoute(),
   new AgencyRoute(),
@@ -32,7 +34,6 @@ const app = new App([
   new CreatorRoute(),
   new SessionsRoute(),
   new SmartTagRoute(),
-  new TierRoute(),
   new EmailRoute(),
   new RoleRoute(),
   new ShiftRoute(),
