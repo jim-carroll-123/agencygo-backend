@@ -3,23 +3,24 @@
 ###
 GET {{ baseURL }}/tier
 ###
-GET  {{ baseURL }}/tier/6575d52a18c3a60c6dda385c HTTP/1.1
+GET  {{ baseURL }}/tier/6576cc1a48496202388be5ae HTTP/1.1
 
 ###
 POST  {{ baseURL }}/tier HTTP/1.1
 content-type: application/json
 
 {
+    "agencyId":"656f4472a461bb97c821168a",
+    "creatorId":"656f4761d765ee2dda21078c",
     "name":"$"
 }
 
 ###
-PUT {{ baseURL }}/tier/6575d5a44b0f79b2c18557bf HTTP/1.1
+PUT {{ baseURL }}/tier/6576d217a6e3b8c50b2ec1cd HTTP/1.1
 content-type: application/json
 
 {
-    "name":"$$"
+     "name":"$$$"
 }
-
 ###
-DELETE {{ baseURL }}/tier/6575d52a18c3a60c6dda385c HTTP/1.1
+DELETE {{ baseURL }}/tier/6576d065a6e3b8c50b2ec1c2 HTTP/1.1
