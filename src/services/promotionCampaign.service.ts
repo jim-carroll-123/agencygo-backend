@@ -9,7 +9,10 @@ export class PromotionCampaignService {
     try {
       const newPromotionCampaign = new promotionCampaignModel({
         ...promotionCampaignData,
+        createdAt: Date.now(),
+        isExpired: false,
       });
+
       // Save the PromotionCampaigns
       const createdPromotionCampaign = await newPromotionCampaign.save();
       return createdPromotionCampaign;
@@ -36,7 +39,11 @@ export class PromotionCampaignService {
 
   public async updatePromotionCampaign(promotionCampaignId: string, promotionCampaignData: PromotionCampaign) {
     try {
-      const updatePromotionCampaign = await promotionCampaignModel.findByIdAndUpdate(promotionCampaignId, promotionCampaignData, { new: true });
+      const updatePromotionCampaign = await promotionCampaignModel.findByIdAndUpdate(
+        promotionCampaignId,
+        { ...promotionCampaignData, updatedAt: Date.now() },
+        { new: true },
+      );
 
       if (!updatePromotionCampaign) {
         throw new HttpException(404, 'promotion campaign not found.');
