@@ -33,12 +33,21 @@ export class PromotionCampaignController {
     try {
       const promotionCampaignId: string = req.params.id;
       const findOnePromotionCampaignData: PromotionCampaign = await this.promotionCampaign.getPromotionCampaignById(promotionCampaignId);
-
       res.status(200).json({ data: findOnePromotionCampaignData, message: 'findOne' });
     } catch (error) {
       next(error);
     }
   };
+  public getPromotionCampaignByAgencyId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const agencyId: string = req.params.id;
+      const findAllAgencyPromotionCampaigns: PromotionCampaign[] = await this.promotionCampaign.getPromotionCampaignsByAgencyId(agencyId);
+      res.status(200).json({ data: findAllAgencyPromotionCampaigns, message: 'agency promotions findOne' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public updatePromotionCampaign = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const promotionCampaignId: string = req.params.id;
@@ -62,4 +71,16 @@ export class PromotionCampaignController {
       next(error);
     }
   };
+
+  public reactivatePromotionCampaigns = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const creatorId: string = req.params.id;
+      const offerExpiry: OfferExpiry = req.body;
+      const reactivatedPromotions = await this.promotionCampaign.reactivateExpiredPromotions(creatorId, offerExpiry);
+      res.status(200).json({ data: reactivatedPromotions, message: 'expired promotions reactivated' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
+import { OfferExpiry } from '@/services/promotionCampaign.service';

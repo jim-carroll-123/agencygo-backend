@@ -19,3 +19,12 @@ export class PromotionCampaignDto {
   @IsOptional()
   public isExpired;
 }
+
+export class UpdatePromotionCampaignDto {
+  @IsBoolean()
+  @IsOptional()
+  public isExpired;
+  @IsString()
+  @IsOptional()
+  public offerExpiry;
+}
