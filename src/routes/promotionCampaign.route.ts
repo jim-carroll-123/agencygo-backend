@@ -25,10 +25,8 @@ export class PromotionCampaignRoute implements Routes {
     );
     this.router.put(
       `${this.path}/:id/reactivatepromotions`,
-      AuthMiddleware,
       ValidationMiddleware(UpdatePromotionCampaignDto),
       this.promotionCampaign.reactivatePromotionCampaigns,
     );
   }
 }
-

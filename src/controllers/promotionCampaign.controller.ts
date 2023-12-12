@@ -75,7 +75,7 @@ export class PromotionCampaignController {
   public reactivatePromotionCampaigns = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const creatorId: string = req.params.id;
-      const offerExpiry: OfferExpiry = req.body;
+      const offerExpiry: any = req.body;
       const reactivatedPromotions = await this.promotionCampaign.reactivateExpiredPromotions(creatorId, offerExpiry);
       res.status(200).json({ data: reactivatedPromotions, message: 'expired promotions reactivated' });
     } catch (error) {
@@ -83,4 +83,3 @@ export class PromotionCampaignController {
     }
   };
 }
-import { OfferExpiry } from '@/services/promotionCampaign.service';

@@ -1,0 +1,39 @@
+@baseURL = http://localhost:3000
+###
+GET {{ baseURL }}/promotion
+###
+GET  {{ baseURL }}/promotion/6576e0212e464fa2b9c66307 HTTP/1.1
+###
+GET  {{ baseURL }}/promotion/agency/65738250a64a07136f7a77b0 HTTP/1.1
+###
+POST  {{ baseURL }}/promotion HTTP/1.1
+content-type: application/json
+
+{
+    "agencyId":"656f4472a461bb97c821168a",
+    "creatorId":"656f4761d765ee2dda21078c",
+    "userType":"New",
+    "activityType":"Free trial",
+    "offerLimit":"10 subscribers",
+    "offerExpiry":"6 days",
+    "message":"discount ticket, join me."
+}
+
+###
+PUT {{ baseURL }}/promotion/6576e0212e464fa2b9c66307 HTTP/1.1
+content-type: application/json
+
+{
+    "offerExpiry":true
+}
+
+###
+DELETE {{ baseURL }}/promotion/6576e0212e464fa2b9c66307 HTTP/1.1
+
+###
+PUT {{ baseURL }}/promotion/65738250a64a07136f7a77b0/reactivatepromotions HTTP/1.1
+content-type: application/json
+
+{
+    "offerExpiry":"30 days"
+}

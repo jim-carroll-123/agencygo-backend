@@ -69,14 +69,12 @@ export class PromotionCampaignService {
     console.log(agencyId, 'agencyId');
     const findAgencyPromotionCampaign: PromotionCampaign[] = await promotionCampaignModel.find({ agencyId });
     if (!findAgencyPromotionCampaign) throw new HttpException(409, "Get: agency didn't have any promotion campaigns yet");
-
     return findAgencyPromotionCampaign;
   }
-
-  public async reactivateExpiredPromotions(creatorId: string, update: OfferExpiry) {
+  public async reactivateExpiredPromotions(creatorId: string, update: any) {
     try {
-      const changes = { isExpired: false, ...update, updatedAt: Date.now() };
-      const condition = { creatorId, isExpired: true };
+      const changes = { isExpired: true, ...update, updatedAt: Date.now() };
+      const condition = { creatorId, isExpired: false };
       const reactivated = await promotionCampaignModel.updateMany(condition, changes);
       console.log(reactivated.modifiedCount);
       if (!reactivated) {
@@ -87,8 +85,4 @@ export class PromotionCampaignService {
       throw new HttpException(500, `reactivate: ${error.message}`);
     }
   }
-}
-
-export interface OfferExpiry {
-  offerExpiry: string;
 }

@@ -1,0 +1,29 @@
+@baseURL = http://localhost:3000
+###
+GET {{ baseURL }}/smarttag
+###
+GET  {{ baseURL }}/smarttag/6576d40a3e0071c641d1f1f2 HTTP/1.1
+
+###
+POST  {{ baseURL }}/smarttag HTTP/1.1
+content-type: application/json
+
+{
+    "tagId":"6576d217a6e3b8c50b2ec1cd",
+    "agencyId":"656f4472a461bb97c821168a",
+    "creatorId":"656f4761d765ee2dda21078c",
+    "minimumAmount":30,
+    "maximumAmount":50
+}
+
+###
+PUT {{ baseURL }}/smarttag/6576d40a3e0071c641d1f1f2 HTTP/1.1
+content-type: application/json
+
+{
+    "minimumAmount":30,
+    "maximumAmount":50
+}
+
+###
+DELETE {{ baseURL }}/smarttag/6576d40a3e0071c641d1f1f2 HTTP/1.1
